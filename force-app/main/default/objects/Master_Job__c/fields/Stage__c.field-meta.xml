@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Stage__c</fullName>
+    <externalId>false</externalId>
+    <label>Stage</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Contract Qualification</fullName>
+                <default>false</default>
+                <label>Contract Qualification</label>
+            </value>
+            <value>
+                <fullName>Contract Preparation</fullName>
+                <default>false</default>
+                <label>Contract Preparation</label>
+            </value>
+            <value>
+                <fullName>Contract Negotiation</fullName>
+                <default>false</default>
+                <label>Contract Negotiation</label>
+            </value>
+            <value>
+                <fullName>Contract Execution</fullName>
+                <default>false</default>
+                <label>Contract Execution</label>
+            </value>
+            <value>
+                <fullName>Contract Completion</fullName>
+                <default>false</default>
+                <label>Contract Completion</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

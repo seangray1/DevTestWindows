@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prime_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>Prime Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>ATI_Contractor_Status__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Gov&#39;t Contractor</fullName>
+                <default>false</default>
+                <label>Gov&#39;t Contractor</label>
+            </value>
+            <value>
+                <fullName>FSS Contractor</fullName>
+                <default>false</default>
+                <label>FSS Contractor</label>
+            </value>
+            <value>
+                <fullName>GSA/BMO Contractor</fullName>
+                <default>false</default>
+                <label>GSA/BMO Contractor</label>
+            </value>
+            <value>
+                <fullName>Military Housing Contractor</fullName>
+                <default>false</default>
+                <label>Military Housing Contractor</label>
+            </value>
+            <value>
+                <fullName>Contingency Contractor</fullName>
+                <default>false</default>
+                <label>Contingency Contractor</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Prime</controllingFieldValue>
+            <valueName>Gov&#39;t Contractor</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Prime</controllingFieldValue>
+            <valueName>FSS Contractor</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Prime</controllingFieldValue>
+            <valueName>GSA/BMO Contractor</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Prime</controllingFieldValue>
+            <valueName>Military Housing Contractor</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Prime</controllingFieldValue>
+            <valueName>Contingency Contractor</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Prime</controllingFieldValue>
+            <valueName>Other</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

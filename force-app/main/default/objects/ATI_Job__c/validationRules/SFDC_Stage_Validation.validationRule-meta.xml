@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SFDC_Stage_Validation</fullName>
+    <active>false</active>
+    <description>ES Jobs can go from Qualification to Won</description>
+    <errorConditionFormula>OR(AND( 
+ISCHANGED(Stage__c), 
+ISPICKVAL(Division__c, &quot;Emergency Svces&quot;), 
+ISPICKVAL(PRIORVALUE(Stage__c), &quot;Qualification&quot;), 
+NOT(ISPICKVAL(Stage__c, &quot;Estimating/Review&quot;)),
+NOT(ISPICKVAL(Stage__c, &quot;Won&quot;)),
+NOT(ISPICKVAL(Stage__c, &quot;Lost&quot;))), 
+AND( 
+ISCHANGED(Stage__c), 
+NOT(ISPICKVAL(Division__c, &quot;Emergency Svces&quot;)), 
+ISPICKVAL(PRIORVALUE(Stage__c), &quot;Qualification&quot;), 
+NOT(ISPICKVAL(Stage__c, &quot;Estimating/Review&quot;)), 
+NOT(ISPICKVAL(Stage__c, &quot;Lost&quot;)))
+)</errorConditionFormula>
+    <errorMessage>Qualification stage can only be changed to Estimating/Review or Lost. Please chatter @Nat Lee if you need assistance updating the stage</errorMessage>
+</ValidationRule>

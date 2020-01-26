@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Other_agency_name_req</fullName>
+    <active>true</active>
+    <description>Other Agency Name/Type field is required if Other is selected in Agency Name/Type field</description>
+    <errorConditionFormula>AND(ISPICKVAL(Agency_Name__c,&quot;Other&quot;), ISBLANK(Other_Agency__c))</errorConditionFormula>
+    <errorDisplayField>Other_Agency__c</errorDisplayField>
+    <errorMessage>Other Agency Name/Type field is required if Other is selected in Agency Name/Type field</errorMessage>
+</ValidationRule>

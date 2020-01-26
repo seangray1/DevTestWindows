@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cooperative__c</fullName>
+    <externalId>false</externalId>
+    <label>Cooperative</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Purchasing_Type__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>BuyBoard</fullName>
+                <default>false</default>
+                <label>BuyBoard</label>
+            </value>
+            <value>
+                <fullName>TIPS</fullName>
+                <default>false</default>
+                <label>TIPS</label>
+            </value>
+            <value>
+                <fullName>TXMAS</fullName>
+                <default>false</default>
+                <label>TXMAS</label>
+            </value>
+            <value>
+                <fullName>US Communities</fullName>
+                <default>false</default>
+                <label>US Communities</label>
+            </value>
+            <value>
+                <fullName>TIPS Trades</fullName>
+                <default>false</default>
+                <label>TIPS Trades</label>
+            </value>
+            <value>
+                <fullName>TIPS Disaster Recovery</fullName>
+                <default>false</default>
+                <label>TIPS Disaster Recovery</label>
+            </value>
+            <value>
+                <fullName>SETX</fullName>
+                <default>false</default>
+                <label>SETX</label>
+            </value>
+            <value>
+                <fullName>MHEC</fullName>
+                <default>false</default>
+                <label>MHEC</label>
+            </value>
+            <value>
+                <fullName>Choice Partners</fullName>
+                <default>false</default>
+                <label>Choice Partners</label>
+            </value>
+            <value>
+                <fullName>CMAS</fullName>
+                <default>false</default>
+                <label>CMAS</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Cooperative</controllingFieldValue>
+            <valueName>BuyBoard</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Cooperative</controllingFieldValue>
+            <valueName>TIPS</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Cooperative</controllingFieldValue>
+            <valueName>TXMAS</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Cooperative</controllingFieldValue>
+            <valueName>US Communities</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

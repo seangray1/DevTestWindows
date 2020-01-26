@@ -1,0 +1,177 @@
+<!--
+  @File Name          : newJobLWC.html
+  @Description        : 
+  @Author             : Sean Gray
+  @Group              : 
+  @Last Modified By   : sean.gray@atirestoration.com
+  @Last Modified On   : 1/24/2020, 1:45:39 PM
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    1/23/2020   Sean Gray     Initial Version
+-->
+<template>
+    <div class="slds-scrollable_y" style="height:120rem;width: 100%;">
+    <div class="slds-box slds-theme_shade">
+        <div class="slds-m-around_medium">
+            <h1 class="slds-text-heading_small" style="text-decoration: underline;">Customer Information</h1>
+        </div>
+                <lightning-record-edit-form object-api-name="ATI_Job__c">
+                    <div class="slds-col slds-size_1-of-5">
+                    <lightning-input-field field-name="Contact__c"></lightning-input-field>
+                </div>
+                </lightning-record-edit-form>
+                <lightning-button label="New Caller" variant="brand" onclick={ToggleNewCaller} ></lightning-button>
+                <div if:true={NewCaller}>
+                <lightning-record-edit-form object-api-name="Contact">
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-5">
+                    <lightning-input-field field-name="Contact_Type__c"></lightning-input-field>
+                    <lightning-input-field field-name="FirstName"></lightning-input-field>
+                    <lightning-input-field field-name="LastName"></lightning-input-field>
+                    <lightning-input-field field-name="MailingStreet"></lightning-input-field>
+                    <lightning-input-field field-name="MailingCity"></lightning-input-field>
+                    <lightning-input-field field-name="MailingState"></lightning-input-field>
+                    <lightning-input-field field-name="MailingCounty"></lightning-input-field>
+                    <lightning-input-field field-name="AccountId"></lightning-input-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-5">
+                    <lightning-input-field field-name="MailingPostalCode"></lightning-input-field>        
+                    <lightning-input-field field-name="Phone"></lightning-input-field>        
+                    <lightning-input-field field-name="Email"></lightning-input-field>        
+                    <lightning-input-field field-name="Phone_Ext__c"></lightning-input-field>              
+                        </div>
+                    </div>
+                </lightning-record-edit-form>
+                <br>
+                <br>
+                <lightning-button label="New Account" variant="brand" onclick={ToggleNewAccount}></lightning-button>    
+            </div>
+                
+                <div if:true={NewAccount}>
+                    <br>
+                    <br>
+                <lightning-record-edit-form object-api-name="Account">
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-5">
+                    <lightning-input-field field-name="Name"></lightning-input-field>         
+                    <lightning-input-field field-name="BillingStreet"></lightning-input-field>         
+                    <lightning-input-field field-name="BillingCity"></lightning-input-field>         
+                    <lightning-input-field field-name="BillingState"></lightning-input-field>         
+                    <lightning-input-field field-name="BillingPostalCode"></lightning-input-field>         
+                        </div>
+                        <div class="slds-col slds-size_1-of-5">
+                    <lightning-input-field field-name="Type"></lightning-input-field> 
+                    <lightning-input-field field-name="BillingCountry"></lightning-input-field> 
+                    <lightning-input-field field-name="Phone"></lightning-input-field> 
+                    <lightning-input-field field-name="Phone_Ext__c"></lightning-input-field> 
+                        </div>
+                    </div>
+                </lightning-record-edit-form>
+                </div>
+            </div>
+                <br>
+                <div class="slds-box slds-theme_shade">
+                <div class="slds-m-around_medium">
+                    <h1 class="slds-text-heading_small" style="text-decoration: underline;">Property</h1>
+                </div>
+                <div class="slds-col slds-size_1-of-5">
+                    <lightning-record-edit-form object-api-name="Master_Job__c">
+                    <lightning-input-field field-name="Property_ID__c" value={PropertyID} onchange={PropertyChange}></lightning-input-field>
+                     </lightning-record-edit-form>
+             </div>
+                <lightning-button label="New Property" variant="brand" onclick={ToggleNewProperty}></lightning-button>
+                <div if:true={NewProperty}>
+                <lightning-record-edit-form object-api-name="Property__c">
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-5">
+                    
+                    <lightning-input-field field-name="Name"></lightning-input-field>
+                    <lightning-input-field field-name="Address_Line_1__c"></lightning-input-field>
+                    <lightning-input-field field-name="Address_Line_2__c"></lightning-input-field>
+                    <lightning-input-field field-name="City__c"></lightning-input-field>
+                    <lightning-input-field field-name="Country__c"></lightning-input-field>
+                    </div>
+                    <div class="slds-col slds-size_1-of-5">
+                    <lightning-input-field field-name="Location__c"></lightning-input-field>
+                    <lightning-input-field field-name="Property_Type__c"></lightning-input-field>
+                    <lightning-input-field field-name="State__c"></lightning-input-field>
+                    <lightning-input-field field-name="Zip__c"></lightning-input-field>
+                </div>
+                    </div>
+            </lightning-record-edit-form>
+                </div>
+                
+    </div>
+
+    <br>
+    <template if:true={AccountRoles}>
+    
+      <div class="slds-box slds-theme_shade">
+             <div class="row">
+              <div class="col-rp-12">
+                  <div class="">
+                      <table class="outer">
+                              <tbody><tr>
+                                <td class="left-col">
+                                  
+                                    <table class="table TblRes week-header ProjTbl">
+                                          <thead>
+                                              <tr class="alpha">
+                                                      <th>  Name</th>
+                                                      <!-- <th>  Start Date</th>
+                                                      <th>  End Date</th> -->
+                                                      
+                                                      
+                                                  </tr></thead>
+                                                  
+                                                  <tbody>
+                                                      
+                                                        <template for:each={AccountRoles} for:item="AccountRole"> 
+                                              <tr key={AccountRole.name}> 
+                                                    <td> 
+                                                        <lightning:layoutItem>
+                                                              <div class="grid">
+                                                                <lightning-input type="text" value={AccountRole.name} class="form-control ProjName" disabled={test} onchange={handleNameChange}></lightning-input>
+                                                    </div>
+                                                    </lightning:layoutItem>
+                                                      </td>
+                                                     
+                                                      </td>
+                                                      </tr>
+                                                    </template> 
+                                                      </tbody>
+                                                        </table>
+                                                        </td>
+                                                        </tr>
+                                                        </tbody>
+                                                        </table>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+</template>
+                                                    
+    <br>
+                <div class="slds-box slds-theme_shade">
+                <div class="slds-m-around_medium">
+                    <h1 class="slds-text-heading_small" style="text-decoration: underline;">Additional Fields</h1>
+                </div>
+                <lightning-record-edit-form object-api-name="ATI_Job__c">
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-2">
+                <lightning-input-field field-name="Description__c"></lightning-input-field>         
+                <lightning-input-field field-name="Division__c"></lightning-input-field>         
+                <lightning-input-field field-name="Office2__c"></lightning-input-field>         
+                <lightning-input-field field-name="Job_Class__c"></lightning-input-field>         
+                        
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                <lightning-input-field field-name="Estimate_Type__c"></lightning-input-field> 
+                <lightning-input-field field-name="Claim__c"></lightning-input-field> 
+                <lightning-input-field field-name="Deductible__c"></lightning-input-field>  
+                    </div>
+                </div>
+                </lightning-record-edit-form>
+    </div>
+    </div>
+</template>

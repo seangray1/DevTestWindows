@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Agency_Name__c</fullName>
+    <externalId>false</externalId>
+    <label>Agency Name/Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>End_User_Agency__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Air Force</fullName>
+                <default>false</default>
+                <label>Air Force</label>
+            </value>
+            <value>
+                <fullName>Army</fullName>
+                <default>false</default>
+                <label>Army</label>
+            </value>
+            <value>
+                <fullName>Marine Corps</fullName>
+                <default>false</default>
+                <label>Marine Corps</label>
+            </value>
+            <value>
+                <fullName>Navy</fullName>
+                <default>false</default>
+                <label>Navy</label>
+            </value>
+            <value>
+                <fullName>Agriculture</fullName>
+                <default>false</default>
+                <label>Agriculture</label>
+            </value>
+            <value>
+                <fullName>Commerce</fullName>
+                <default>false</default>
+                <label>Commerce</label>
+            </value>
+            <value>
+                <fullName>Education</fullName>
+                <default>false</default>
+                <label>Education</label>
+            </value>
+            <value>
+                <fullName>Energy</fullName>
+                <default>false</default>
+                <label>Energy</label>
+            </value>
+            <value>
+                <fullName>Health &amp; Human Services</fullName>
+                <default>false</default>
+                <label>Health &amp; Human Services</label>
+            </value>
+            <value>
+                <fullName>Homeland Security</fullName>
+                <default>false</default>
+                <label>Homeland Security</label>
+            </value>
+            <value>
+                <fullName>Housing and Urban Development</fullName>
+                <default>false</default>
+                <label>Housing and Urban Development</label>
+            </value>
+            <value>
+                <fullName>Interior</fullName>
+                <default>false</default>
+                <label>Interior</label>
+            </value>
+            <value>
+                <fullName>Justice</fullName>
+                <default>false</default>
+                <label>Justice</label>
+            </value>
+            <value>
+                <fullName>Labor</fullName>
+                <default>false</default>
+                <label>Labor</label>
+            </value>
+            <value>
+                <fullName>State</fullName>
+                <default>false</default>
+                <label>State</label>
+            </value>
+            <value>
+                <fullName>Transportation</fullName>
+                <default>false</default>
+                <label>Transportation</label>
+            </value>
+            <value>
+                <fullName>Veterans Affairs</fullName>
+                <default>false</default>
+                <label>Veterans Affairs</label>
+            </value>
+            <value>
+                <fullName>US Postal Service</fullName>
+                <default>false</default>
+                <label>US Postal Service</label>
+            </value>
+            <value>
+                <fullName>County</fullName>
+                <default>false</default>
+                <label>County</label>
+            </value>
+            <value>
+                <fullName>City/Township</fullName>
+                <default>false</default>
+                <label>City/Township</label>
+            </value>
+            <value>
+                <fullName>Port District</fullName>
+                <default>false</default>
+                <label>Port District</label>
+            </value>
+            <value>
+                <fullName>Tribal</fullName>
+                <default>false</default>
+                <label>Tribal</label>
+            </value>
+            <value>
+                <fullName>K-12 School</fullName>
+                <default>false</default>
+                <label>K-12 School</label>
+            </value>
+            <value>
+                <fullName>Community College</fullName>
+                <default>false</default>
+                <label>Community College</label>
+            </value>
+            <value>
+                <fullName>University</fullName>
+                <default>false</default>
+                <label>University</label>
+            </value>
+            <value>
+                <fullName>Trade School</fullName>
+                <default>false</default>
+                <label>Trade School</label>
+            </value>
+            <value>
+                <fullName>Daycare (non-private)</fullName>
+                <default>false</default>
+                <label>Daycare (non-private)</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Federal (Defense)</controllingFieldValue>
+            <valueName>Air Force</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Defense)</controllingFieldValue>
+            <valueName>Army</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Defense)</controllingFieldValue>
+            <valueName>Marine Corps</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Defense)</controllingFieldValue>
+            <valueName>Navy</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Defense)</controllingFieldValue>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <controllingFieldValue>Local</controllingFieldValue>
+            <controllingFieldValue>Educational</controllingFieldValue>
+            <valueName>Other</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>Agriculture</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>Commerce</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>Education</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>Energy</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>Health &amp; Human Services</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>Homeland Security</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>Housing and Urban Development</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>Interior</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>Justice</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>Labor</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>State</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>Transportation</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>Veterans Affairs</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Federal (Civilian)</controllingFieldValue>
+            <valueName>US Postal Service</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Local</controllingFieldValue>
+            <valueName>County</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Local</controllingFieldValue>
+            <valueName>City/Township</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Local</controllingFieldValue>
+            <valueName>Port District</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Local</controllingFieldValue>
+            <valueName>Tribal</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Educational</controllingFieldValue>
+            <valueName>K-12 School</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Educational</controllingFieldValue>
+            <valueName>Community College</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Educational</controllingFieldValue>
+            <valueName>University</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Educational</controllingFieldValue>
+            <valueName>Trade School</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Educational</controllingFieldValue>
+            <valueName>Daycare (non-private)</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ES_Job_Type_Mandatory</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND( 
+ISPICKVAL(  Division__c,&quot;Emergency Svces&quot;), 
+ISBLANK(TEXT(  ES_Job_Type__c  )),
+DATEVALUE(CreatedDate) &gt;= DATE(2019,12,9)
+)</errorConditionFormula>
+    <errorDisplayField>ES_Job_Type__c</errorDisplayField>
+    <errorMessage>ES Job Type must be populated when division is Emergency Svces</errorMessage>
+</ValidationRule>
