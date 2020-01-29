@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : Sean Gray
   @Group              : 
-  @Last Modified By   : Sean Gray
-  @Last Modified On   : 1/26/2020, 1:12:34 PM
+  @Last Modified By   : sean.gray@atirestoration.com
+  @Last Modified On   : 1/28/2020, 11:12:00 AM
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    1/23/2020   Sean Gray     Initial Version
@@ -69,17 +69,103 @@
                 </lightning-record-edit-form>
                 </div>
             </div>
-                <br>
-                <div class="slds-box slds-theme_shade">
-                <div class="slds-m-around_medium">
+                
+                
+                <!-- <div class="slds-m-around_medium">
                     <h1 class="slds-text-heading_small" style="text-decoration: underline;">Property</h1>
                 </div>
                 <div class="slds-col slds-size_1-of-5">
                     <lightning-record-edit-form object-api-name="Master_Job__c">
                     <lightning-input-field field-name="Property_ID__c" value={PropertyID} onchange={PropertyChange}></lightning-input-field>
                      </lightning-record-edit-form>
-             </div>
-                <lightning-button label="New Property" variant="brand" onclick={ToggleNewProperty}></lightning-button>
+             </div> -->
+        
+
+    <br>
+    <div class="slds-box slds-theme_shade">
+            <div class="slds-m-around_medium">
+                    <h1 class="slds-text-heading_small" style="text-decoration: underline;">Property Search</h1>
+                </div>
+    <div class="slds-m-around_medium">
+    <lightning-input label="Property Search" onkeyup={PropertyChanged} value={searchKey}></lightning-input>
+    <template if:true={Properties}>
+        <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout tabletop">
+            <thead>
+                    <tr class="slds-text-heading_label">
+                      <th scope="col"><div class="slds-truncate" title="Property">Properties</div></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+        <template for:each={Properties} for:item="Property">
+                <tr key={Property.Id}>
+                        <th scope="row">                                                           
+                                <b><lightning-button variant="base" label={Property.Name} value={Property} title="Base action" onclick={populatePropertyField} class="slds-m-left_x-small jobButton"></lightning-button>
+                                </b>
+                                
+                                <lightning-formatted-address
+                                    street={Property.Address_Line_1__c}
+                                    city={Property.City__c}
+                                    country='US'
+                                    province={Property.State__c}
+                                    postal-code={Property.Zip__c} disabled={inputDisabled}>
+                            </lightning-formatted-address>
+                            <!-- <lightning-input disabled={inputDisabled} label={Property.Name} value={Property.Name}></lightning-input> -->
+                    </th>
+                        
+                </tr>
+
+        </template>
+    </tbody>
+    </table>
+            </template>
+
+    </div>
+    <lightning-button label="New Property" variant="brand" onclick={ToggleNewProperty}></lightning-button>
+    <div if:true={NewProperty}>
+    <lightning-record-edit-form object-api-name="Property__c">
+        <div class="slds-grid">
+            <div class="slds-col slds-size_1-of-5">
+        
+        <lightning-input-field field-name="Name"></lightning-input-field>
+        <lightning-input-field field-name="Address_Line_1__c"></lightning-input-field>
+        <lightning-input-field field-name="Address_Line_2__c"></lightning-input-field>
+        <lightning-input-field field-name="City__c"></lightning-input-field>
+        <lightning-input-field field-name="Country__c"></lightning-input-field>
+        </div>
+        <div class="slds-col slds-size_1-of-5">
+        <lightning-input-field field-name="Location__c"></lightning-input-field>
+        <lightning-input-field field-name="Property_Type__c"></lightning-input-field>
+        <lightning-input-field field-name="State__c"></lightning-input-field>
+        <lightning-input-field field-name="Zip__c"></lightning-input-field>
+    </div>
+        </div>
+</lightning-record-edit-form>
+    </div>
+    
+
+
+    </div>
+    <br>
+    <div if:true={PropertySelected}>
+    <div class="slds-box slds-theme_shade">
+    <div class="slds-m-around_medium">
+            <h1 class="slds-text-heading_small" style="text-decoration: underline;">Property</h1>
+        </div>
+        <br>
+        {PropertySelectedField.Name}
+        <lightning-formatted-address
+                                    street={PropertySelectedField.Address_Line_1__c}
+                                    city={PropertySelectedField.City__c}
+                                    country='US'
+                                    province={PropertySelectedField.State__c}
+                                    postal-code={PropertySelectedField.Zip__c} disabled={inputDisabled}>
+        </lightning-formatted-address>
+    </div>
+</div>
+<br>
+<!-- <lightning-input label="Property Test" value={testingProperty}></lightning-input> -->
+    <!-- <div class="slds-box slds-theme_shade">
+    <lightning-button label="New Property" variant="brand" onclick={ToggleNewProperty}></lightning-button>
                 <div if:true={NewProperty}>
                 <lightning-record-edit-form object-api-name="Property__c">
                     <div class="slds-grid">
@@ -100,13 +186,54 @@
                     </div>
             </lightning-record-edit-form>
                 </div>
-         hello       
-    </div>
+                
+    </div> -->
 
-    <br>
-    <template if:true={AccountRoles}>
-    
+
+    <!-- <div class="slds-m-around_medium">
+        <lightning-input type="search" class="slds-m-bottom_small" label="Search" onkeyup={SearchJobs} onchange={ChangeSearchKey}></lightning-input>
+        <lightning-button label="Search" onclick={SearchJobs}></lightning-button>
+        <template if:true={Jobs}>
+                <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout tabletop">
+                        <thead>
+                                <tr class="slds-text-heading_label">
+                                  <th scope="col"><div class="slds-truncate" title="Job">Job</div></th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                    <template for:each={Jobs} for:item="Job">
+                            <tr key={Job.Id}>
+                                    <th scope="row">                                                           
+                                            <b><lightning-button variant="base" label={Job.Name} value={Job.Id} title="Base action" onclick={navigateToDailyTimesheetListView} class="slds-m-left_x-small jobButton"></lightning-button>
+                                            </b>
+                                            <lightning-formatted-address
+                                                street={Job.Project_Site_Address__c}
+                                                city={Job.Project_Site_City__c}
+                                                country='US'
+                                                province={Job.Project_Site_State__c}
+                                                postal-code={Job.Project_Site_Zipcode__c}>
+                                        </lightning-formatted-address>
+
+                                </th>
+                                    
+                            </tr>
+
+                    </template>
+                </tbody>
+                </table>
+            </template>
+            <template if:true={error}>
+                    <b class="tabletop">{error}</b>
+                </template>
+        </div> -->
+
+
+    <!-- <template if:true={AccountRolesSelected}> -->
+            
       <div class="slds-box slds-theme_shade">
+            <div class="slds-m-around_medium">
+                    <h1 class="slds-text-heading_small" style="text-decoration: underline;">Account Roles</h1>
+                </div>
              <div class="row">
               <div class="col-rp-12">
                   <div class="">
@@ -118,8 +245,9 @@
                                           <thead>
                                               <tr class="alpha">
                                                       <th>  Name</th>
-                                                      <!-- <th>  Start Date</th>
-                                                      <th>  End Date</th> -->
+                                                      <th>  Type</th>
+                                                      <th>  Contact</th>
+                                                      
                                                       
                                                       
                                                   </tr></thead>
@@ -131,12 +259,33 @@
                                                     <td> 
                                                         <lightning:layoutItem>
                                                               <div class="grid">
-                                                                <lightning-input type="text" value={AccountRole.name} class="form-control ProjName" disabled={test} onchange={handleNameChange}></lightning-input>
+                                                                    <lightning-record-edit-form object-api-name="Account_Roles__c">
+                                                                <lightning-input-field type="text" value={AccountRole.Name} class="form-control ProjName" field-name="Name" variant="label-hidden">
+                                                                    </lightning-input-field>
+                                                                    </lightning-record-edit-form>
                                                     </div>
                                                     </lightning:layoutItem>
                                                       </td>
+                                                      <td> 
+                                                            <lightning:layoutItem>
+                                                                  <div class="grid">
+                                                                      <lightning-record-edit-form object-api-name="Account_Roles__c">
+                                                                    <lightning-input-field value={AccountRole.Roles__c} field-name="Roles__c" class="form-control ProjName" variant="label-hidden"></lightning-input-field>
+                                                                </lightning-record-edit-form>
+                                                        </div>
+                                                        </lightning:layoutItem>
+                                                          </td>
+                                                          <td> 
+                                                                <lightning:layoutItem>
+                                                                      <div class="grid">
+                                                                          <lightning-record-edit-form object-api-name="Account_Roles__c">
+                                                                        <lightning-input-field value={AccountRoles.Contact_ID__c} field-name="Contact_ID__c" class="form-control ProjName" variant="label-hidden" ></lightning-input-field>
+                                                                    </lightning-record-edit-form>
+                                                            </div>
+                                                            </lightning:layoutItem>
+                                                              </td>
                                                      
-                                                      </td>
+                                                      
                                                       </tr>
                                                     </template> 
                                                       </tbody>
@@ -148,8 +297,10 @@
                                                         </div>
                                                         </div>
                                                         </div>
+                    <lightning-button label="Add New Account Role" onclick={AddNewRow}></lightning-button>
                                                     </div>
-</template>
+                                                    
+<!-- </template> -->
                                                     
     <br>
                 <div class="slds-box slds-theme_shade">
@@ -173,5 +324,6 @@
                 </div>
                 </lightning-record-edit-form>
     </div>
-    </div>
+</div> 
+
 </template>
