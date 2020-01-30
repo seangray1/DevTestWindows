@@ -3,8 +3,8 @@
  * @Description        : 
  * @Author             : sean.gray@atirestoration.com
  * @Group              : 
- * @Last Modified By   : sean.gray@atirestoration.com
- * @Last Modified On   : 1/28/2020, 11:03:31 AM
+ * @Last Modified By   : Sean Gray
+ * @Last Modified On   : 1/29/2020, 1:52:24 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/28/2020   sean.gray@atirestoration.com     Initial Version
@@ -39,8 +39,9 @@ public with sharing class NewJobController {
     }
     @AuraEnabled 
     public static list<Account_Roles__c> CheckId(string propId){
-        List<Account_Roles__c> a = [Select Id, Name, Roles__c, Contact_ID__c FROM Account_Roles__c Where Property_ID__c =: propId];
+        List<Account_Roles__c> a = [Select Id, Name, Roles__c, Contact_ID__c, Address__c, Account_ID__c FROM Account_Roles__c Where Property_ID__c =: propId];
         system.debug('Prop Id + ' + propId);
+        system.debug('Contact ID is ' + a);
         return a;
 
     }
