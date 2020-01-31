@@ -6,11 +6,17 @@
             "c/bigTimeForceSync": [
                 "bigTimeForceSync/bigTimeForceSync.js"
             ],
+            "c/budgetLWC": [
+                "budgetLWC/budgetLWC.js"
+            ],
             "c/caseButton": [
                 "caseButton/caseButton.js"
             ],
             "c/cloneJobLWC": [
                 "cloneJobLWC/cloneJobLWC.js"
+            ],
+            "c/courtesyCallLWC": [
+                "courtesyCallLWC/courtesyCallLWC.js"
             ],
             "c/dailyTimeSheetSearch": [
                 "dailyTimeSheetSearch/dailyTimeSheetSearch.js"
@@ -18,23 +24,20 @@
             "c/dailyTimeSheetlistView": [
                 "dailyTimeSheetlistView/dailyTimeSheetlistView.js"
             ],
+            "c/dailyTimeSheetlistViewJobpage": [
+                "dailyTimeSheetlistViewJobpage/dailyTimeSheetlistViewJobpage.js"
+            ],
             "c/dailyTimesheet": [
                 "dailyTimesheet/dailyTimesheet.js"
             ],
             "c/logCall": [
                 "logCall/logCall.js"
             ],
+            "c/lookupLWC": [
+                "lookupLWC/lookupLWC.js"
+            ],
             "c/micaLWC": [
                 "micaLWC/micaLWC.js"
-            ],
-            "c/pMAssignment": [
-                "pMAssignment/pMAssignment.js"
-            ],
-            "c/projectNote": [
-                "projectNote/projectNote.js"
-            ],
-            "c/rejectbudget": [
-                "rejectbudget/rejectbudget.js"
             ],
             "c/newJobLWC": [
                 "newJobLWC/newJobLWC.js"
@@ -42,17 +45,17 @@
             "c/newProjectSchedule": [
                 "newProjectSchedule/newProjectSchedule.js"
             ],
-            "c/budgetLWC": [
-                "budgetLWC/budgetLWC.js"
+            "c/pMAssignment": [
+                "pMAssignment/pMAssignment.js"
             ],
-            "c/dailyTimeSheetlistViewJobpage": [
-                "dailyTimeSheetlistViewJobpage/dailyTimeSheetlistViewJobpage.js"
+            "c/projectNote": [
+                "projectNote/projectNote.js"
             ],
             "c/recordList": [
                 "recordList/recordList.js"
             ],
-            "c/lookupLWC": [
-                "lookupLWC/lookupLWC.js"
+            "c/rejectbudget": [
+                "rejectbudget/rejectbudget.js"
             ],
             "c/searchComponent": [
                 "searchComponent/searchComponent.js"

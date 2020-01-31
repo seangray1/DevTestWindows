@@ -4,7 +4,7 @@
   @Author             : Sean Gray
   @Group              : 
   @Last Modified By   : Sean Gray
-  @Last Modified On   : 1/29/2020, 2:29:19 PM
+  @Last Modified On   : 1/31/2020, 3:02:27 PM
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    1/23/2020   Sean Gray     Initial Version
@@ -87,7 +87,7 @@
                     <h1 class="slds-text-heading_small" style="text-decoration: underline;">Property Search</h1>
                 </div>
     <div class="slds-m-around_medium">
-    <lightning-input label="Property Search" onkeyup={PropertyChanged} value={PropertyValue}></lightning-input>
+    <lightning-input label="Property Search" onkeyup={PropertyChanged} placeholder='Search for Properties.. ' value={PropertyValue}></lightning-input>
     <template if:true={Properties}>
         <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout tabletop">
             <thead>
@@ -244,14 +244,15 @@
                               <tbody><tr>
                                 <td class="left-col">
                                   
-                                    <table class="table TblRes week-header ProjTbl">
+                                    <table class="table ActRoles">
                                           <thead>
-                                              <tr class="alpha">
+                                              <tr>
                                                       <th>  Name</th>
-                                                      <th>  Type</th>
+                                                      <th>  Roles</th>
                                                       <th>  Address</th>
                                                       <th>  Contact</th>
                                                       <th>  Account</th>
+                                                      <th class="DeleteClmn"></th>
                                                       
                                                       
                                                       
@@ -265,7 +266,7 @@
                                                         <lightning:layoutItem>
                                                               <div class="grid">
                                                                     <lightning-record-edit-form object-api-name="Account_Roles__c">
-                                                                <lightning-input-field type="text" value={AccountRole.Name} class="form-control ProjName" field-name="Name" variant="label-hidden">
+                                                                <lightning-input-field type="text" value={AccountRole.Name} class="form-control ARName" field-name="Name" variant="label-hidden">
                                                                     </lightning-input-field>
                                                                     </lightning-record-edit-form>
                                                     </div>
@@ -275,25 +276,18 @@
                                                             <lightning:layoutItem>
                                                                   <div class="grid">
                                                                       <lightning-record-edit-form object-api-name="Account_Roles__c">
-                                                                    <lightning-input-field value={AccountRole.Roles__c} field-name="Roles__c" class="form-control ProjName" variant="label-hidden"></lightning-input-field>
+                                                                    <lightning-input-field value={AccountRole.Roles__c} field-name="Roles__c" class="form-control ARRoles" variant="label-hidden"></lightning-input-field>
                                                                 </lightning-record-edit-form>
                                                         </div>
                                                         </lightning:layoutItem>
                                                           </td>
-                                                          <td> 
-                                                            <lightning:layoutItem>
-                                                                  <div class="grid">
-                                                                    <lightning-record-edit-form object-api-name="Account_Roles__c">
-                                                                    <lightning-input value={AccountRole.Address__c} class="form-control ProjName" variant="label-hidden" ></lightning-input>
-                                                                        </lightning-record-edit-form>
-                                                        </div>
-                                                        </lightning:layoutItem>
-                                                          </td>
+                                                          
+                                                          
                                                           <td> 
                                                                 <lightning:layoutItem>
                                                                       <div class="grid">
                                                                           <lightning-record-edit-form object-api-name="Account_Roles__c">
-                                                                        <lightning-input-field value={AccountRole.Contact_ID__c} field-name="Contact_ID__c" class="form-control ProjName" variant="label-hidden" ></lightning-input-field>
+                                                                        <lightning-input-field value={AccountRole.Contact_ID__c} field-name="Contact_ID__c" class="form-control ARContact" variant="label-hidden" ></lightning-input-field>
                                                                     </lightning-record-edit-form>
                                                             </div>
                                                             </lightning:layoutItem>
@@ -302,17 +296,17 @@
                                                                 <lightning:layoutItem>
                                                                       <div class="grid">
                                                                           <lightning-record-edit-form object-api-name="Account_Roles__c">
-                                                                        <lightning-input-field value={AccountRole.Account_ID__c} field-name="Account_ID__c" class="form-control ProjName" variant="label-hidden" ></lightning-input-field>
+                                                                        <lightning-input-field value={AccountRole.Account_ID__c} field-name="Account_ID__c" class="form-control ARAccount" variant="label-hidden" ></lightning-input-field>
                                                                     </lightning-record-edit-form>
                                                             </div>
                                                             </lightning:layoutItem>
                                                               </td>
-                                                              <td> 
-                                                                <lightning:layoutItem>
-                                                                      <div class="grid">
-                                                                          <lightning-button label="Delete" variant="destructive" onclick={deleteRow} class="form-control ProjName"></lightning-button>
-                                                            </div>
-                                                            </lightning:layoutItem>
+                                                              <td class="DeleteClmn right-col"> 
+                                                                <!-- Don't INCLUDE DIV GRID IT MESS IT UP! -->
+                                                                       <!-- <div class="grid">  -->
+                                                                          <lightning-button label='' class="delete-icon DeleteAR" title="Delete" variant="destructive" onclick={DeleteARRow} icon-name="action:delete"></lightning-button>
+                                                             <!-- </div>  -->
+                                                            
                                                               </td>
 
                                                             
@@ -360,5 +354,68 @@
                 </lightning-record-edit-form>
     </div>
 </div> 
+
+<template if:true={bShowModal}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+       <div class="slds-modal__container">
+          <!-- modal header start -->
+          <header class="slds-modal__header">
+             <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                <lightning-icon icon-name="utility:close"
+                   alternative-text="close"
+                   variant="inverse"
+                   size="small" ></lightning-icon>
+                <span class="slds-assistive-text">Close</span>
+             </button>
+             <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Master Jobs</h2>
+          </header>
+          <!-- modal body start -->
+          
+          
+          <div class="slds-box slds-theme_shade">
+           
+    <div class="slds-m-around_medium">
+    <template if:true={MasterJobs}>
+        <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout tabletop">
+            <thead>
+                    <tr class="slds-text-heading_label">
+                      <th scope="col"><div class="slds-truncate" title="Property">Master Job</div></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+        <template for:each={MasterJobs} for:item="MasterJob">
+                <tr key={MasterJob.Id}>
+                        <th scope="row">  
+                            <br>                                                         
+                                <b><lightning-button variant="base" label={MasterJob.Name} value={MasterJob} title="Base action" onclick={populateMasterJobField} class="slds-m-left_x-small jobButton"></lightning-button>
+                                </b>
+                                
+                                
+                            <lightning-input disabled={inputDisabled} label={MasterJob.Stage__c} value={MasterJob.Stage__c}></lightning-input>
+                            
+                    </th>
+                        
+                </tr>
+
+        </template>
+        
+    </tbody>
+    </table>
+
+            </template>
+            <lightning-button variant="base" label='New Master Job' title="Base action" onclick={closeModal} class="slds-m-left_x-small jobButton"></lightning-button>
+
+    </div>
+          </div>
+          
+          <!-- end of prop code -->
+          <!-- modal footer start-->
+          <!-- <footer class="slds-modal__footer">
+             <button class="slds-button slds-button_neutral" onclick={closeModal}>Cancel</button>
+          </footer> -->
+       </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+ </template>
 
 </template>

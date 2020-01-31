@@ -4,7 +4,7 @@
  * @Author             : Sean Gray
  * @Group              : 
  * @Last Modified By   : Sean Gray
- * @Last Modified On   : 1/30/2020, 9:00:20 AM
+ * @Last Modified On   : 1/31/2020, 2:49:14 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/23/2020   Sean Gray     Initial Version
@@ -12,6 +12,7 @@
 import { LightningElement, track } from 'lwc';
 //import SearchAccountRoles from '@salesforce/apex/NewJobController.GetAccountRoles';
 import SearchProperties from '@salesforce/apex/NewJobController.GetProperties';
+import GetMasterJobs from '@salesforce/apex/NewJobController.GetMasterJobs';
 import checkId from '@salesforce/apex/NewJobController.CheckId';
 
 const DELAY = 900;
@@ -31,10 +32,13 @@ export default class NewJobLWC extends LightningElement {
 @track PropertySelected = false;
 @track PropertySelectedField;
 @track PropertyValue;
+@track bShowModal = false;
+@track MasterJobDetails;
+@track MasterJobId;
 
-// connectedCallback(){
+ //connectedCallback(){
 //     this.AccountRoles.push({Name : '',})
-// }
+ //}
 ToggleNewCaller(){
     this.NewAccount = false;
     if(!this.NewCaller){
@@ -60,6 +64,12 @@ ToggleNewProperty(){
 AddNewRow(){
     //this.AccountRoleNew(Name ='test');
     this.AccountRoles.push({Name : '', Type : '', Contact : ''});
+}
+showModal(){
+    this.bShowModal = true;
+}
+closeModal(){
+    this.bShowModal = false;
 }
 // PropertyChange(event){
 //     this.PropertyID = event.detail.value;
@@ -87,6 +97,11 @@ AddNewRow(){
 
 // }
 // }
+populateMasterJobField(event){
+    this.MasterJobDetails = event.target.value;
+    this.MasterJobId = this.MasterJobDetails.Id;
+    this.bShowModal = false;
+}
 populatePropertyField(event){
     
    // console.log('Property Id first is + ' + this.Property.Id);
@@ -106,6 +121,12 @@ populatePropertyField(event){
         console.log('Account Roles is ' + this.AccountRoles);
         console.log('Account Roles Name ' + this.AccountRoles.Name);
         console.log('Account Roles Contact ' + this.AccountRoles.Contact_ID__c);
+    })
+    GetMasterJobs({propId:this.testingProperty.Id}).then(result => {
+        this.MasterJobs = result;
+        if(this.MasterJobs !== null){
+            this.bShowModal = true;
+        }
     })
 }
 PropertyChanged(event){
@@ -133,43 +154,50 @@ PropertyChanged(event){
 }
 
 getAllAccountRoleObjects() {
-    var AccountRoless = [];
-
+    var AccountRoles = [];
+//var AccountRoless
     //Get Value from HTML 
-    let TblRow =  Array.from(this.template.querySelectorAll('table.PMTbl tbody tr'));
+    let TblRow =  Array.from(this.template.querySelectorAll('table.ActRoles tbody tr'));
+    console.log('tbl' + TblRow);
     let RowCount = TblRow.length;
+    console.log('RowCount' + RowCount);
     for(let k=0; k<RowCount; k++){
-        let Name = TblRow[k].querySelector('.PMName').value;
-        let TblReg = TblRow[k].querySelectorAll('.PM_Reg');
-        let TblOt = TblRow[k].querySelectorAll('.PM_OT');
-        let TblDbl = TblRow[k].querySelectorAll('.PM_DBL');
+        let ARName = TblRow[k].querySelector('.ARName').value;
+        let ARRoles = TblRow[k].querySelector('.ARRoles').value;
+        let ARAddress = TblRow[k].querySelector('.ARAddress').value;
+        let ARContact = TblRow[k].querySelector('.ARContact').value;
+        let ARAccount = TblRow[k].querySelector('.ARAccount').value;
+        // let TblReg = TblRow[k].querySelectorAll('.PM_Reg');
+        // let TblOt = TblRow[k].querySelectorAll('.PM_OT');
+        // let TblDbl = TblRow[k].querySelectorAll('.PM_DBL');
         
         
 
-        let LaborCode = TblRow[k].querySelector('.PMLaborCode').value;
+        
         //let CWPw = TblRow[k].querySelector('.CWPw').checked;
         
-        
-        AccountRoless.push({
-            Name: Name,PW: false,LaborCode: LaborCode,MondayDBLHours: MondayDBLHours, MondayOTHours: MondayOTHours, MondayRegHours: MondayRegHours,
-            TuesdayDBLHours: TuesdayDBLHours,TuesdayOTHours: TuesdayOTHours, TuesdayRegHours: TuesdayRegHours,
-            WednesdayDBLHours: WednesdayDBLHours,WednesdayOTHours: WednesdayOTHours, WednesdayRegHours: WednesdayRegHours,
-            ThursdayDBLHours:ThursdayDBLHours,ThursdayOTHours:ThursdayOTHours , ThursdayRegHours:ThursdayRegHours,
-            FridayDBLHours:FridayDBLHours ,FridayOTHours:FridayOTHours , FridayRegHours:FridayRegHours,
-            SaturdayDBLHours:SaturdayDBLHours ,SaturdayOTHours: SaturdayOTHours , SaturdayRegHours:SaturdayRegHours ,
-            SundayDBLHours:SundayDBLHours ,SundayOTHours:SundayOTHours , SundayRegHours:SundayRegHours
+        AccountRoles.push({
+            Name: ARName, Roles__c: ARRoles, Address__c : ARAddress, Contact_ID__c: ARContact, Account_ID__c: ARAccount
         });
+        console.log('Account roles contains ' +AccountRoles);
 
     }
-    return AccountRoless;
+    return AccountRoles;
 }
 
 
-DeletePDRow(e){
-    this.AccountRolesToDelete = this.getAllAccountRoleObjects();
-    let DeleteRowIndex = e.target.parentNode.parentNode.rowIndex;
-    this.AccountRolesToDelete.splice(DeleteRowIndex-1,1);
+DeleteARRow(e){
+    var DeleteRowIndex = e.target.parentNode.parentNode.rowIndex;
+    console.log('Delete row index ' + DeleteRowIndex);
+    console.log('Test ' + e);
+    this.AccountRoles = this.getAllAccountRoleObjects();
+   
+   // let x1 = e.target.getElementById("TblRow").parentNode.rowIndex;
+    //console.log('Delete row please ' + x1);
 
+    this.AccountRoles.splice(DeleteRowIndex-1,1);
+//var i = r.parentNode.parentNode.rowIndex;
+//document.getElementById("myTable").deleteRow(i);
     // this.Supervisors = this.getAllSupervisorObjects();
     // this.CrewMembers = this.getAllCrewMembersObjects();
 }

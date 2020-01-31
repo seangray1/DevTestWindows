@@ -4,7 +4,7 @@
  * @Author             : sean.gray@atirestoration.com
  * @Group              : 
  * @Last Modified By   : Sean Gray
- * @Last Modified On   : 1/29/2020, 1:52:24 PM
+ * @Last Modified On   : 1/31/2020, 2:41:49 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/28/2020   sean.gray@atirestoration.com     Initial Version
@@ -43,6 +43,14 @@ public with sharing class NewJobController {
         system.debug('Prop Id + ' + propId);
         system.debug('Contact ID is ' + a);
         return a;
+
+    }
+    @AuraEnabled 
+    public static list<Master_Job__c> GetMasterJobs(string propId){
+        List<Master_Job__c> mj = [Select Id, Name, Stage__c, Property_ID__c FROM Master_Job__c Where Property_ID__c =: propId AND Active__c = true];
+        system.debug('Prop Id + ' + propId);
+        
+        return mj;
 
     }
 }
