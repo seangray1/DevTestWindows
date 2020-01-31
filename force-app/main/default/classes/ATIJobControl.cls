@@ -4,7 +4,7 @@
  * @Author             : sean.gray@atirestoration.com
  * @Group              : 
  * @Last Modified By   : Sean Gray
- * @Last Modified On   : 1/26/2020, 12:57:17 PM
+ * @Last Modified On   : 1/27/2020, 6:46:13 AM
  * @Modification Log   : 
  *==============================================================================
  * Ver         Date                     Author      		      Modification
@@ -315,8 +315,8 @@ public without sharing class ATIJobControl {
                                 nj.Project_Manager__c != oj.Project_Manager__c ||
                                 nj.Office__c != oj.Office__c ||
                                 nj.Division__c != oj.Division__c ||
-                                nj.Name != oj.Name
-                                //nj.Job_Number__c != oj.Job_number__c
+                                nj.Name != oj.Name ||
+                                nj.Job_Name__c != oj.Job_name__c
                                 ) {
                                     nj.job_prev_name__c = oldJobMap.get(nj.id).name;
                                     system.debug('nj.job_prev_name__c' + nj.job_prev_name__c);

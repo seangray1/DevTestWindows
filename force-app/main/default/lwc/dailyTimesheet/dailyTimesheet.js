@@ -2244,6 +2244,7 @@ ValidatehrsPM(e) {
     DeleteSUPRow(e){
         let TempSup = this.getAllSupervisorObjects();
         let DeleteRowIndex = e.target.parentNode.parentNode.rowIndex;
+        console.log('delete row ' + DeleteRowIndex);
         TempSup.splice(DeleteRowIndex-1,1);
         this.Supervisors = TempSup;
         //this.template.querySelector('table.SupTbl tbody').deleteRow(DeleteRowIndex-1);
