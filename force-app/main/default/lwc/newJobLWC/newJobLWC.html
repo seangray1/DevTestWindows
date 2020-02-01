@@ -4,7 +4,7 @@
   @Author             : Sean Gray
   @Group              : 
   @Last Modified By   : Sean Gray
-  @Last Modified On   : 1/31/2020, 3:02:27 PM
+  @Last Modified On   : 2/1/2020, 10:58:56 AM
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    1/23/2020   Sean Gray     Initial Version
@@ -17,7 +17,7 @@
         </div>
                 <lightning-record-edit-form object-api-name="ATI_Job__c">
                     <div class="slds-col slds-size_1-of-5">
-                    <lightning-input-field field-name="Contact__c"></lightning-input-field>
+                    <lightning-input-field field-name="Contact__c" value={ContactId} onchange={ContactIdChange}></lightning-input-field>
                 </div>
                 </lightning-record-edit-form>
                 <lightning-button label="New Caller" variant="brand" onclick={ToggleNewCaller} ></lightning-button>
@@ -25,20 +25,20 @@
                 <lightning-record-edit-form object-api-name="Contact">
                     <div class="slds-grid">
                         <div class="slds-col slds-size_1-of-5">
-                    <lightning-input-field field-name="Contact_Type__c"></lightning-input-field>
-                    <lightning-input-field field-name="FirstName"></lightning-input-field>
-                    <lightning-input-field field-name="LastName"></lightning-input-field>
-                    <lightning-input-field field-name="MailingStreet"></lightning-input-field>
-                    <lightning-input-field field-name="MailingCity"></lightning-input-field>
-                    <lightning-input-field field-name="MailingState"></lightning-input-field>
-                    <lightning-input-field field-name="MailingCounty"></lightning-input-field>
-                    <lightning-input-field field-name="AccountId"></lightning-input-field>
+                    <lightning-input-field field-name="Contact_Type__c" value={ContactType} onchange={ContactTypeChange}></lightning-input-field>
+                    <lightning-input-field field-name="FirstName" value={FirstName} onchange={FirstNameChange}></lightning-input-field>
+                    <lightning-input-field field-name="LastName" value={LastName} onchange={LastNameChange}></lightning-input-field>
+                    <lightning-input-field field-name="MailingStreet" value={MailingStreet} onchange={MailingStreetChange}></lightning-input-field>
+                    <lightning-input-field field-name="MailingCity" value={MailingCity} onchange={MailingCityChange}></lightning-input-field>
+                    <lightning-input-field field-name="MailingState" value={MailingState} onchange={MailingStateChange}></lightning-input-field>
+                    <lightning-input-field field-name="MailingCounty" value={MailingCounty} onchange={MailingCountyChange}></lightning-input-field>
+                    <lightning-input-field field-name="AccountId" value={AccountId} onchange={AccountIdChange}></lightning-input-field>
                         </div>
                         <div class="slds-col slds-size_1-of-5">
-                    <lightning-input-field field-name="MailingPostalCode"></lightning-input-field>        
-                    <lightning-input-field field-name="Phone"></lightning-input-field>        
-                    <lightning-input-field field-name="Email"></lightning-input-field>        
-                    <lightning-input-field field-name="Phone_Ext__c"></lightning-input-field>              
+                    <lightning-input-field field-name="MailingPostalCode" value={MailingPostalCode} onchange={MailingPostalCodeChange}></lightning-input-field>        
+                    <lightning-input-field field-name="Phone" value={Phone} onchange={PhoneChange}></lightning-input-field>        
+                    <lightning-input-field field-name="Email" value={Email} onchange={EmailChange}></lightning-input-field>        
+                    <lightning-input-field field-name="Phone_Ext__c" value={PhoneExt} onchange={PhoneExtChange}></lightning-input-field>              
                         </div>
                     </div>
                 </lightning-record-edit-form>
@@ -53,17 +53,17 @@
                 <lightning-record-edit-form object-api-name="Account">
                     <div class="slds-grid">
                         <div class="slds-col slds-size_1-of-5">
-                    <lightning-input-field field-name="Name"></lightning-input-field>         
-                    <lightning-input-field field-name="BillingStreet"></lightning-input-field>         
-                    <lightning-input-field field-name="BillingCity"></lightning-input-field>         
-                    <lightning-input-field field-name="BillingState"></lightning-input-field>         
-                    <lightning-input-field field-name="BillingPostalCode"></lightning-input-field>         
+                    <lightning-input-field field-name="Name" value={AccountName} onchange={AccountNameChange}></lightning-input-field>         
+                    <lightning-input-field field-name="BillingStreet" value={BillingStreet} onchange={BillingStreetChange}></lightning-input-field>         
+                    <lightning-input-field field-name="BillingCity" value={BillingCity} onchange={BillingCityChange}></lightning-input-field>         
+                    <lightning-input-field field-name="BillingState" value={BillingState} onchange={BillingStateChange}></lightning-input-field>         
+                    <lightning-input-field field-name="BillingPostalCode" value={BillingPostalCode} onchange={BillingPostalCodeChange}></lightning-input-field>         
                         </div>
                         <div class="slds-col slds-size_1-of-5">
-                    <lightning-input-field field-name="Type"></lightning-input-field> 
-                    <lightning-input-field field-name="BillingCountry"></lightning-input-field> 
-                    <lightning-input-field field-name="Phone"></lightning-input-field> 
-                    <lightning-input-field field-name="Phone_Ext__c"></lightning-input-field> 
+                    <lightning-input-field field-name="Type" value={Type} onchange={TypeChange}></lightning-input-field> 
+                    <lightning-input-field field-name="BillingCountry" value={BillingCountry} onchange={BillingCountryChange}></lightning-input-field> 
+                    <lightning-input-field field-name="Phone" value={AccountPhone} onchange={AccountPhoneChange}></lightning-input-field> 
+                    <lightning-input-field field-name="Phone_Ext__c" value={AccountPhoneExt} onchange={AccountPhoneExtChange}></lightning-input-field> 
                         </div>
                     </div>
                 </lightning-record-edit-form>
@@ -126,19 +126,19 @@
         <div class="slds-grid">
             <div class="slds-col slds-size_1-of-5">
         
-        <lightning-input-field field-name="Name"></lightning-input-field>
+        <lightning-input-field field-name="Name" value={PropertyName} onchange={PropertyNameChange}></lightning-input-field>
         
         <!-- <lightning-input-field field-name="Address_Line_2__c"></lightning-input-field> -->
-        <lightning-input-field field-name="City__c"></lightning-input-field>
-        <lightning-input-field field-name="Country__c"></lightning-input-field>
-        <lightning-input-field field-name="State__c"></lightning-input-field>
+        <lightning-input-field field-name="City__c" value={City} onchange={CityChange}></lightning-input-field>
+        <lightning-input-field field-name="Country__c" value={Country} onchange={CountryChange}></lightning-input-field>
+        <lightning-input-field field-name="State__c" value={State} onchange={StateChange}></lightning-input-field>
         </div>
         <div class="slds-col slds-size_1-of-5">
-            <lightning-input-field field-name="Address_Line_1__c"></lightning-input-field>
+            <lightning-input-field field-name="Address_Line_1__c" value={AddressLine1} onchange={AddressLine1Change}></lightning-input-field>
         <!-- <lightning-input-field field-name="Location__c"></lightning-input-field> -->
-        <lightning-input-field field-name="Property_Type__c"></lightning-input-field>
+        <lightning-input-field field-name="Property_Type__c" value={PropertyType} onchange={PropertyTypeChange}></lightning-input-field>
         
-        <lightning-input-field field-name="Zip__c"></lightning-input-field>
+        <lightning-input-field field-name="Zip__c" value={Zip} onchange={ZipChange}></lightning-input-field>
     </div>
         </div>
 </lightning-record-edit-form>
@@ -249,7 +249,7 @@
                                               <tr>
                                                       <th>  Name</th>
                                                       <th>  Roles</th>
-                                                      <th>  Address</th>
+                                                      
                                                       <th>  Contact</th>
                                                       <th>  Account</th>
                                                       <th class="DeleteClmn"></th>
@@ -339,21 +339,26 @@
                 <lightning-record-edit-form object-api-name="ATI_Job__c">
                 <div class="slds-grid">
                     <div class="slds-col slds-size_1-of-2">
-                <lightning-input-field field-name="Description__c"></lightning-input-field>         
-                <lightning-input-field field-name="Division__c"></lightning-input-field>         
-                <lightning-input-field field-name="Office2__c"></lightning-input-field>         
-                <lightning-input-field field-name="Job_Class__c"></lightning-input-field>         
+                <lightning-input-field field-name="Description__c" value={Description} onchange={DescriptionChange}></lightning-input-field>         
+                <lightning-input-field field-name="Division__c" value={Division} onchange={DivisionChange}></lightning-input-field>         
+                <lightning-input-field field-name="Office2__c" value={Office} onchange={OfficeChange}></lightning-input-field>         
+                <lightning-input-field field-name="Job_Class__c" value={JobClass} onchange={JobClassChange}></lightning-input-field>         
                         
                     </div>
                     <div class="slds-col slds-size_1-of-2">
-                <lightning-input-field field-name="Estimate_Type__c"></lightning-input-field> 
-                <lightning-input-field field-name="Claim__c"></lightning-input-field> 
-                <lightning-input-field field-name="Deductible__c"></lightning-input-field>  
+                <lightning-input-field field-name="Estimate_Type__c" value={EstimateType} onchange={EstimateTypeChange}></lightning-input-field> 
+                <lightning-input-field field-name="Claim__c" value={Claim} onchange={ClaimChange}></lightning-input-field> 
+                <lightning-input-field field-name="Deductible__c" value={Deductible} onchange={DeductibleChange}></lightning-input-field>  
                     </div>
                 </div>
                 </lightning-record-edit-form>
     </div>
+    <br>
+    <div class="slds-box slds-theme_shade">
+    <lightning-button label='Submit' onclick={CreateNewJob} variant="brand"></lightning-button>
+    </div>
 </div> 
+
 
 <template if:true={bShowModal}>
     <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
@@ -367,7 +372,7 @@
                    size="small" ></lightning-icon>
                 <span class="slds-assistive-text">Close</span>
              </button>
-             <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Master Jobs</h2>
+             <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate biggerText">Master Jobs</h2>
           </header>
           <!-- modal body start -->
           
@@ -379,7 +384,7 @@
         <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout tabletop">
             <thead>
                     <tr class="slds-text-heading_label">
-                      <th scope="col"><div class="slds-truncate" title="Property">Master Job</div></th>
+                      <th scope="col"><div class="slds-truncate biggerText" title="Property">Select a Master Job or New Master Job</div></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -389,9 +394,9 @@
                             <br>                                                         
                                 <b><lightning-button variant="base" label={MasterJob.Name} value={MasterJob} title="Base action" onclick={populateMasterJobField} class="slds-m-left_x-small jobButton"></lightning-button>
                                 </b>
+                                <br>
                                 
-                                
-                            <lightning-input disabled={inputDisabled} label={MasterJob.Stage__c} value={MasterJob.Stage__c}></lightning-input>
+                            <!-- <lightning-formatted-text disabled={inputDisabled} label={MasterJob.Stage__c}></lightning-formatted-text> -->
                             
                     </th>
                         
@@ -403,7 +408,8 @@
     </table>
 
             </template>
-            <lightning-button variant="base" label='New Master Job' title="Base action" onclick={closeModal} class="slds-m-left_x-small jobButton"></lightning-button>
+            <br>
+            <lightning-button variant="brand" label='New Master Job' title="New Master Job" onclick={closeModal} class="slds-m-left_x-small jobButton"></lightning-button>
 
     </div>
           </div>

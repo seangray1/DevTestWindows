@@ -4,7 +4,7 @@
  * @Author             : sean.gray@atirestoration.com
  * @Group              : 
  * @Last Modified By   : Sean Gray
- * @Last Modified On   : 1/31/2020, 2:41:49 PM
+ * @Last Modified On   : 2/1/2020, 11:00:03 AM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/28/2020   sean.gray@atirestoration.com     Initial Version
@@ -53,4 +53,35 @@ public with sharing class NewJobController {
         return mj;
 
     }
+    @AuraEnabled 
+    public static Id CreateNewJob(string ContactInfo, string AccountRoleInfo, string AccountInfo, string PropertyInfo, string JobInfo, string MasterJobId){
+        
+        system.debug(' Contact Info ' + ContactInfo);
+        system.debug(' AccountRoleInfo ' + AccountRoleInfo);
+        system.debug(' Account Info ' + AccountInfo);
+        system.debug(' Property Info ' + PropertyInfo);
+        system.debug(' Job Info ' + JobInfo);
+        system.debug(' MasterJob Info ' + MasterJobId);
+        // List<Master_Job__c> mj = [Select Id, Name, Stage__c, Property_ID__c FROM Master_Job__c Where Property_ID__c =: propId AND Active__c = true];
+        // system.debug('Prop Id + ' + propId);
+        Id test;
+        return test;
+
+    }
+    public class ContactWrapper{
+        public List<Id> PropertyId {get;set;}
+    }
+    public class AccountWrapper{
+        public List<Id> PropertyId {get;set;}
+    }
+    public class AccountRoleWrapper{
+        public List<Id> PropertyId {get;set;}
+    }
+    public class PropertyWrapper{
+        public List<Id> PropertyId {get;set;}
+    }
+    public class JobWrapper{
+        public List<Id> PropertyId {get;set;}
+    }
+    
 }
