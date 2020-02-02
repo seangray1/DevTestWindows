@@ -4,7 +4,7 @@
  * @Author             : Sean Gray
  * @Group              : 
  * @Last Modified By   : Sean Gray
- * @Last Modified On   : 2/1/2020, 10:57:59 AM
+ * @Last Modified On   : 2/1/2020, 11:16:12 AM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/23/2020   Sean Gray     Initial Version
@@ -60,7 +60,7 @@ export default class NewJobLWC extends LightningElement {
 @track BillingPostalCode;
 @track TypeChange;
 @track BillingCountry;
-@track PhoneChange;
+@track AccountPhone;
 @track AccountPhoneExt;
 @track City;
 @track Country;
@@ -257,12 +257,13 @@ populatePropertyField(event){
     
    // console.log('Property Id first is + ' + this.Property.Id);
     //console.log('Property Id first is + ' + this.testingProperty);
-    this.PropertyID = event.detail.value;
+    //this.PropertyID = event.detail.value;
     this.Properties = '';
     this.PropertySelected = true;
     this.testingProperty = event.target.value;
     this.PropertySelectedField = event.target.value;
     this.PropertyValue = this.PropertySelectedField.Name;
+    this.PropertyID = this.PropertySelectedField.Id;
     console.log('Testing name alert ' + this.PropertySelectedField.name);
     console.log('PropertyID ' + this.testingProperty);
 

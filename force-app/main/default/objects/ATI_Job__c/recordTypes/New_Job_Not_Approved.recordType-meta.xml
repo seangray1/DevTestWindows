@@ -1693,6 +1693,21 @@
         </values>
     </picklistValues>
     <picklistValues>
+        <picklist>PM_Assignment_Status__c</picklist>
+        <values>
+            <fullName>Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>None</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Rejected</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
         <picklist>Primary_Account__c</picklist>
         <values>
             <fullName>Caller Account</fullName>
