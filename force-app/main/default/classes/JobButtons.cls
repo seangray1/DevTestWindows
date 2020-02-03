@@ -4,7 +4,7 @@
  * @Author             : Sean Gray
  * @Group              : 
  * @Last Modified By   : Sean Gray
- * @Last Modified On   : 2/2/2020, 7:23:03 AM
+ * @Last Modified On   : 2/2/2020, 3:03:59 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    2/1/2020   Sean Gray     Initial Version
@@ -100,13 +100,13 @@ public with sharing class JobButtons {
     @AuraEnabled
     public static string PMAssignmentQuery(String recordId){
         
-        ATI_Job__c job = [Select Id, amount__c,total_billing_forecast_amount__c, Insurance_Adjuster_Broker__c, contact__c,office2__c, Project_Manager__c, Project_manager_new__c, Name, Percent_Complete__c, Estimated_Completion_Date__c, completion_date__c FROM ATI_Job__c WHERE Id =: recordId];
+        ATI_Job__c job = [Select Id, Account__r.Name, lead_source__c, amount__c,total_billing_forecast_amount__c, Insurance_Adjuster_Broker__c, contact__c,office2__c, Project_Manager__c, Project_manager_new__c, Name, Percent_Complete__c, Estimated_Completion_Date__c, completion_date__c FROM ATI_Job__c WHERE Id =: recordId];
         List<office__c> office = [Select Id, office_manager__c, project_coordinator__c, regional_manager__c FROM Office__c WHERE id =:job.office2__c];
         //List<Contact> cont = [Select Name FROM Contact Where Id =: job.contact__c];
-        Contact ins = new Contact();
-        if(job.Insurance_Adjuster_Broker__c != null){
-        ins = [Select Name FROM Contact Where Id =: job.Insurance_Adjuster_Broker__c Limit 1];
-        }
+        // Contact ins = new Contact();
+        // if(job.Insurance_Adjuster_Broker__c != null){
+        // ins = [Select Name FROM Contact Where Id =: job.Insurance_Adjuster_Broker__c Limit 1];
+        // }
         List<Budget__c> bud = new List<Budget__c>();
         bud = [Select Name, Total_Allocations__c, Total_Program_Fees_New__c, Total_Budget_Goal__c, ATI_Job__c FROM Budget__c Where ATI_Job__c =:job.id Order By createdDate DESC Limit 1];
         Budget__c bu = new Budget__c();
@@ -115,7 +115,7 @@ public with sharing class JobButtons {
         }
         String PMAssignmentResults;
         // if(!ins.isEmpty()){
-        PMAssignmentResults = '{"Insurance":"'+ ins.name +'", "Fees":"'+bu.Total_Program_Fees_New__c+'","Allocation":"'+ bu.Total_Allocations__c +'", "Price":"'+ job.amount__c +'", "Budget":"'+ bu.Total_Budget_Goal__c +'", "Forecast":"'+ job.total_billing_forecast_Amount__c +'"}';  
+        PMAssignmentResults = '{"Insurance":"'+ job.Account__r.Name + ' ' + job.lead_source__c +'", "Fees":"'+bu.Total_Program_Fees_New__c+'","Allocation":"'+ bu.Total_Allocations__c +'", "Price":"'+ job.amount__c +'", "Budget":"'+ bu.Total_Budget_Goal__c +'", "Forecast":"'+ job.total_billing_forecast_Amount__c +'"}';  
         // }else{
         // PMAssignmentResults = '{"Insurance":"'+ 'Null' +'", "Fees":"'+bud[0].Total_Program_Fees_New__c+'","Allocation":"'+ bud[0].Total_Allocations__c +'", "Price":"'+ job.amount__c +'", "Budget":"'+ bud[0].Total_Budget_Goal__c +'", "Forecast":"'+ job.total_billing_forecast_Amount__c +'"}';
         // }
@@ -145,12 +145,12 @@ public with sharing class JobButtons {
          contactName = [Select Name, mobilephone FROM Contact Where Id =: conId];
         User pm = [Select Name FROM User WHere Id =: projectManagerId];
          
-        ATI_Job__c job = [Select Id, amount__c,total_billing_forecast_amount__c, Insurance_Adjuster_Broker__c, contact__c,office2__c, Project_Manager__c, Project_manager_new__c, Name, Percent_Complete__c, Estimated_Completion_Date_Per_PD__c, completion_date__c FROM ATI_Job__c WHERE Id =: recordId];
+        ATI_Job__c job = [Select Id, amount__c,total_billing_forecast_amount__c,Account__r.Name, Lead_Source__c, contact__c,office2__c, Project_Manager__c, Project_manager_new__c, Name, Percent_Complete__c, Estimated_Completion_Date_Per_PD__c, completion_date__c FROM ATI_Job__c WHERE Id =: recordId];
         List<office__c> office = [Select Id, office_manager__c, project_coordinator__c, branch_manager__c FROM Office__c WHERE id =:job.office2__c];
-         Contact ins = new Contact();
-         if(job.Insurance_Adjuster_Broker__c != null){
-        ins = [Select Name FROM Contact Where Id =: job.Insurance_Adjuster_Broker__c];
-         }
+        //  Contact ins = new Contact();
+        //  if(job.Insurance_Adjuster_Broker__c != null){
+        // ins = [Select Name FROM Contact Where Id =: job.Insurance_Adjuster_Broker__c];
+        //  }
         List<Budget__c> bud = [Select Name, Total_Allocations__c, Total_Program_Fees_New__c, Total_Budget_Goal__c, ATI_Job__c FROM Budget__c Where ATI_Job__c =:job.id Order By createdDate DESC Limit 1];
         system.debug('Working + ' + ownerId);
         Budget__c bu = new Budget__c();
@@ -160,7 +160,7 @@ public with sharing class JobButtons {
         String contactUrl = URL.getSalesforceBaseUrl().toExternalForm() + '/' + conId;
         //if(!bud.isempty()){
         //string comments = '\n' + 'PM Assignment: ' + job.name +'\n' + '\n' + '\n' + 'Insurance Carrier/TPA: ' + ins.name +'\n' + 'Fees: ' + bu.Total_Program_Fees_New__c + '\n' + 'Allocation: '+ bu.Total_Allocations__c + '\n'  +'Price: '+ job.amount__c + '\n'  +'Budget: ' + bu.Total_Budget_Goal__c + '\n' + 'Contract Start Date: '+ startDate + '\n' + 'Contract Completion Date: ' + completionDate + '\n' + 'Forecast: '+ job.total_billing_forecast_Amount__c +'\n' + 'Brief Scope: '+briefScope+'\n' + 'Notes: '+notes +'\n' + 'ContactInfo: '+contactInfo+'\n' + 'Suggested PM: ' + projectManager; 
-        string comments = '\n' + 'PM Assignment: ' + job.name +'\n' + '\n' + '\n' + 'Insurance Carrier/TPA: ' + ins.name +'\n' + 'Fees: ' + bu.Total_Program_Fees_New__c + '\n' + 'Allocation: '+ bu.Total_Allocations__c + '\n'  +'Price: '+ job.amount__c + '\n'  +'Budget: ' + bu.Total_Budget_Goal__c + '\n' + 'Contract Start Date: '+ startDate + '\n' + 'Contract Completion Date: ' + completionDate + '\n' + 'Forecast: '+ job.total_billing_forecast_Amount__c +'\n' + 'Brief Scope: '+briefScope+'\n' + 'Notes: '+notes +'\n' + 'ContactInfo: '+ contactName.Name + ' || Mobile : ' + contactName.mobilephone + '\n' + 'Suggested PM: ' + pm.Name;
+        string comments = '\n' + 'PM Assignment: ' + job.name +'\n' + '\n' + '\n' + 'Insurance Carrier/TPA: ' + job.Account__r + ' ' + job.lead_source__c  +'\n' + 'Fees: ' + bu.Total_Program_Fees_New__c + '\n' + 'Allocation: '+ bu.Total_Allocations__c + '\n'  +'Price: '+ job.amount__c + '\n'  +'Budget: ' + bu.Total_Budget_Goal__c + '\n' + 'Contract Start Date: '+ startDate + '\n' + 'Contract Completion Date: ' + completionDate + '\n' + 'Forecast: '+ job.total_billing_forecast_Amount__c +'\n' + 'Brief Scope: '+briefScope+'\n' + 'Notes: '+notes +'\n' + 'ContactInfo: '+ contactName.Name +  '\n' + 'Suggested PM: ' + pm.Name;
         
         //Task t = new Task( Type = 'Project Note', ActivityDate = system.today(), Description = comments, OwnerId = ownerId, Priority = 'Low', Status='Completed', Subject = 'Project Note', WhatId = recordId);
         //insert t;
@@ -301,4 +301,21 @@ public with sharing class JobButtons {
         return cases[0].id;
         
     }
+    @AuraEnabled
+    public static string AllocationApproval(String OppName, String recordId, String JobNumber, Integer Amount, String FirstQ, String SecondQ, String ThirdQ, 
+    String Subcontractor, String Description){
+        system.debug(OppName + recordId + JobNumber + Amount + FirstQ + SecondQ + ThirdQ + Description + Subcontractor);
+        approval.ProcessSubmitRequest req1 = new Approval.ProcessSubmitRequest();
+        req1.setComments('Submitting request for approval. Details are: ');
+        req1.setObjectId(recordId);
+        // Submit on behalf of a specific submitter
+        req1.setSubmitterId(UserInfo.getUserId());
+        // Submit the record to specific process and skip the criteria evaluation
+        req1.setProcessDefinitionNameOrId('X2PercentAllocation');
+        req1.setSkipEntryCriteria(true);
+        // Submit the approval request for the account
+        Approval.ProcessResult result = Approval.process(req1);
+        return 'success';
+    }
+    
 }

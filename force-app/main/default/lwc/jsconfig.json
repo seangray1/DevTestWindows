@@ -62,6 +62,12 @@
             ],
             "c/CloneJobLWC": [
                 "CloneJobLWC/CloneJobLWC.js"
+            ],
+            "c/AllocationsApp": [
+                "AllocationsApp/AllocationsApp.js"
+            ],
+            "c/allocationsApp": [
+                "allocationsApp/allocationsApp.js"
             ]
         }
     },
