@@ -4,15 +4,18 @@
  * @Author             : Sean Gray
  * @Group              : 
  * @Last Modified By   : Sean Gray
- * @Last Modified On   : 2/3/2020, 6:34:52 PM
+ * @Last Modified On   : 2/4/2020, 9:44:02 AM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    9/7/2019   Sean Gray     Initial Version
 **/
-import { LightningElement, track, api } from 'lwc';
+import { LightningElement, track, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import ApprovedOrRejected from '@salesforce/apex/ProjectSchedule.ProjectScheduleInsert';
 import testapexBudgetOutput from '@salesforce/apex/ProjectSchedule.testBudget';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+
+import COURTESYCALL_FIELD from '@salesforce/schema/Case.Case_Type__c';
 
 var budgetlength;
 var i;
@@ -23,17 +26,17 @@ export default class NewProjectSchedule extends NavigationMixin (LightningElemen
     this.recordId = this.jobIdtosearch;
     testapexBudgetOutput({recordId:this.recordId})
         .then(result => {
-            console.log('First Result is : ' + result);
+           
             this.budgetlineItemsRecieved = result;
-            console.log('Result is '+ this.budgetlineItemsRecieved);
+      
             budgetlength = this.budgetlineItemsRecieved.length;
         // i = 0;
     for (i = 0; i < budgetlength; i++){
         this.Budgetlineitems.push({name: this.budgetlineItemsRecieved[i].Trade__c, description : this.budgetlineItemsRecieved[i].Trade__c, 
             startDate : null, endDate : null, connectedTo : null, dayDiff : null});
-            console.log('Line item name ' + this.Budgetlineitems[i].name);
+            
         this.ScheduleLineItemOptions.push({label : this.budgetlineItemsRecieved[i].Trade__c, value : this.budgetlineItemsRecieved[i].Trade__c});
-        console.log('Line item name 2' + this.ScheduleLineItemOptions[i].label);  
+        
     }
     /*for(budgetLineItem in budgetlineItemsTest){
         this.Budgetlineitems.push({name: budgetLineItem})   
@@ -43,6 +46,7 @@ export default class NewProjectSchedule extends NavigationMixin (LightningElemen
     //this.ScheduleLineItemOptions.shift();
         })        
     }
+    @track savedRecord = true;
     @track loading;
     @track test = true;
     @track BudgetLineItemRecieved ="";
@@ -59,12 +63,12 @@ export default class NewProjectSchedule extends NavigationMixin (LightningElemen
     @track ScheduleLineItemOptions = [{
     }];
     @track AccountRoles;
+    @wire(getPicklistValues, { fieldApiName: NAME_FIELD})
+    CourtesyCallPicklistValues;
     
     get options() {
         for (i = 0; i < this.Budgetlineitems.length; i++){
             //console.log('Budget line item name ' + this.budgetlineItemsRecieved[i].name + this.budgetlineItemsRecieved.length);
-            console.log('i is equal to ' + i);
-            console.log('Budgetlineitems is ' + this.Budgetlineitems[i].name);
             this.ScheduleLineItemOptions.push({label : this.Budgetlineitems[i].name, value : this.Budgetlineitems[i].name}); 
         }
         return this.ScheduleLineItemOptions;
@@ -73,8 +77,24 @@ export default class NewProjectSchedule extends NavigationMixin (LightningElemen
     UpdateName(event){
         this.schedulename = event.detail.value;
     }
-    handleNameChange(event){
-        this.name = event.detail.value;
+    handleNameChange(e){
+        var nameCh = e.detail.value;
+        console.log('Namech ' + nameCh);
+        this.Budgetlineitems = this.getAllAccountRoleObjects();
+        
+        for (var i=0;i<this.Budgetlineitems.length; i++){
+        if ( this.Budgetlineitems[i].name === nameCh ){
+            console.log('budget line item name ' + i + ' ' + this.Budgetlineitems[i].name);
+            console.log('budget line item name ' + i + ' ' + this.Budgetlineitems[i].description);
+        this.Budgetlineitems[i].description = nameCh;
+        console.log('budget line item name ' + i + ' ' + this.Budgetlineitems[i].description);
+        break;
+    }
+}
+        // console.log('Delete row index ' + descriptionChange);
+        // console.log('Test ' + e);
+        // this.Budgetlineitems = this.getAllAccountRoleObjects();
+        // this.Budgetlineitems[descriptionChange].description = this.Budgetlineitems[descriptionChange].name;
     }
     handleStartDateChange(event){
         this.startDate = event.detail.value;
@@ -115,8 +135,7 @@ export default class NewProjectSchedule extends NavigationMixin (LightningElemen
 }
 DeleteARRow(e){
     var DeleteRowIndex = e.target.parentNode.parentNode.rowIndex;
-    console.log('Delete row index ' + DeleteRowIndex);
-    console.log('Test ' + e);
+    
     this.Budgetlineitems = this.getAllAccountRoleObjects();
     this.Budgetlineitems.splice(DeleteRowIndex-1,1);
 }
@@ -125,9 +144,9 @@ getAllAccountRoleObjects() {
 //var AccountRoless
     //Get Value from HTML 
     let TblRow =  Array.from(this.template.querySelectorAll('table.ActRoles tbody tr'));
-    console.log('tbl' + TblRow);
+    
     let RowCount = TblRow.length;
-    console.log('RowCount' + RowCount);
+    
     for(let k=0; k<RowCount; k++){
         let ScheduleName = TblRow[k].querySelector('.ScheduleName').value;
         let ScheduleDescription = TblRow[k].querySelector('.ScheduleDescription').value;
@@ -140,7 +159,7 @@ getAllAccountRoleObjects() {
         ScheduleLineItems.push({
             name: ScheduleName, description: ScheduleDescription,  startDate: ScheduleStartDate, endDate: ScheduleEndDate, connectedTo : ScheduleConnectedTo, dayDiff : ScheduleDaysDiff
         });
-        console.log('Account roles contains ' +ScheduleLineItems);
+        
 
     }
     return ScheduleLineItems;
@@ -166,7 +185,7 @@ return JSON.stringify(ProjectObject);
 getProjectObjects() {
     var Projects = [];
         let ProjTblRow =  Array.from(this.template.querySelectorAll('table.ProjTbl tbody tr'));
-        console.log('ProjTblRow' + ProjTblRow);
+        
         let ProjRowCount = ProjTblRow.length;
         for(let Projindex=0; Projindex<ProjRowCount; Projindex++){
             let ProjName = ProjTblRow[Projindex].querySelector('.ProjName').value;
@@ -180,7 +199,7 @@ getProjectObjects() {
                     days : ''
                 });
             }
-            console.log('Projects' + Projects);
+            
             return Projects;
         }  
 }

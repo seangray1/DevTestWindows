@@ -4,7 +4,7 @@
  * @Author             : Sean Gray
  * @Group              : 
  * @Last Modified By   : Sean Gray
- * @Last Modified On   : 2/1/2020, 11:16:12 AM
+ * @Last Modified On   : 2/4/2020, 9:56:28 AM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/23/2020   Sean Gray     Initial Version
@@ -78,8 +78,18 @@ export default class NewJobLWC extends LightningElement {
 @track AccountRoleLineItems = [{}];
 @track loading = false;
 @track data;
+@track ContactSelected = false;
+@track AccountRole;
+@track ContactRole;
 ContactIdChange(e){
     this.ContactId = e.detail.value;
+    if(this.ContactId > 0){
+    this.ContactSelected = true;
+    }else{
+        this.ContactSelected = false;
+        this.ContactRole = '';
+        this.AccountRole = '';
+    }
 }
 ContactTypeChange(e){
     this.ContactType = e.detail.value;

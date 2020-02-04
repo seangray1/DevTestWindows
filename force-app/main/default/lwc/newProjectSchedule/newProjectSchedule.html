@@ -4,7 +4,7 @@
   @Author             : sean.gray@atirestoration.com
   @Group              : 
   @Last Modified By   : Sean Gray
-  @Last Modified On   : 2/3/2020, 6:00:53 PM
+  @Last Modified On   : 2/4/2020, 8:12:25 AM
   @Modification Log   : 
   ==============================================================================
   Ver         Date                     Author      		      Modification
@@ -41,8 +41,10 @@
                         <th> Description</th>
                         <th> Start Date</th>
                         <th> End Date</th>
+                      
                         <th> Connected To</th>
                         <th> Day Difference</th>
+                      
                         <th class="DeleteClmn"></th>
 
                       </tr>
@@ -60,6 +62,16 @@
                                     variant="label-hidden" class="form-control ScheduleName" onchange={handleNameChange}>
                                   </lightning-input-field>
                                 </lightning-record-edit-form>
+                                <lightning-combobox
+                                    label = ''
+                                    name="FirstQuestion"
+                                    value={Budgetlineitem.name}
+                                    placeholder="--Select--"
+                                    options={ScheduleLineItemOptions}
+                                    onchange={handleNameChange}
+                                    class="gridInput ScheduleName"
+                                    disabled={unSavedRecord}
+                                     >
                               </div>
                             </lightning:layoutItem>
                           </td>
@@ -68,7 +80,7 @@
                               <div class="grid">
                                 <lightning-record-edit-form object-api-name="Schedule_Line_Item__c">
                                   <lightning-input-field field-name="Product_Description__c" value={Budgetlineitem.description}
-                                    variant="label-hidden" class="form-control ScheduleDescription" onchange={handleNameChange}>
+                                    variant="label-hidden" class="form-control ScheduleDescription">
                                   </lightning-input-field>
                                 </lightning-record-edit-form>
                               </div>
@@ -113,6 +125,7 @@
                                     options={ScheduleLineItemOptions}
                                     onchange={handleFirstChange}
                                     class="gridInput ScheduleConnectedTo"
+                                    disabled={savedRecord}
                                      >
                             </lightning-combobox>
                               </div>
@@ -122,22 +135,13 @@
                             <lightning:layoutItem>
                               <div class="grid">
 
-                                <lightning-input type="number" value={Budgetlineitem.dayDiff} class="gridInput ScheduleDaysDiff"></lightning-input>
+                                <lightning-input type="number" value={Budgetlineitem.dayDiff} disabled={savedRecord} class="gridInput ScheduleDaysDiff"></lightning-input>
                             
                               </div>
                             </lightning:layoutItem>
-                          </td>
-                          <!-- <td> 
-                                                        <lightning:layoutItem>
-                                                              <div class="grid">
-                                                                
-                                                                <lightning-record-edit-form object-api-name="Schedule_Line_Item__c">
-                                                                  <lightning-input-field field-name="Product_Options__c" variant="label-hidden" onchange={handleProductChange} class="form-control ProjEndDate" ></lightning-input-field>
-                                              
-                                                                  </lightning-record-edit-form>
-                                                    </div>
-                                                    </lightning:layoutItem>
-                                                      </td> -->
+             
+                        </td>
+                          
                           <td class="DeleteClmn right-col lowerDelete">
                             <lightning-button label='' class="delete-icon DeleteAR lowerDelete" title="Delete" variant="destructive"
                               onclick={DeleteARRow} icon-name="action:delete"></lightning-button>

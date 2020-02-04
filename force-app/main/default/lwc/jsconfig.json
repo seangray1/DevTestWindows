@@ -3,6 +3,9 @@
         "experimentalDecorators": true,
         "baseUrl": ".",
         "paths": {
+            "c/allocationsApp": [
+                "allocationsApp/allocationsApp.js"
+            ],
             "c/bigTimeForceSync": [
                 "bigTimeForceSync/bigTimeForceSync.js"
             ],
@@ -14,6 +17,9 @@
             ],
             "c/cloneJobLWC": [
                 "cloneJobLWC/cloneJobLWC.js"
+            ],
+            "c/contactTile": [
+                "contactTile/contactTile.js"
             ],
             "c/courtesyCallLWC": [
                 "courtesyCallLWC/courtesyCallLWC.js"
@@ -59,18 +65,6 @@
             ],
             "c/searchComponent": [
                 "searchComponent/searchComponent.js"
-            ],
-            "c/CloneJobLWC": [
-                "CloneJobLWC/CloneJobLWC.js"
-            ],
-            "c/AllocationsApp": [
-                "AllocationsApp/AllocationsApp.js"
-            ],
-            "c/allocationsApp": [
-                "allocationsApp/allocationsApp.js"
-            ],
-            "c/contactTile": [
-                "contactTile/contactTile.js"
             ]
         }
     },
