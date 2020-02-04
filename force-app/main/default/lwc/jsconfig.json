@@ -68,6 +68,9 @@
             ],
             "c/allocationsApp": [
                 "allocationsApp/allocationsApp.js"
+            ],
+            "c/contactTile": [
+                "contactTile/contactTile.js"
             ]
         }
     },

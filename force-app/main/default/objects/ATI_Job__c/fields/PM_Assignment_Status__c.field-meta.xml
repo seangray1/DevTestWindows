@@ -18,6 +18,11 @@
                 <label>None</label>
             </value>
             <value>
+                <fullName>Sent for Approval</fullName>
+                <default>false</default>
+                <label>Sent for Approval</label>
+            </value>
+            <value>
                 <fullName>Rejected</fullName>
                 <default>false</default>
                 <label>Rejected</label>

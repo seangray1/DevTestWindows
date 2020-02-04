@@ -1706,6 +1706,10 @@
             <fullName>Rejected</fullName>
             <default>false</default>
         </values>
+        <values>
+            <fullName>Sent for Approval</fullName>
+            <default>false</default>
+        </values>
     </picklistValues>
     <picklistValues>
         <picklist>Primary_Account__c</picklist>

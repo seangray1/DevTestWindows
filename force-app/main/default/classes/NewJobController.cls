@@ -55,7 +55,11 @@ public with sharing class NewJobController {
     }
     @AuraEnabled 
     public static Id CreateNewJob(string ContactInfo, string AccountRoleInfo, string AccountInfo, string PropertyInfo, string JobInfo, string MasterJobId){
-        
+        system.debug('Contact Wrap ' + ContactInfo);
+        ContactWrapper contactWrap = (ContactWrapper)JSON.deserialize(ContactInfo, ContactWrapper.class);
+        system.debug('Contact deserialized first name ' +contactWrap.FirstName);
+        AccountWrapper accountWrap = (AccountWrapper)JSON.deserialize(AccountInfo, AccountWrapper.class);
+        system.debug('Contact Wrap ' + contactWrap);
         system.debug(' Contact Info ' + ContactInfo);
         system.debug(' AccountRoleInfo ' + AccountRoleInfo);
         system.debug(' Account Info ' + AccountInfo);
@@ -69,11 +73,28 @@ public with sharing class NewJobController {
 
     }
     public class ContactWrapper{
-        public List<Id> PropertyId {get;set;}
+        public List<Id> ContactId {get;set;}
+        public string ContactType {get;set;}
+        public string FirstName {get;set;}
+        public string LastName {get;set;}
+        public string MailingStreet {get;set;}
+        public string MailingCity {get;set;}
+        public string MailingState {get;set;}
+        public string MailingCounty {get;set;}
+        public list<Id> AccountId {get;set;}
+        public string Phone {get;set;}
+        public string Email {get;set;}
+        public string PhoneExt {get;set;}
+        public string MailingPostalCode {get;set;}
     }
-    public class AccountWrapper{
-        public List<Id> PropertyId {get;set;}
+    public class ContactId {
+        public Id ContactId {get;set;}
+    
     }
+    public class AccountId{
+        public Id AccountId {get;set;}
+    }
+    
     public class AccountRoleWrapper{
         public List<Id> PropertyId {get;set;}
     }
@@ -83,5 +104,39 @@ public with sharing class NewJobController {
     public class JobWrapper{
         public List<Id> PropertyId {get;set;}
     }
+    public class AccountWrapper{
+        //public List<Id> PropertyId {get;set;}
+        public string AccountName {get;set;}
+        public string BillingStreet {get;set;}
+        public string BillingCity {get;set;}
+        public string BillingState {get;set;}
+        public string BillingPostalCode {get;set;}
+        public string TypeChange {get;set;}
+        public string BillingCountry {get;set;}
+        public string AccountPhone {get;set;}
+        public string AccountPhoneExt {get;set;}
+    }
     
+// @track AccountName;
+// @track BillingStreet;
+// @track BillingCity;
+// @track BillingState;
+// @track BillingPostalCode;
+// @track TypeChange;
+// @track BillingCountry;
+// @track AccountPhone;
+// @track AccountPhoneExt;
+// @track City;
+// @track Country;
+// @track State;
+// @track AddressLine1;
+// @track PropertyType;
+// @track Zip;
+// @track Description;
+// @track Division;
+// @track Office;
+// @track JobClass;
+// @track EstimateType;
+// @track Claim;
+// @track Deductible;
 }

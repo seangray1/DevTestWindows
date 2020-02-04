@@ -4,7 +4,7 @@
  * @Author             : Sean Gray
  * @Group              : 
  * @Last Modified By   : Sean Gray
- * @Last Modified On   : 2/2/2020, 3:27:48 PM
+ * @Last Modified On   : 2/3/2020, 5:55:01 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    9/7/2019   Sean Gray     Initial Version
@@ -61,26 +61,26 @@ public with sharing class ProjectSchedule {
     }
 
     @AuraEnabled
-    public static List<String> testBudget(string recordId){
-        List<String> budgetLineItemList = new List<String>();
+    public static List<Budget_Line_Item__c> testBudget(string recordId){
+        List<Budget_Line_Item__c> budgetLineItemList = new List<Budget_Line_Item__c>();
         List<Budget_Line_Item__c> budList = new List<Budget_Line_Item__c>();
         set<string> s = new Set<String>();
-        List<ATI_Job__c> job = [Select Id, Budget__c FROM ATI_Job__c WHERE Id =:recordId];
-        system.debug('Job budget is '+ job[0].budget__c);
+        // List<ATI_Job__c> job = [Select Id, Budget__c FROM ATI_Job__c WHERE Id =:recordId limit 1];
+        // system.debug('Job budget is '+ job[0].budget__c);
         
         List<Budget__c> bud = [Select Id, ATI_Job__c, Project_manager__c FROM Budget__c WHERE ATI_Job__c =:recordId ORDER BY createdDate DESC];
         if(!bud.isEmpty()){
             system.debug('hitting this point..' + bud);
-        List<Budget_Line_Item__c> budLineItems = [Select Id, Name, trade__c FROM Budget_Line_Item__c WHERE Budget__c =: bud[0].id ORDER BY orderNumber__c ASC];
-        for(Budget_Line_Item__c b : budLineItems){
-            string nameOfLineItem = b.trade__c;
-            budgetLineItemList.add(nameOfLineItem);
-            system.debug('testing');
-            budList.add(b);
-        }
+        budList = [Select Id, Name, trade__c FROM Budget_Line_Item__c WHERE Budget__c =: bud[0].id ORDER BY orderNumber__c ASC];
+        // for(Budget_Line_Item__c b : budLineItems){
+        //     string nameOfLineItem = b.trade__c;
+        //     budgetLineItemList.add(nameOfLineItem);
+        //     system.debug('testing');
+        //     budList.add(b);
+        // }
     }
-    system.debug('is this even working?');
-    system.debug(budgetLineItemList);
-    return budgetLineItemList;
+    // system.debug('is this even working?');
+    system.debug(budList);
+    return budList;
     }
 }

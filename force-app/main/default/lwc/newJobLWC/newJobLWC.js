@@ -343,12 +343,15 @@ DeleteARRow(e){
 }
 
 CreateNewJob(){
+            if(((!this.ContactId ) && (!this.LastName)) || ((!this.ContactId) && (!this.AccountId && (!this.AccountName || !this.AccountPhone)))){
+                this.error = true;
+            }else{
             this.loading = true;
             let AccountRoleInfo = this.GenerateAccountRoleJSON();
             //Account Roles is good to go.
             //Caller now
             //set up a JSON set up.
-            ContactJSON = JSON.stringify({'ContactId': this.ContactId, 'FirstName': this.FirstName, 'LastName': this.LastName,
+            ContactJSON = JSON.stringify({'ContactId': this.ContactId, 'FirstName': this.FirstName, 'ContactType':this.ContactType, 'LastName': this.LastName,
             'MailingStreet': this.MailingStreet,'MailingCity': this.MailingCity,'MailingState': this.MailingState,'MailingCounty': this.MailingCounty,
             'AccountId': this.AccountId,'MailingPostalCode': this.MailingPostalCode,'Phone': this.Phone,'Email': this.Email,
             'PhoneExt': this.PhoneExt});
@@ -379,6 +382,7 @@ CreateNewJob(){
                             }
                             })
     }
+}
    
 
 GenerateAccountRoleJSON(){

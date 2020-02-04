@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : Sean Gray
   @Group              : 
-  @Last Modified By   : Sean Gray
-  @Last Modified On   : 2/2/2020, 8:57:17 AM
+  @Last Modified By   : sean.gray@atirestoration.com
+  @Last Modified On   : 2/3/2020, 11:01:16 AM
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    1/23/2020   Sean Gray     Initial Version
@@ -25,14 +25,13 @@
                 <lightning-record-edit-form object-api-name="Contact">
                     <div class="slds-grid">
                         <div class="slds-col slds-size_1-of-5">
-                            
                     <lightning-input-field field-name="Contact_Type__c" value={ContactType} onchange={ContactTypeChange}></lightning-input-field>
                     <lightning-input-field field-name="FirstName" value={FirstName} onchange={FirstNameChange}></lightning-input-field>
                     <lightning-input-field field-name="LastName" value={LastName} onchange={LastNameChange}></lightning-input-field>
                     <lightning-input-field field-name="MailingStreet" value={MailingStreet} onchange={MailingStreetChange}></lightning-input-field>
                     <lightning-input-field field-name="MailingCity" value={MailingCity} onchange={MailingCityChange}></lightning-input-field>
                     <lightning-input-field field-name="MailingState" value={MailingState} onchange={MailingStateChange}></lightning-input-field>
-                    <lightning-input-field field-name="MailingCounty" value={MailingCounty} onchange={MailingCountyChange}></lightning-input-field>
+                    <lightning-input-field field-name="Mailing_County__c" value={MailingCounty} onchange={MailingCountyChange}></lightning-input-field>
                     <lightning-input-field field-name="AccountId" value={AccountId} onchange={AccountIdChange}></lightning-input-field>
                         </div>
                         <div class="slds-col slds-size_1-of-5">
@@ -424,5 +423,7 @@
     </section>
     <div class="slds-backdrop slds-backdrop_open"></div>
  </template>
-
+ <template if:true={error}>
+    <div class="errormessage">Fill out all required fields</div>
+</template>
 </template>

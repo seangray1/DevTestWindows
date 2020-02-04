@@ -1507,6 +1507,15 @@
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
+        <fullName>Update_PM_Assignment_Status</fullName>
+        <field>PM_Assignment_Status__c</field>
+        <literalValue>Approved</literalValue>
+        <name>Update PM Assignment Status</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
         <fullName>Update_of_Last_Stage_Change</fullName>
         <description>Records date/time of last change to/from Won Stage</description>
         <field>Date_of_Last_Stage_Change_To_From_Won__c</field>
