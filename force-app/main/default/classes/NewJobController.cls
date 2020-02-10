@@ -4,7 +4,7 @@
  * @Author             : sean.gray@atirestoration.com
  * @Group              : 
  * @Last Modified By   : Sean Gray
- * @Last Modified On   : 2/1/2020, 11:00:03 AM
+ * @Last Modified On   : 2/4/2020, 3:29:42 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/28/2020   sean.gray@atirestoration.com     Initial Version
@@ -37,6 +37,31 @@ public with sharing class NewJobController {
         system.debug('Properties are ' + props);
         return props;
     }
+    @AuraEnabled(cacheable = true)
+    public static List<Contact> GetCustomers(String searchKey) {
+        
+        system.debug('Customer Key is ' + searchKey);
+        //JSONWrapper PropertyIDs = (JSONWrapper)JSON.deserialize(PropertyId, JSONWrapper.class);
+        // for(Id ca : PropertyIDs.PropertyID){
+        // PropertyIDFinal = ca; }
+        String searchLikeKey = '%' + searchKey + '%';
+        List<Contact> conts = [Select Id, LastName, FirstName, Account.Name, Account.Id, Name FROM Contact Where Name Like : searchLikeKey Limit 10];
+        system.debug('Contacts are ' + conts);
+        return conts;
+    }
+    @AuraEnabled(cacheable = true)
+    public static List<Account> GetContactAccounts(String searchKey) {
+        
+        system.debug('Customer Key is ' + searchKey);
+        //JSONWrapper PropertyIDs = (JSONWrapper)JSON.deserialize(PropertyId, JSONWrapper.class);
+        // for(Id ca : PropertyIDs.PropertyID){
+        // PropertyIDFinal = ca; }
+        String searchLikeKey = '%' + searchKey + '%';
+        List<Account> accts = [Select Id,Name FROM Account Where Name Like : searchLikeKey Limit 10];
+        system.debug('Contacts are ' + accts);
+        return accts;
+    }
+    
     @AuraEnabled 
     public static list<Account_Roles__c> CheckId(string propId){
         List<Account_Roles__c> a = [Select Id, Name, Roles__c, Contact_ID__c, Address__c, Account_ID__c FROM Account_Roles__c Where Property_ID__c =: propId];

@@ -65,6 +65,9 @@
             ],
             "c/searchComponent": [
                 "searchComponent/searchComponent.js"
+            ],
+            "c/CloneJobLWC": [
+                "CloneJobLWC/CloneJobLWC.js"
             ]
         }
     },

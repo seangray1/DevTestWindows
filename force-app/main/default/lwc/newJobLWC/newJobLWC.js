@@ -4,18 +4,35 @@
  * @Author             : Sean Gray
  * @Group              : 
  * @Last Modified By   : Sean Gray
- * @Last Modified On   : 2/4/2020, 9:56:28 AM
+ * @Last Modified On   : 2/4/2020, 8:12:03 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/23/2020   Sean Gray     Initial Version
 **/
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, wire } from 'lwc';
 //import SearchAccountRoles from '@salesforce/apex/NewJobController.GetAccountRoles';
 import SearchProperties from '@salesforce/apex/NewJobController.GetProperties';
+import SearchCustomers from '@salesforce/apex/NewJobController.GetCustomers';
+import SearchContactAccounts from '@salesforce/apex/NewJobController.GetContactAccounts';
+
 import GetMasterJobs from '@salesforce/apex/NewJobController.GetMasterJobs';
 import checkId from '@salesforce/apex/NewJobController.CheckId';
 import CreateNewJob from '@salesforce/apex/NewJobController.CreateNewJob';
 import { NavigationMixin } from 'lightning/navigation';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import ATIJOB_OBJECT from '@salesforce/schema/ATI_Job__c';
+import ACCOUNT_OBJECT from '@salesforce/schema/Account';
+import CONTACT_OBJECT from '@salesforce/schema/Contact';
+import PROPERTY_OBJECT from '@salesforce/schema/Property__c';
+import ACCOUNTROLES_OBJECT from '@salesforce/schema/Account_Roles__c';
+import ROLE_FIELD from '@salesforce/schema/Account_Roles__c.Roles__c';
+import DIVISION_FIELD from '@salesforce/schema/ATI_Job__c.Division__c';
+import JOBCLASS_FIELD from '@salesforce/schema/ATI_Job__c.Job_Class__c';
+import ESTIMATETYPE_FIELD from '@salesforce/schema/ATI_Job__c.Estimate_Type__c';
+import PROPERTYTYPE_FIELD from '@salesforce/schema/Property__c.Property_Type__c';
+import CONTACTTYPE_FIELD from '@salesforce/schema/Contact.Contact_Type__c';
+import TYPE_FIELD from '@salesforce/schema/Account.Type';
 var ContactJSON;
 var AccountJSON;
 var PropertyJSON;
@@ -23,7 +40,19 @@ var JobJSON;
 const DELAY = 600;
 export default class NewJobLWC extends LightningElement {
 @track testingProperty;
-@track Properties; 
+@track Properties;
+@track ContactAccountRole; 
+@track Customers;
+@track CustomerValue;
+@track CustomerPicked = false;
+@track CustomerId; 
+@track CustomerSelectedField;
+@track ContactAccounts;
+@track ContactAccountValue;
+@track ContactAccountPicked = false;
+@track ContactAccountSelected= false;
+@track ContactAccountId;
+@track ContactAccountName;
 @track searchKey;
 @track NewCaller = false;
 @track NewAccount = false;
@@ -81,6 +110,49 @@ export default class NewJobLWC extends LightningElement {
 @track ContactSelected = false;
 @track AccountRole;
 @track ContactRole;
+@track CustomerAccountId;
+@track CustomerAccountName;
+
+@wire(getObjectInfo, { objectApiName: ACCOUNTROLES_OBJECT })
+    objectInfo;
+@wire(getObjectInfo, { objectApiName: ACCOUNT_OBJECT })
+    accountInfo;
+@wire(getObjectInfo, { objectApiName: CONTACT_OBJECT })
+    contactInfo;
+@wire(getObjectInfo, { objectApiName: PROPERTY_OBJECT })
+    propertyInfo;
+@wire(getObjectInfo, { objectApiName: ATIJOB_OBJECT })
+    atijobInfo;
+@wire(getPicklistValues, { recordTypeId: '$objectInfo.data.defaultRecordTypeId', fieldApiName: ROLE_FIELD})
+AccountRolesValues;
+@wire(getPicklistValues, { recordTypeId: '0120g000000l3yMAAQ', fieldApiName: DIVISION_FIELD})
+AtiJobDivisionValues;
+@wire(getPicklistValues, { recordTypeId: '0120g000000l3yMAAQ', fieldApiName: JOBCLASS_FIELD})
+AtiJobJobClassValues;
+@wire(getPicklistValues, { recordTypeId: '0120g000000l3yM', fieldApiName: ESTIMATETYPE_FIELD})
+AtiJobEstimateTypeValues;
+@wire(getPicklistValues, { recordTypeId: '$accountInfo.data.defaultRecordTypeId', fieldApiName: TYPE_FIELD})
+AccountTypeValues;
+@wire(getPicklistValues, { recordTypeId: '$contactInfo.data.defaultRecordTypeId', fieldApiName: CONTACTTYPE_FIELD})
+ContactTypeValues;
+@wire(getPicklistValues, { recordTypeId: '$propertyInfo.data.defaultRecordTypeId', fieldApiName: PROPERTYTYPE_FIELD})
+PropertyTypeValues;
+
+// @wire(getPicklistValues, { recordTypeId: '$objectInfo.data.defaultRecordTypeId', fieldApiName: ROLE_FIELD})
+// AccountRolesValues;
+// @wire(getPicklistValues, { recordTypeId: '$atijobInfo.data.defaultRecordTypeId', fieldApiName: DIVISION_FIELD})
+// AtiJobDivisionValues;
+// @wire(getPicklistValues, { recordTypeId: '$atijobInfo.data.defaultRecordTypeId', fieldApiName: JOBCLASS_FIELD})
+// AtiJobJobClassValues;
+// @wire(getPicklistValues, { recordTypeId: '$atijobInfo.data.defaultRecordTypeId', fieldApiName: ESTIMATETYPE_FIELD})
+// AtiJobEstimateTypeValues;
+// @wire(getPicklistValues, { recordTypeId: '$accountInfo.data.defaultRecordTypeId', fieldApiName: TYPE_FIELD})
+// AccountTypeValues;
+// @wire(getPicklistValues, { recordTypeId: '$contactInfo.data.defaultRecordTypeId', fieldApiName: CONTACTTYPE_FIELD})
+// ContactTypeValues;
+// @wire(getPicklistValues, { recordTypeId: '$propertyInfo.data.defaultRecordTypeId', fieldApiName: PROPERTYTYPE_FIELD})
+// PropertyTypeValues;
+
 ContactIdChange(e){
     this.ContactId = e.detail.value;
     if(this.ContactId > 0){
@@ -90,6 +162,12 @@ ContactIdChange(e){
         this.ContactRole = '';
         this.AccountRole = '';
     }
+}
+ContactRoleChanged(e){
+    this.ContactRole = e.detail.value;
+}
+ContactAccountRoleChanged(e){
+    this.ContactAccountRole = e.detail.value;
 }
 ContactTypeChange(e){
     this.ContactType = e.detail.value;
@@ -258,10 +336,78 @@ closeModal(){
 // }
 // }
 
-populateMasterJobField(event){
-    this.MasterJobDetails = event.target.value;
-    this.MasterJobId = this.MasterJobDetails.Id;
-    this.bShowModal = false;
+ContactAccountChanged(event){
+    window.clearTimeout(this.delayTimeout);
+       var searchKey = event.target.value;
+       if(searchKey.length === 0){this.ContactAccounts = null;}
+       if(searchKey.length >= 1){
+           
+        // eslint-disable-next-line @lwc/lwc/no-async-operation
+        //this.delayTimeout = setTimeout(() => {
+            // eslint-disable-next-line @lwc/lwc/no-async-operation
+            this.delayTimeout = setTimeout(() => {
+                SearchContactAccounts({searchKey : searchKey})
+                .then(result => {
+                    this.ContactAccounts = result;
+                    console.log('Customers ' + this.ContactAccounts);
+                })
+                
+                .catch(error => {
+                    this.error = error;
+                });
+            }, DELAY);
+        }
+        // });
+
+}
+CustomerChanged(event){
+    window.clearTimeout(this.delayTimeout);
+       var searchKey = event.target.value;
+       if(searchKey.length === 0){this.Customers = null;}
+       if(searchKey.length >= 1){
+           
+        // eslint-disable-next-line @lwc/lwc/no-async-operation
+        //this.delayTimeout = setTimeout(() => {
+            // eslint-disable-next-line @lwc/lwc/no-async-operation
+            this.delayTimeout = setTimeout(() => {
+                SearchCustomers({searchKey : searchKey})
+                .then(result => {
+                    this.Customers = result;
+                    console.log('Customers ' + this.Customers);
+                })
+                
+                .catch(error => {
+                    this.error = error;
+                });
+            }, DELAY);
+        }
+        // });
+
+}
+populateContactAccountField(event){
+    
+    // console.log('Property Id first is + ' + this.Property.Id);
+     //console.log('Property Id first is + ' + this.testingProperty);
+     //this.PropertyID = event.detail.value;
+     this.ContactAccounts = '';
+     this.ContactAccountSelected = true;
+     var ContactAccountField = event.target.value;
+     this.ContactAccountValue = ContactAccountField.Name;
+     this.ContactAccountId = this.ContactAccountField.Id;
+     this.ContactAccountName = this.ContactAccountField.Name;
+}
+populateCustomerField(event){
+    
+    // console.log('Property Id first is + ' + this.Property.Id);
+     //console.log('Property Id first is + ' + this.testingProperty);
+     //this.PropertyID = event.detail.value;
+     this.Customers = '';
+     this.CustomerSelected = true;
+     this.CustomerSelectedField = event.target.value;
+     this.CustomerValue = this.CustomerSelectedField.Name;
+     this.CustomerId = this.CustomerSelectedField.Id;
+     this.CustomerAccountId = this.CustomerSelectedField.Account.Id;
+     this.CustomerAccountName = this.CustomerSelectedField.Account.Name;
 }
 populatePropertyField(event){
     
@@ -343,7 +489,11 @@ getAllAccountRoleObjects() {
     return AccountRoles;
 }
 
-
+populateMasterJobField(event){
+    this.MasterJobDetails = event.target.value;
+    this.MasterJobId = this.MasterJobDetails.Id;
+    this.bShowModal = false;
+}
 DeleteARRow(e){
     var DeleteRowIndex = e.target.parentNode.parentNode.rowIndex;
     console.log('Delete row index ' + DeleteRowIndex);

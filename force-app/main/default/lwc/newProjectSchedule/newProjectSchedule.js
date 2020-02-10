@@ -4,7 +4,7 @@
  * @Author             : Sean Gray
  * @Group              : 
  * @Last Modified By   : Sean Gray
- * @Last Modified On   : 2/4/2020, 9:44:02 AM
+ * @Last Modified On   : 2/4/2020, 3:05:38 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    9/7/2019   Sean Gray     Initial Version
@@ -13,9 +13,9 @@ import { LightningElement, track, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import ApprovedOrRejected from '@salesforce/apex/ProjectSchedule.ProjectScheduleInsert';
 import testapexBudgetOutput from '@salesforce/apex/ProjectSchedule.testBudget';
-import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+// import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 
-import COURTESYCALL_FIELD from '@salesforce/schema/Case.Case_Type__c';
+// import COURTESYCALL_FIELD from '@salesforce/schema/Case.Case_Type__c';
 
 var budgetlength;
 var i;
@@ -63,8 +63,8 @@ export default class NewProjectSchedule extends NavigationMixin (LightningElemen
     @track ScheduleLineItemOptions = [{
     }];
     @track AccountRoles;
-    @wire(getPicklistValues, { fieldApiName: NAME_FIELD})
-    CourtesyCallPicklistValues;
+    // @wire(getPicklistValues, { fieldApiName: NAME_FIELD})
+    // CourtesyCallPicklistValues;
     
     get options() {
         for (i = 0; i < this.Budgetlineitems.length; i++){
@@ -79,18 +79,21 @@ export default class NewProjectSchedule extends NavigationMixin (LightningElemen
     }
     handleNameChange(e){
         var nameCh = e.detail.value;
+        var rowInd = e.target.parentNode.parentNode.rowIndex;
+        console.log(' Row ind ' + rowInd);
         console.log('Namech ' + nameCh);
         this.Budgetlineitems = this.getAllAccountRoleObjects();
         
-        for (var i=0;i<this.Budgetlineitems.length; i++){
-        if ( this.Budgetlineitems[i].name === nameCh ){
-            console.log('budget line item name ' + i + ' ' + this.Budgetlineitems[i].name);
-            console.log('budget line item name ' + i + ' ' + this.Budgetlineitems[i].description);
-        this.Budgetlineitems[i].description = nameCh;
-        console.log('budget line item name ' + i + ' ' + this.Budgetlineitems[i].description);
-        break;
-    }
-}
+//         for (var i=0;i<this.Budgetlineitems.length; i++){
+//         if ( this.Budgetlineitems[i].name === nameCh ){
+//             console.log('budget line item name ' + i + ' ' + this.Budgetlineitems[i].name);
+//             console.log('budget line item name ' + i + ' ' + this.Budgetlineitems[i].description);
+//             if(this.Budgetlineitems[i].description.length < this.Budgetlineitems[i].name.length){
+//         this.Budgetlineitems[i].description = nameCh;
+//         console.log('budget line item name ' + i + ' ' + this.Budgetlineitems[i].description);
+//             }
+//     }
+// }
         // console.log('Delete row index ' + descriptionChange);
         // console.log('Test ' + e);
         // this.Budgetlineitems = this.getAllAccountRoleObjects();
