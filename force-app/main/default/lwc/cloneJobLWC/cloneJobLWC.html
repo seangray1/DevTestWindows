@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : Sean Gray
   @Group              : 
-  @Last Modified By   : Sean Gray
-  @Last Modified On   : 2/7/2020, 5:15:59 PM
+  @Last Modified By   : sean.gray@atirestoration.com
+  @Last Modified On   : 2/10/2020, 9:23:49 AM
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    1/21/2020   Sean Gray     Initial Version
@@ -27,27 +27,27 @@
                 <!-- <label class="Labels"  for="input-01">Percent of Job Complete: %</label> -->
                 <div class="slds-form-element__control">
       <lightning-input-field field-name="Name" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Job_Name__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Job_Number__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Account__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Contact__c" value={Name}></lightning-input-field>
+      <lightning-input-field field-name="Job_Name__c" value={JobName}></lightning-input-field>
+      <lightning-input-field field-name="Job_Number__c" value={JobNumber}></lightning-input-field>
+      <lightning-input-field field-name="Account__c" value={Account}></lightning-input-field>
+      <lightning-input-field field-name="Contact__c" value={Contact}></lightning-input-field>
         
-      <lightning-input-field field-name="Taken_By__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Customer__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Lead_Source__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Year_Structure_Built__c" value={Name}></lightning-input-field>
+      <lightning-input-field field-name="Taken_By__c" value={TakenBy}></lightning-input-field>
+      <lightning-input-field field-name="Customer__c" value={Customer}></lightning-input-field>
+      <lightning-input-field field-name="Lead_Source__c" value={LeadSource}></lightning-input-field>
+      <lightning-input-field field-name="Year_Structure_Built__c" value={YearStructureBuilt}></lightning-input-field>
  
-      <lightning-input-field field-name="Date_of_Loss__c" value={Name}></lightning-input-field>
+      <lightning-input-field field-name="Date_of_Loss__c" value={DateOfLoss}></lightning-input-field>
         
-      <lightning-input-field field-name="Description__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Job_Class__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Probability__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Project_Site_Contact_Name__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Project_Site_Contact_Account__c" value={Name}></lightning-input-field>
+      <lightning-input-field field-name="Description__c" value={Description}></lightning-input-field>
+      <lightning-input-field field-name="Job_Class__c" value={JobClass}></lightning-input-field>
+      <lightning-input-field field-name="Probability__c" value={Probability}></lightning-input-field>
+      <lightning-input-field field-name="Project_Site_Contact_Name__c" value={ProjectSiteContactName}></lightning-input-field>
+      <lightning-input-field field-name="Project_Site_Contact_Account__c" value={ProjectSiteContactAccount}></lightning-input-field>
        
-      <lightning-input-field field-name="Office2__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Stage__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Project_type__c" value={Name}></lightning-input-field>
+      <lightning-input-field field-name="Office2__c" value={Office}></lightning-input-field>
+      <lightning-input-field field-name="Stage__c" value={Stage}></lightning-input-field>
+      <lightning-input-field field-name="Project_type__c" value={ProjectType}></lightning-input-field>
     </div>
   </div>
 </div>
@@ -56,29 +56,29 @@
     <!-- <label class="Labels"  for="input-01">Estimated Completion Date Per PD:</label> -->
     <div class="slds-form-element__control">
       
-      <lightning-input-field field-name="Referred_by__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="CloseDate__c" value={Name}></lightning-input-field>
+      <lightning-input-field field-name="Referred_by__c" value={ReferredBy}></lightning-input-field>
+      <lightning-input-field field-name="CloseDate__c" value={CloseDate}></lightning-input-field>
        
-      <lightning-input-field field-name="County__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Contact_Information__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="City_of_LA__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Project_Site_Address__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Project_Site_Address_2__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Project_Site_City__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Project_Site_State__c" value={Name}></lightning-input-field>
+      <lightning-input-field field-name="County__c" value={County}></lightning-input-field>
+      <lightning-input-field field-name="Contact_Information__c" value={ContactInformation}></lightning-input-field>
+      <lightning-input-field field-name="City_of_LA__c" value={CityOfLA}></lightning-input-field>
+      <lightning-input-field field-name="Project_Site_Address__c" value={ProjectSiteAddress}></lightning-input-field>
+      <lightning-input-field field-name="Project_Site_Address_2__c" value={ProjectSiteAddress2}></lightning-input-field>
+      <lightning-input-field field-name="Project_Site_City__c" value={ProjectSiteCity}></lightning-input-field>
+      <lightning-input-field field-name="Project_Site_State__c" value={ProjectSiteState}></lightning-input-field>
    
      
-      <lightning-input-field field-name="Project_Site_Zipcode__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Project_Site_Contact_Email__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="no_Email_Available__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Policy__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Deductible__c" value={Name}></lightning-input-field>
+      <lightning-input-field field-name="Project_Site_Zipcode__c" value={ProjectSiteZipcode}></lightning-input-field>
+      <lightning-input-field field-name="Project_Site_Contact_Email__c" value={ProjectSiteContactEmail}></lightning-input-field>
+      <lightning-input-field field-name="no_Email_Available__c" value={NoEmailAvailable}></lightning-input-field>
+      <lightning-input-field field-name="Policy__c" value={Policy}></lightning-input-field>
+      <lightning-input-field field-name="Deductible__c" value={Deductible}></lightning-input-field>
     
     
-      <lightning-input-field field-name="Claim__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Cont_P_O_Client_Job__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="PO__c" value={Name}></lightning-input-field>
-      <lightning-input-field field-name="Send_Prelim__c" value={Name}></lightning-input-field>
+      <lightning-input-field field-name="Claim__c" value={Claim}></lightning-input-field>
+      <lightning-input-field field-name="Cont_P_O_Client_Job__c" value={ContPOClientJob}></lightning-input-field>
+      <lightning-input-field field-name="PO__c" value={PO}></lightning-input-field>
+      <lightning-input-field field-name="Send_Prelim__c" value={SendPrelim}></lightning-input-field>
                  
     </div>
   </div>
@@ -103,7 +103,8 @@
 </div>
 </fieldset>
 
-      <lightning-button label="Submit" variant="brand" name="create" type="submit"></lightning-button>
+      <lightning-button label="Submit" variant="brand" name="create" type="submit" class="center"></lightning-button>
+      <lightning-button label="Cancel" onclick={Cancel} variant="destructive" class="center"></lightning-button>
     </lightning-record-edit-form>
 
   </div> 
@@ -130,11 +131,9 @@
               <div class="slds-m-around_medium">
                 <p style="width:100%; font-size:20px; text-align:center;margin: 45px 0 20px 0;"> Will the cloned job be related to this existing job ?</p><br/>
                 <div style="width:100%; text-align:center;"><button style="padding: 3px 40px;margin-right: 20px;" class="slds-button slds-button_brand" onclick={YesTrue}>Yes</button>
-                <button style="padding: 3px 40px;" class="slds-button slds-button_neutral">No</button></div>
+                <button style="padding: 3px 40px;" class="slds-button slds-button_neutral" onclick={NoTrue}>No</button></div>
                   <br>
-                  <lightning-button variant="brand" label='New Master Job' title="New Master Job"
-                      onclick={closeModal} class="slds-m-left_x-small jobButton"></lightning-button>
-
+                  
               </div>
           </div>
 

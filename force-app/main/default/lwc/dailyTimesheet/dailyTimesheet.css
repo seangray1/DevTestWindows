@@ -230,6 +230,9 @@ table.TblCopy tr td:nth-child(3), table.TblCopy tr td:nth-child(4), table.TblCop
     table.week-header tbody tr td.DeleteClmn{position: absolute; top: 0; right: 0;}
     table.table tr{position: relative;}
 }
+.WorkDescription{
+     font-weight:bold; position: relative;font-size: 13px;
+}
 @media (max-width:768px){
     .slds-modal__container{position:fixed;
     left:57%;margin-left:-10rem;height: auto; bottom:230px;}

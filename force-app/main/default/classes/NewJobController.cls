@@ -3,8 +3,8 @@
  * @Description        : 
  * @Author             : sean.gray@atirestoration.com
  * @Group              : 
- * @Last Modified By   : Sean Gray
- * @Last Modified On   : 2/4/2020, 3:29:42 PM
+ * @Last Modified By   : sean.gray@atirestoration.com
+ * @Last Modified On   : 2/5/2020, 11:17:36 AM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/28/2020   sean.gray@atirestoration.com     Initial Version
@@ -33,9 +33,16 @@ public with sharing class NewJobController {
         // for(Id ca : PropertyIDs.PropertyID){
         // PropertyIDFinal = ca; }
         String searchLikeKey = '%' + searchKey + '%';
-        List<Property__c> props = [Select Id, Name, State__c, City__c, Address_Line_1__c, Zip__c FROM Property__c Where Name Like : searchLikeKey];
+        List<Property__c> props = [Select Id, Name, State__c, City__c, Address_Line_1__c, Zip__c FROM Property__c Where Address_Line_1__c Like : searchLikeKey];
         system.debug('Properties are ' + props);
         return props;
+    }
+    @AuraEnabled(cacheable = true)
+    public static List<Office__c> GetOffices(String searchKey) {
+        String searchLikeKey = '%' + searchKey + '%';
+        List<Office__c> off = [Select Id, Name FROM Office__c Where Name Like : searchLikeKey];
+        
+        return off;
     }
     @AuraEnabled(cacheable = true)
     public static List<Contact> GetCustomers(String searchKey) {
@@ -77,7 +84,19 @@ public with sharing class NewJobController {
         
         return mj;
 
+        
     }
+    @AuraEnabled  
+    public static List<String> getPickListValuesIntoList(){  
+               List<String> pickListValuesList= new List<String>(); 
+                Schema.DescribeFieldResult fieldResult = Account_Roles__c.Roles__c.getDescribe();   
+                List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();   
+                for( Schema.PicklistEntry pickListVal : ple){  
+                  pickListValuesList.add(pickListVal.getLabel());  
+                }       
+                return pickListValuesList;
+            }
+        
     @AuraEnabled 
     public static Id CreateNewJob(string ContactInfo, string AccountRoleInfo, string AccountInfo, string PropertyInfo, string JobInfo, string MasterJobId){
         system.debug('Contact Wrap ' + ContactInfo);

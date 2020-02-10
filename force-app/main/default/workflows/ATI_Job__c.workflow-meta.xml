@@ -1140,8 +1140,12 @@
         <description>Wine Country Fire Email Alert</description>
         <protected>false</protected>
         <recipients>
-            <recipient>kelli.smith@atirestoration.com</recipient>
+            <recipient>sean.gray@atirestoration.com</recipient>
             <type>user</type>
+        </recipients>
+        <recipients>
+            <field>Branch_Manager__c</field>
+            <type>userLookup</type>
         </recipients>
         <senderAddress>donotreply@atirestoration.com</senderAddress>
         <senderType>OrgWideEmailAddress</senderType>
@@ -3224,7 +3228,7 @@ $Profile.Name &lt;&gt; &quot;Restricted Process Execution&quot;)</formula>
             <name>Wine_Country_Fire_Email_Alert</name>
             <type>Alert</type>
         </actions>
-        <active>false</active>
+        <active>true</active>
         <criteriaItems>
             <field>ATI_Job__c.Job_Category__c</field>
             <operation>equals</operation>

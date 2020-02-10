@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : Sean Gray
   @Group              : 
-  @Last Modified By   : Sean Gray
-  @Last Modified On   : 2/7/2020, 5:11:22 PM
+  @Last Modified By   : sean.gray@atirestoration.com
+  @Last Modified On   : 2/10/2020, 9:06:38 AM
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    1/21/2020   Sean Gray     Initial Version
@@ -26,5 +26,5 @@
         display: inline !important;
         }
     </aura:html>
-    <c:cloneJobLWC/>
+    <c:cloneJobLWC recordId = "{!v.recordId}" oncloseform="{!c.closeForm}"/>
 </aura:component>

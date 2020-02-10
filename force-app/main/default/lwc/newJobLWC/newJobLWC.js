@@ -12,9 +12,10 @@
 import { LightningElement, track, wire } from 'lwc';
 //import SearchAccountRoles from '@salesforce/apex/NewJobController.GetAccountRoles';
 import SearchProperties from '@salesforce/apex/NewJobController.GetProperties';
+import GetAccountRolesPicklist from '@salesforce/apex/NewJobController.getPickListValuesIntoList';
 import SearchCustomers from '@salesforce/apex/NewJobController.GetCustomers';
 import SearchContactAccounts from '@salesforce/apex/NewJobController.GetContactAccounts';
-
+import SearchOffices from '@salesforce/apex/NewJobController.GetOffices';
 import GetMasterJobs from '@salesforce/apex/NewJobController.GetMasterJobs';
 import checkId from '@salesforce/apex/NewJobController.CheckId';
 import CreateNewJob from '@salesforce/apex/NewJobController.CreateNewJob';
@@ -40,7 +41,11 @@ var JobJSON;
 const DELAY = 600;
 export default class NewJobLWC extends LightningElement {
 @track testingProperty;
+@track ARContacts;
 @track Properties;
+@track Offices;
+@track OfficeId;
+@track OfficeValue;
 @track ContactAccountRole; 
 @track Customers;
 @track CustomerValue;
@@ -112,6 +117,9 @@ export default class NewJobLWC extends LightningElement {
 @track ContactRole;
 @track CustomerAccountId;
 @track CustomerAccountName;
+@track AccountRolePicklistValuesContainer =[{}];
+@track ARReady = false;
+@track AccountRoles = [{}];
 
 @wire(getObjectInfo, { objectApiName: ACCOUNTROLES_OBJECT })
     objectInfo;
@@ -125,6 +133,8 @@ export default class NewJobLWC extends LightningElement {
     atijobInfo;
 @wire(getPicklistValues, { recordTypeId: '$objectInfo.data.defaultRecordTypeId', fieldApiName: ROLE_FIELD})
 AccountRolesValues;
+@wire(getPicklistValues, { recordTypeId: '$objectInfo.data.defaultRecordTypeId', fieldApiName: ROLE_FIELD})
+AccountRoleValues;
 @wire(getPicklistValues, { recordTypeId: '0120g000000l3yMAAQ', fieldApiName: DIVISION_FIELD})
 AtiJobDivisionValues;
 @wire(getPicklistValues, { recordTypeId: '0120g000000l3yMAAQ', fieldApiName: JOBCLASS_FIELD})
@@ -138,6 +148,27 @@ ContactTypeValues;
 @wire(getPicklistValues, { recordTypeId: '$propertyInfo.data.defaultRecordTypeId', fieldApiName: PROPERTYTYPE_FIELD})
 PropertyTypeValues;
 
+
+// get options() {
+//     return [{ 
+//         AccountRolesValues.data.values}];
+// }
+connectedCallback(){
+    GetAccountRolesPicklist({}).then(result =>{
+        var AccountRolePicklistValues = result;
+        for(var i = 0; i<AccountRolePicklistValues.length;i++){
+            console.log('Lenght is '+ AccountRolePicklistValues.length + '    values are ' + AccountRolePicklistValues[i] );
+            this.AccountRolePicklistValuesContainer.push({label : AccountRolePicklistValues[i], value : AccountRolePicklistValues[i], });
+           
+        }
+        
+        this.AccountRolePicklistValuesContainer.shift();
+        this.ARReady = true;
+        console.log('yo');
+        this.AccountRoles.push({Roles__c : '', Contact_ID__c : '', Account_ID__c :'', ContactSearch: false});
+        this.AccountRoles.shift();
+    })
+}
 // @wire(getPicklistValues, { recordTypeId: '$objectInfo.data.defaultRecordTypeId', fieldApiName: ROLE_FIELD})
 // AccountRolesValues;
 // @wire(getPicklistValues, { recordTypeId: '$atijobInfo.data.defaultRecordTypeId', fieldApiName: DIVISION_FIELD})
@@ -152,7 +183,35 @@ PropertyTypeValues;
 // ContactTypeValues;
 // @wire(getPicklistValues, { recordTypeId: '$propertyInfo.data.defaultRecordTypeId', fieldApiName: PROPERTYTYPE_FIELD})
 // PropertyTypeValues;
-
+CustomerSelectedFalse(event){
+    event.preventDefault();
+    this.CustomerSelected = !this.CustomerSelected;
+}
+setAddressFields(){
+        const address =
+            this.template.querySelector('[data-id="AddressLookup"]');
+        const isValid = address.checkValidity();
+        if(!isValid) {
+            console.log('Address street '  + address.street);
+        }
+        
+        if(!isValid) {
+            alert("Not a Valid Address");
+    }
+}
+ClearContactSearch(event){
+    this.ClearSearch();
+    this.CustomerSelected = false;
+}
+ClearSearch(){
+    this.CustomerSelected = false;
+}
+ContactIdChangeNew(){
+this.CustomerSelected = true;
+}
+ClearCustomer(){
+    this.Customers = null;
+}
 ContactIdChange(e){
     this.ContactId = e.detail.value;
     if(this.ContactId > 0){
@@ -259,9 +318,7 @@ DescriptionChange(e){
 DivisionChange(e){
     this.Division = e.detail.value;
 }
-OfficeChange(e){
-    this.Office = e.detail.value;
-}
+
 JobClassChange(e){
     this.JobClass = e.detail.value;
 }
@@ -301,7 +358,7 @@ ToggleNewProperty(){
 }
 AddNewRow(){
     //this.AccountRoleNew(Name ='test');
-    this.AccountRoles.push({Name : '', Type : '', Contact : ''});
+    this.AccountRoles.push({Name : '', Type : '', Contact : '', ContactSearch: ''});
 }
 showModal(){
     this.bShowModal = true;
@@ -335,6 +392,69 @@ closeModal(){
 
 // }
 // }
+ARContactChangeNew(event){
+    var rowInd = event.target.parentNode.parentNode.rowIndex;
+                   console.log('Contact index ' + rowInd);
+}
+
+ARContactChange(event){
+
+    console.log('Testing ARContact Change ' );
+    window.clearTimeout(this.delayTimeout);
+       var searchKey = event.target.value;
+       if(searchKey.length === 0){this.ARContacts = null;}
+       if(searchKey.length >= 1){
+           console.log('Testing ' + searchKey);
+        // eslint-disable-next-line @lwc/lwc/no-async-operation
+        //this.delayTimeout = setTimeout(() => {
+            // eslint-disable-next-line @lwc/lwc/no-async-operation
+            this.delayTimeout = setTimeout(() => {
+                SearchCustomers({searchKey : searchKey})
+                .then(result => {
+                    this.ARContacts = result;
+                   console.log('ARContacts ' + this.ARContacts);
+                   var rowInd = event.target.parentNode.parentNode.rowIndex;
+                   console.log('Delete row index ' + rowInd);
+                   
+                   this.AccountRoles = this.getAllAccountRoleObjects();
+                   this.AccountRoles[rowInd].ContactSearch = 't';
+                })
+                
+                .catch(error => {
+                    this.error = error;
+                    console.log('Error ' + this.error);
+                });
+            }, DELAY);
+           
+        }
+       
+
+
+
+}
+OfficeChange(event){
+    window.clearTimeout(this.delayTimeout);
+       var searchKey = event.target.value;
+       if(searchKey.length === 0){this.Offices = null;}
+       if(searchKey.length >= 1){
+           
+        // eslint-disable-next-line @lwc/lwc/no-async-operation
+        //this.delayTimeout = setTimeout(() => {
+            // eslint-disable-next-line @lwc/lwc/no-async-operation
+            this.delayTimeout = setTimeout(() => {
+                SearchOffices({searchKey : searchKey})
+                .then(result => {
+                    this.Offices = result;
+                    console.log('Customers ' + this.Offices);
+                })
+                
+                .catch(error => {
+                    this.error = error;
+                });
+            }, DELAY);
+        }
+}
+
 
 ContactAccountChanged(event){
     window.clearTimeout(this.delayTimeout);
@@ -384,6 +504,14 @@ CustomerChanged(event){
         // });
 
 }
+populateOfficeField(event){
+    
+     this.Offices = '';
+     var OfficeField = event.target.value;
+     this.OfficeValue = OfficeField.Name;
+     this.OfficeId = OfficeField.Id;
+     
+}
 populateContactAccountField(event){
     
     // console.log('Property Id first is + ' + this.Property.Id);
@@ -393,8 +521,8 @@ populateContactAccountField(event){
      this.ContactAccountSelected = true;
      var ContactAccountField = event.target.value;
      this.ContactAccountValue = ContactAccountField.Name;
-     this.ContactAccountId = this.ContactAccountField.Id;
-     this.ContactAccountName = this.ContactAccountField.Name;
+     this.ContactAccountId = ContactAccountField.Id;
+     this.ContactAccountName = ContactAccountField.Name;
 }
 populateCustomerField(event){
     
@@ -445,7 +573,7 @@ PropertyChanged(event){
     window.clearTimeout(this.delayTimeout);
        this.searchKey = event.target.value;
        if(this.searchKey.length === 0){this.Properties = null;}
-       if(this.searchKey.length >= 3){
+       if(this.searchKey.length >= 1){
            
         // eslint-disable-next-line @lwc/lwc/no-async-operation
         //this.delayTimeout = setTimeout(() => {
@@ -475,13 +603,13 @@ getAllAccountRoleObjects() {
     let RowCount = TblRow.length;
     console.log('RowCount' + RowCount);
     for(let k=0; k<RowCount; k++){
-        let ARName = TblRow[k].querySelector('.ARName').value;
+        // let ARName = TblRow[k].querySelector('.ARName').value;
         let ARRoles = TblRow[k].querySelector('.ARRoles').value;
         //let ARAddress = TblRow[k].querySelector('.ARAddress').value;
         let ARContact = TblRow[k].querySelector('.ARContact').value;
         let ARAccount = TblRow[k].querySelector('.ARAccount').value;
         AccountRoles.push({
-            Name: ARName, Roles__c: ARRoles,  Contact_ID__c: ARContact, Account_ID__c: ARAccount
+             Roles__c: ARRoles,  Contact_ID__c: ARContact, Account_ID__c: ARAccount, ContactSearch : false
         });
         console.log('Account roles contains ' +AccountRoles);
 

@@ -1,3 +1,14 @@
+<!--
+  @File Name          : dailyTimesheet.html
+  @Description        : 
+  @Author             : sean.gray@atirestoration.com
+  @Group              : 
+  @Last Modified By   : sean.gray@atirestoration.com
+  @Last Modified On   : 2/7/2020, 11:00:03 AM
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    2/7/2020   sean.gray@atirestoration.com     Initial Version
+-->
 <template>
 
         {test}
@@ -1145,6 +1156,7 @@
                 </section><!-- End OVerall Toal for Crew Member-->
                 
                 <section class="FinalComments">
+                    <div class="WorkDescription">Work Description</div>
                     <template if:true={restrict}>
                         <lightning-textarea name="comments" disabled readonly="readonly" class="Comments" value={comments}></lightning-textarea>
                     </template>
