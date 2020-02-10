@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PE_cant_be_the_PD</fullName>
+    <active>true</active>
+    <description>Project Estimator can&#39;t be the same as the Project Director.</description>
+    <errorConditionFormula>(Project_Estimator__c = Project_Manager__c) &amp;&amp; DATEVALUE(CreatedDate) &gt;= DATE(2020,01,31)</errorConditionFormula>
+    <errorMessage>Project Estimator can&#39;t be the same as the Project Director.</errorMessage>
+</ValidationRule>

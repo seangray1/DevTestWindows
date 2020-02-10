@@ -1,3 +1,14 @@
+/**
+ * @File Name          : DailyTimesheetController.cls
+ * @Description        : 
+ * @Author             : sean.gray@atirestoration.com
+ * @Group              : 
+ * @Last Modified By   : sean.gray@atirestoration.com
+ * @Last Modified On   : 2/7/2020, 10:57:08 AM
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    2/7/2020   sean.gray@atirestoration.com     Initial Version
+**/
 public without sharing class DailyTimesheetController {
      
     @AuraEnabled (cacheable=true)
@@ -143,10 +154,10 @@ public without sharing class DailyTimesheetController {
     public static List<ATI_Job__c> findJobs(String searchKey) {
         system.debug('parameter -' + searchKey);
         String key = '%' + searchKey + '%';
-        return [SELECT Id,Job_Name__c,Job_Number_No_Dashes__c,Job_Number_No_Dash_Last_5__c,Job_Number__c,Name,
+        return [SELECT Id,Job_Name__c, CreatedDate, Job_Number_No_Dashes__c,Job_Number_No_Dash_Last_5__c,Job_Number__c,Name,
                 Project_Site_Address_2__c,Project_Site_Address_CityStZIP__c,Project_Site_Address_Concat__c,
                 Project_Site_Address_Link__c,Project_Site_Address__c,Project_Site_City__c,Project_Site_State__c,Project_Site_Zipcode__c
-                FROM ATI_Job__c WHERE Name LIKE :key LIMIT 10];
+                FROM ATI_Job__c WHERE Name LIKE :key ORDER BY Date_Time_Taken__c DESC LIMIT 10];
     }
     
 }

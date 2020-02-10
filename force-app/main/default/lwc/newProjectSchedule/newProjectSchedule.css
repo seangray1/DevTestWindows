@@ -4,51 +4,51 @@
    
 }
 .Name1 {
-    color: red;
+    
     font-family: fantasy;
 }
 .Quantity1 {
-    color: red;
+    
     font-family: fantasy;
 }
 .Price1 {
-    color: red;
+    
     font-family: fantasy;
 }
 .Race1 {
-    color: red;
+   
     font-family: fantasy;
 }
 .save1 {
-    color: red;
+    
     font-family: fantasy;
     border-spacing: 3em;
 }
-.alpha {
+/* .alpha {
     font-size: 15px;
     padding-left: 5%;
     font-family: Arial, Helvetica, sans-serif;
-    background-color: lightskyblue;
-}
+    
+} */
 .a {
-    color:blueviolet;
+    
     font-family: fantasy;
-    background-color:rgb(135, 222, 210);
+  
     font-variant: normal;
     font-family: fantasy;
 }
 .copy-row {
-    color: aqua;
-    background-color: blueviolet;
+    
+    
 }
 .rec1 {
-    background-color: darkseagreen;
+    
 }
 .rec2 {
-    background-color: darkseagreen;
+    
 }
-.rec3 {
-    background-color: darkseagreen;
+.lowerDelete {
+    margin-top: 5%;
 }
 .pleaseWork {
     size: 2em;
@@ -62,19 +62,22 @@
 }
 .grid {
     color: gray;
-    width: 200px;
-    margin-top: -2%;
+
+    margin-top: 1%;
  
     
     
    
+}
+.gridInput {
+    margin-bottom: 5.5%;
 }
 .form{
     display: inline;
 }
 .add-row buton{
     float: left;
-    background: #333333;
+    ;
     text-decoration: none;
     padding: 5px 10px;
     border-radius: 10px;
@@ -82,8 +85,7 @@
 }
 .BtnSave buton {
     float: left;
-    background: #333333;
-    color: #fff;
+
     text-decoration: none;
     padding: 5px 10px;
     border-radius: 10px;
@@ -91,8 +93,7 @@
 }
 .cancel buton {
     float: left;
-    background: #333333;
-    color: #fff;
+    
     text-decoration: none;
     padding: 5px 10px;
     border-radius: 10px;

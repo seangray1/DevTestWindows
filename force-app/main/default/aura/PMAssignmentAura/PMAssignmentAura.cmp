@@ -4,7 +4,7 @@
   @Author             : Sean Gray
   @Group              : 
   @Last Modified By   : sean.gray@atirestoration.com
-  @Last Modified On   : 11/27/2019, 12:50:36 PM
+  @Last Modified On   : 1/28/2020, 8:43:07 AM
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    10/4/2019   Sean Gray     Initial Version
@@ -12,7 +12,7 @@
 <aura:component implements="force:appHostable,lightning:actionOverride,force:lightningQuickActionWithoutHeader,flexipage:availableForAllPageTypes,force:appHostable,force:hasRecordId" access="global">
         <!-- <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
         <lightning:flow aura:id="flowData" /> -->
-
+        <aura:attribute name="recordId" type="Id" description="This attribute is for getting record id"/>
         <aura:html tag="style">
         .slds-modal__container{
         height : auto;

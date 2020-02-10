@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Project_Note_San_Diego_ATI_Job</fullName>
+    <filterScope>Queue</filterScope>
+    <label>Project Note - San Diego</label>
+    <queue>Project_Note_San_Diego</queue>
+    <sharedTo>
+        <allInternalUsers/>
+    </sharedTo>
+</ListView>
