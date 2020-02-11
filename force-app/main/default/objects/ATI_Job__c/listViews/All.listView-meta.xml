@@ -4,6 +4,8 @@
     <columns>NAME</columns>
     <columns>Date_Taken__c</columns>
     <columns>Stage__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Project_Site_Address__c</columns>
     <filterScope>Everything</filterScope>
     <label>All</label>
 </ListView>

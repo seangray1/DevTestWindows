@@ -454,12 +454,15 @@
                                             <thead>
                                                 <tr>
                                                     <!-- <th> Name</th> -->
+                                                   
                                                     <th> Roles</th>
 
                                                     <th> Contact</th>
-                                                    <th class="AddContact"></th>
+                                                    
                                                     <th> Account</th>
+                                                   
                                                     <th class="DeleteClmn"></th>
+                                                   
 
 
 
@@ -503,16 +506,12 @@
                                                                             variant="label-hidden"
                                                                             onchange={ARContactChangeNew}>
                                                                         </lightning-input-field>
+                                                                        
                                                                     </lightning-record-edit-form>
+                                                                   
                                                              
                                                         </td>
-                                                        <td>
-                                                                 
-                                                            <lightning-button label='New Contact' class="delete-icon AddContact"
-                                                                title="addContact" variant="brand"
-                                                                onclick={addContact} icon-name="utility:contact">
-                                                            </lightning-button>
-                                                        </td>
+                                                       
                                                         <td>
                                                           
                                                                     <lightning-record-edit-form
@@ -524,22 +523,22 @@
                                                                             variant="label-hidden">
                                                                         </lightning-input-field>
                                                                     </lightning-record-edit-form>
-                                                            
+                                                                    
                                                         </td>
-                                                    
+                                                        
                                                     <td>
                                                       
-                                                         <!-- class="DeleteClmn right-col" -->
-                                                            <!-- Don't INCLUDE DIV GRID IT MESS IT UP! -->
-                                                            <!-- <div class="grid">  -->
-                                                                
-                                                            <lightning-button label='' class="delete-icon DeleteAR"
-                                                                title="Delete" variant="destructive"
-                                                                onclick={DeleteARRow} icon-name="action:delete">
-                                                            </lightning-button>
-                                                            <!-- </div>  -->
-                                                        
-                                                        </td>
+                                                        <!-- class="DeleteClmn right-col" -->
+                                                           <!-- Don't INCLUDE DIV GRID IT MESS IT UP! -->
+                                                           <!-- <div class="grid">  -->
+                                                               
+                                                           <lightning-button label='' class="delete-icon DeleteAR"
+                                                               title="Delete" variant="destructive"
+                                                               onclick={DeleteARRow} icon-name="action:delete">
+                                                           </lightning-button>
+                                                           <!-- </div>  -->
+                                                       
+                                                       </td>
                                                         
                                                         
 
@@ -560,9 +559,20 @@
                 </div>
             
             <br>
-            <lightning-button label="Add New Account Role" variant="brand" onclick={AddNewRow}></lightning-button>
+            <div class="slds-grid">
+                
+            <lightning-button label="Add Row" variant="brand" onclick={AddNewRow}></lightning-button>
+                
+                
+            
+            <lightning-button label='New Contact' title="addContact" class="Buttonspacing" variant="brand" onclick={addContact} ></lightning-button>
+      
+            
+            <lightning-button label='New Account'  title="addAccount" variant="brand" class="Buttonspacing" onclick={addAccount} >    </lightning-button>
+                </div>
+                
+
         </div>
-    
     </template>
         <!-- </template> -->
 
@@ -574,8 +584,12 @@
             
                 <div class="slds-grid">
                     <div class="slds-col slds-size_1-of-4">
-                       
-                        <lightning-input label="Description" value={Description} onchange={DescriptionChange}></lightning-input>
+                        <label class="Labels" for="textarea-id-01"> Description</label>
+                                     
+                                        <lightning-textarea placeholder="Type Description Here" onchange={DescriptionChange} value={Description}></lightning-textarea>
+                                      
+                        <!-- <lightning-textarea
+                        <lightning-input label="Description" value={Description} onchange={DescriptionChange}></lightning-input> -->
                         <!-- <lightning-combobox name="progress"
                         label="Division"
                         value={Division}
@@ -586,8 +600,55 @@
                        
                         
                        
-                            <lightning-input label="Office" onkeyup={OfficeChange}
-                                placeholder='Search for Office.. ' value={OfficeValue} type="search"></lightning-input>
+                            
+                        
+                        <!-- <lightning-combobox name="progress"
+                        label="Job Class"
+                        value={JobClass}
+                        placeholder="-Select-"
+                        options={AtiJobJobClassValues.data.values}
+                        onchange={JobClassChange} >
+                    </lightning-combobox> -->
+                    </div>
+                    <div class="slds-col slds-size_1-of-6">
+                        <!-- <lightning-combobox name="progress"
+                        label="Estimate Type"
+                        value={EstimateType}
+                        placeholder="-Select-"
+                        options={AtiJobEstimateTypeValues.data.values}
+                        onchange={EstimateTypeChange} >
+                        </lightning-combobox> -->
+                        <label class="Labels spacing" for="textarea-id-01"> Claim</label>
+                        <lightning-input  value={Claim} onchange={ClaimChange} class="spacing"></lightning-input>
+                        <label class="Labels spacing" for="textarea-id-01"> Deductible</label>
+                        <lightning-input value={Deductible} onchange={DeductibleChange} class="spacing"></lightning-input>
+                       
+                    </div>
+                    <div class="slds-col slds-size_1-of-6">
+                        <label class="Labels spacing" for="textarea-id-01"> Job Class</label>
+                        <lightning-combobox name="progress"
+                        
+                        value={JobClass}
+                        placeholder="-Select-"
+                        options={AtiJobJobClassValues.data.values
+                        onchange={JobClassChange} 
+                        class="spacing">
+                    </lightning-combobox> 
+                    <label class="Labels spacing" for="textarea-id-01"> Estimate Type</label>
+                     <lightning-combobox name="progress"
+                        
+                        value={EstimateType}
+                        placeholder="-Select-"
+                        options={AtiJobEstimateTypeValues.data.values
+                        onchange={EstimateTypeChange}
+                        class="spacing" >
+                        </lightning-combobox>
+
+                    </div>
+                    <div class="slds-col slds-size_1-of-6">
+                        <label class="Labels spacing pushDown" for="textarea-id-01"> Office</label>
+                    <lightning-input onkeyup={OfficeChange}
+                                placeholder='Search for Office.. ' value={OfficeValue} type="search" class="spacing"></lightning-input>
                       
                         <template if:true={Offices}>
                             <table
@@ -627,45 +688,8 @@
                                 </tbody>
                             </table>
                         </template>
-                        
-                        <!-- <lightning-combobox name="progress"
-                        label="Job Class"
-                        value={JobClass}
-                        placeholder="-Select-"
-                        options={AtiJobJobClassValues.data.values}
-                        onchange={JobClassChange} >
-                    </lightning-combobox> -->
-                    </div>
-                    <div class="slds-col slds-size_1-of-4">
-                        <!-- <lightning-combobox name="progress"
-                        label="Estimate Type"
-                        value={EstimateType}
-                        placeholder="-Select-"
-                        options={AtiJobEstimateTypeValues.data.values}
-                        onchange={EstimateTypeChange} >
-                        </lightning-combobox> -->
-                        
-                        <lightning-input label="Claim" value={Claim} onchange={ClaimChange}></lightning-input>
-                        <lightning-input label="Deductible" value={Deductible} onchange={DeductibleChange}></lightning-input>
-                       
-                    </div>
-                    <div class="slds-col slds-size_1-of-4">
-                        <lightning-combobox name="progress"
-                        label="Job Class"
-                        value={JobClass}
-                        placeholder="-Select-"
-                        options={AtiJobJobClassValues.data.values
-                        onchange={JobClassChange} >
-                    </lightning-combobox> 
-                     <lightning-combobox name="progress"
-                        label="Estimate Type"
-                        value={EstimateType}
-                        placeholder="-Select-"
-                        options={AtiJobEstimateTypeValues.data.values
-                        onchange={EstimateTypeChange} >
-                        </lightning-combobox>
-
-                    </div>
+                </div>
+                
                 </div>
             
         </div>

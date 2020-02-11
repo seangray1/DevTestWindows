@@ -29,3 +29,16 @@
 .increaseSize{
     size:110%;
 }
+.spacing{
+    
+    padding-left: 10%;
+}
+.inlineButtons{
+    display: inline;
+}
+.pushDown{
+    padding-top: 6%;
+}
+.Buttonspacing{
+    padding-left: 1%;
+}
