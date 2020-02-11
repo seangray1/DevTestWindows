@@ -40,6 +40,8 @@ var PropertyJSON;
 var JobJSON;
 const DELAY = 600;
 export default class NewJobLWC extends LightningElement {
+    @track activeSections = ['Customer Search', 'Additional Information', 'Account Roles', 'Property Information'];
+   
 @track testingProperty;
 @track ARContacts;
 @track Properties;
@@ -183,6 +185,16 @@ connectedCallback(){
 // ContactTypeValues;
 // @wire(getPicklistValues, { recordTypeId: '$propertyInfo.data.defaultRecordTypeId', fieldApiName: PROPERTYTYPE_FIELD})
 // PropertyTypeValues;
+handleSectionToggle(event) {
+    const openSections = event.detail.openSections;
+
+    // if (openSections.length === 0) {
+    //     this.activeSectionsMessage = 'All sections are closed';
+    // } else {
+    //     this.activeSectionsMessage =
+    //         'Open sections: ' + openSections.join(', ');
+    // }
+}
 CustomerSelectedFalse(event){
     event.preventDefault();
     this.CustomerSelected = !this.CustomerSelected;

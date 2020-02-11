@@ -13,14 +13,17 @@
     
     <div class="slds-scrollable_y" style="height:120rem;width: 100%;">
         <div class="slds-box slds-theme_shade">
-            <div class="slds-m-around_medium">
+            <lightning-accordion allow-multiple-sections-open
+                         onsectiontoggle={handleSectionToggle}
+                         active-section-name={activeSections}>
+            <!-- <div class="slds-m-around_medium">
                 <h1 class="slds-text-heading_small" style="text-decoration: underline;">Customer Information</h1>
-            </div>
+            </div> -->
             
             <!-- Start of New Search -->
             <!-- <div class="slds-m-around_medium"> -->
                
-                    
+                <lightning-accordion-section name="Customer Search" label="Customer Search">       
                         <template if:true={CustomerSelected}>
                          
                         <lightning-pill label='test' onremove={CustomerSelectedFalse} >
@@ -322,8 +325,8 @@
                                     required
                                      ></lightning-input-address>
                 </div>
-
-            </div>
+                </lightning-accordion-section>
+            <!-- </div> -->
        
 
 
@@ -338,10 +341,11 @@
 
 
         <br>
-        <div class="slds-box slds-theme_shade">
-            <div class="slds-m-around_medium">
+        <!-- <div class="slds-box slds-theme_shade"> -->
+            <lightning-accordion-section name="Property Information" label="Property Information">
+            <!-- <div class="slds-m-around_medium">
                 <h1 class="slds-text-heading_small" style="text-decoration: underline;">Property Search</h1>
-            </div>
+            </div> -->
             <div class="slds-m-around_medium">
                 <div class="slds-grid">
                     <div class="slds-col slds-size_1-of-5">
@@ -369,10 +373,10 @@
                                                 class="slds-m-left_x-small jobButton"></lightning-button>
                                         </b>
 
-                                        <!-- <lightning-formatted-address street={Property.Address_Line_1__c}
+                                        <lightning-formatted-address street={Property.Address_Line_1__c}
                                             city={Property.City__c} country='US' province={Property.State__c}
-                                            postal-code={Property.Zip__c} disabled={inputDisabled}>
-                                        </lightning-formatted-address> -->
+                                            postal-code={Property.Zip__c} disabled>
+                                        </lightning-formatted-address>
                                         <!-- <lightning-input disabled={inputDisabled} label={Property.Name} value={Property.Name}></lightning-input> -->
                                     </th>
 
@@ -434,14 +438,16 @@
             </div>
 
             </div>
-
-        </div>
+            </lightning-accordion-section>
+        <!-- </div> -->
         <br>
+        <lightning-accordion-section name="Account Roles" label="Account Roles">
        <template if:true={ARReady}>
-        <div class="slds-box slds-theme_shade"> 
-            <div class="slds-m-around_medium">
+           
+        <!-- <div class="slds-box slds-theme_shade">  -->
+            <!-- <div class="slds-m-around_medium">
                 <h1 class="slds-text-heading_small" style="text-decoration: underline;">Account Roles</h1>
-            </div>
+            </div> -->
             <div class="row">
                 <div class="col-rp-12">
                     
@@ -559,8 +565,7 @@
                 </div>
             
             <br>
-            <div class="slds-grid">
-                
+            <lightning-button-group>
             <lightning-button label="Add Row" variant="brand" onclick={AddNewRow}></lightning-button>
                 
                 
@@ -569,18 +574,22 @@
       
             
             <lightning-button label='New Account'  title="addAccount" variant="brand" class="Buttonspacing" onclick={addAccount} >    </lightning-button>
-                </div>
+        </lightning-button-group>
                 
 
-        </div>
+        <!-- </div> -->
     </template>
+</lightning-accordion-section>
         <!-- </template> -->
 
         <br>
-        <div class="slds-box slds-theme_shade">
-            <div class="slds-m-around_medium">
+        
+        <lightning-accordion-section name="Additional Information"  label="Additional Information">
+        
+        <!-- <div class="slds-box slds-theme_shade"> -->
+            <!-- <div class="slds-m-around_medium">
                 <h1 class="slds-text-heading_small" style="text-decoration: underline;">Additional Fields</h1>
-            </div>
+            </div> -->
             
                 <div class="slds-grid">
                     <div class="slds-col slds-size_1-of-4">
@@ -691,16 +700,22 @@
                 </div>
                 
                 </div>
-            
-        </div>
+        </lightning-accordion-section>
+        <!-- </div> -->
+            </lightning-accordion>
         <br>
-        <div class="slds-box slds-theme_shade">
-            <lightning-button label='Submit' onclick={CreateNewJob} variant="brand"></lightning-button>
-        </div>
-    
+
+        <!-- <div class="slds-box slds-theme_shade"> -->
+            
+        <!-- </div> -->
+    </div>
 </div>
-
-
+<div class="slds-p-around_medium lgc-bg-inverse element">
+    <lightning-button-group>
+<lightning-button label='Submit' onclick={CreateNewJob} variant="brand"></lightning-button>
+<lightning-button label='Cancel' onclick={Cancel} ></lightning-button>
+</lightning-button-group>
+</div>
     <template if:true={bShowModal}>
         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
             aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
