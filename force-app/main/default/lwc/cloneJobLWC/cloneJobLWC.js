@@ -118,11 +118,13 @@ get recordTypeId() {
             this.Account = data.fields.Account__c.value;
             this.Contact = data.fields.Contact__c.value;
             this.TakenBy = data.fields.Taken_By__c.value;
-         
+            
+            this.Parent_Job__c = this.recordId;
+            
             this.LeadSource = data.fields.Lead_Source__c.value;
             this.YearStructureBuilt = data.fields.Year_Structure_Built__c.value;
             this.DateOfLoss = data.fields.Date_of_Loss__c.value;
-            this.Description = data.fields.Description__c.value;
+            this.Description = data.fields.Description__c.value; //make blank if not related.
             this.JobClass = data.fields.Job_Class__c.value;
            
             this.ProjectSiteContactName = data.fields.Project_Site_Contact_Name__c.value;
@@ -160,24 +162,33 @@ get recordTypeId() {
     }
     NoTrue(){
         this.Start = false;
-        this.No = true;
+        this.Yes = true;
+        this.Parent_Job__c = '';
+        this.Description = '';
     }
     handleSuccess(event){
+        const payload = event.detail;
+        console.log(JSON.stringify(payload));
         console.log('before payload');
-        var payload = event.detail.value;
-        console.log(payload.id);
-        this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
-            attributes: {
-                recordId: payload.id,
-                objectApiName: 'ATI_Job__c',
-                actionName: 'view',
-            },
-        });
+        const test = JSON.stringify(payload);
+        const ContactJSON = JSON.parse(test);
+        const jobId = ContactJSON.id;
+        console.log(jobId);
+       
+        location.href='https://' + window.location.hostname + '/lightning/r/ATI_Job__c/' + jobId + '/view';
+        event.action= this.location;
+        // this[NavigationMixin.Navigate]({
+        //     type: 'standard__recordPage',
+        //     attributes: {
+        //         recordId: jobId,
+        //         objectApiName: 'ATI_Job__c',
+        //         actionName: 'view',
+        //     },
+        // });
     }
     Loading(){
         console.log('Starting Load');
-        // this.loading = true;
+        this.loading = true;
     }
     Cancel(){
         this.loading = true;
