@@ -122,6 +122,7 @@ export default class NewJobLWC extends LightningElement {
 @track AccountRolePicklistValuesContainer =[{}];
 @track ARReady = false;
 @track AccountRoles = [{}];
+@track CreateContact = false;
 
 @wire(getObjectInfo, { objectApiName: ACCOUNTROLES_OBJECT })
     objectInfo;
@@ -194,6 +195,9 @@ handleSectionToggle(event) {
     //     this.activeSectionsMessage =
     //         'Open sections: ' + openSections.join(', ');
     // }
+}
+addContact(){
+    this.CreateContact = true;
 }
 CustomerSelectedFalse(event){
     event.preventDefault();
@@ -684,7 +688,10 @@ CreateNewJob(){
     }
 }
    
-
+Cancel(event){
+    location.href='https://' + window.location.hostname + '/lightning/o/ATI_Job__c/list?filterName=Recent';
+        event.action= this.location;
+}
 GenerateAccountRoleJSON(){
     var AccountRoleObject = {AccountRoleLineItems : this.GetAccountRolesObjects()
     };
