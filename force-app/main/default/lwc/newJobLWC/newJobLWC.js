@@ -11,6 +11,8 @@
 **/
 import { LightningElement, track, wire } from 'lwc';
 //import SearchAccountRoles from '@salesforce/apex/NewJobController.GetAccountRoles';
+import InsertAccount from '@salesforce/apex/NewJobController.InsertAccount';
+import InsertPersonAccount from '@salesforce/apex/NewJobController.InsertPersonAccount';
 import SearchProperties from '@salesforce/apex/NewJobController.GetProperties';
 import GetAccountRolesPicklist from '@salesforce/apex/NewJobController.getPickListValuesIntoList';
 import SearchCustomers from '@salesforce/apex/NewJobController.GetCustomers';
@@ -41,7 +43,7 @@ var JobJSON;
 const DELAY = 600;
 export default class NewJobLWC extends LightningElement {
     @track activeSections = ['Customer Search', 'Additional Information', 'Account Roles', 'Property Information'];
-   
+@track PersonAccount = false;
 @track testingProperty;
 @track ARContacts;
 @track Properties;
@@ -94,7 +96,7 @@ export default class NewJobLWC extends LightningElement {
 @track BillingCity;
 @track BillingState;
 @track BillingPostalCode;
-@track TypeChange;
+@track Type;
 @track BillingCountry;
 @track AccountPhone;
 @track AccountPhoneExt;
@@ -123,6 +125,12 @@ export default class NewJobLWC extends LightningElement {
 @track ARReady = false;
 @track AccountRoles = [{}];
 @track CreateContact = false;
+@track AccountEmpty = true;
+@track CreateNewContact = false;
+@track PersonAccountModal = false;
+@track AccountQuestion = false;
+@track AccountLastName;
+@track AccountFirstName;
 
 @wire(getObjectInfo, { objectApiName: ACCOUNTROLES_OBJECT })
     objectInfo;
@@ -168,41 +176,208 @@ connectedCallback(){
         this.AccountRolePicklistValuesContainer.shift();
         this.ARReady = true;
         console.log('yo');
-        this.AccountRoles.push({Roles__c : '', Contact_ID__c : '', Account_ID__c :'', ContactSearch: false});
+        this.AccountRoles.push({Roles__c : '', Contact_ID__c : '', Account_ID__c :''});
         this.AccountRoles.shift();
     })
 }
-// @wire(getPicklistValues, { recordTypeId: '$objectInfo.data.defaultRecordTypeId', fieldApiName: ROLE_FIELD})
-// AccountRolesValues;
-// @wire(getPicklistValues, { recordTypeId: '$atijobInfo.data.defaultRecordTypeId', fieldApiName: DIVISION_FIELD})
-// AtiJobDivisionValues;
-// @wire(getPicklistValues, { recordTypeId: '$atijobInfo.data.defaultRecordTypeId', fieldApiName: JOBCLASS_FIELD})
-// AtiJobJobClassValues;
-// @wire(getPicklistValues, { recordTypeId: '$atijobInfo.data.defaultRecordTypeId', fieldApiName: ESTIMATETYPE_FIELD})
-// AtiJobEstimateTypeValues;
-// @wire(getPicklistValues, { recordTypeId: '$accountInfo.data.defaultRecordTypeId', fieldApiName: TYPE_FIELD})
-// AccountTypeValues;
-// @wire(getPicklistValues, { recordTypeId: '$contactInfo.data.defaultRecordTypeId', fieldApiName: CONTACTTYPE_FIELD})
-// ContactTypeValues;
-// @wire(getPicklistValues, { recordTypeId: '$propertyInfo.data.defaultRecordTypeId', fieldApiName: PROPERTYTYPE_FIELD})
-// PropertyTypeValues;
+addAccountQuestion(){
+    this.AccountQuestion = true;
+}
+PersonAccountClicked(){
+    this.AccountQuestion = false;
+    this.PersonAccountModal = true;
+}
+BusinessAccountClicked(){
+    this.AccountQuestion = false;
+    this.addAccount();
+}
+closePersonAccountModal(){
+    this.PersonAccountModal = false;
+    this.AccountId = null;
+    this.AccountName = null;
+    this.AccountLastName = null;
+    this.AccountFirstName = null;
+    this.AccountPhone = null;
+    this.Type = null;
+    this.AccountPhoneExt = null;
+
+    this.BillingStreet = null;
+    this.BillingCity = null;
+    this.BillingState = null;
+    this.BillingPostalCode = null;
+    this.ContactAccountRole = null;
+}
+savePersonAccount(){
+    if(this.AccountLastName !== null && this.AccountFirstName !== null && this.AccountPhone !== null && this.Type !== null &&
+        this.AccountPhoneExt !== null && this.ContactAccountRole !== null){
+            const address = this.template.querySelector('[data-id="PersonAccountAddressLookup"]');
+            const isValid = address.checkValidity();
+             if(isValid) {
+                this.BillingStreet = address.street;
+                this.BillingCity = address.city;
+                this.BillingState = address.province;
+                this.BillingPostalCode = address.postal;
+                this.BillingCountry = address.country;
+
+                InsertPersonAccount({FirstName:this.AccountFirstName, LastName:this.AccountLastName, Phone:this.AccountPhone, Type:this.Type, PhoneExt:this.AccountPhoneExt,
+                 BillingStreet:this.BillingStreet, BillingCity:this.BillingCity, 
+                BillingState:this.BillingState, BillingPostalCode:this.BillingPostalCode, BillingCountry:this.BillingCountry})
+                .then(result =>{ 
+                    this.AccountId = result;
+                        this.AccountRoles = this.ReplaceEmptyAccountRoleRows();
+                        //now Reset the form
+                        this.AccountId = null;
+                        this.AccountName = null;
+                        this.AccountLastName = null;
+                        this.AccountFirstName = null;
+                        this.AccountPhone = null;
+                        this.Type = null;
+                        this.AccountPhoneExt = null;
+                       
+                        this.BillingStreet = null;
+                        this.BillingCity = null;
+                        this.BillingState = null;
+                        this.BillingPostalCode = null;
+                        this.ContactAccountRole = null;
+                })
+             }
+        
+            if(!isValid) {
+                alert("Not a Valid Address");
+             }   
+        }
+    }
+
+saveAccount(){
+    if(this.AccountName !== null && this.AccountPhone !== null && this.Type !== null &&
+        this.AccountPhoneExt !== null && this.ContactAccountRole !== null){
+            const address = this.template.querySelector('[data-id="AccountAddressLookup"]');
+            const isValid = address.checkValidity();
+             if(isValid) {
+                this.BillingStreet = address.street;
+                this.BillingCity = address.city;
+                this.BillingState = address.province;
+                this.BillingPostalCode = address.postal;
+                this.BillingCountry = address.country;
+
+                InsertAccount({Name:this.AccountName, Phone:this.AccountPhone, Type:this.Type, PhoneExt:this.AccountPhoneExt,
+                 BillingStreet:this.BillingStreet, BillingCity:this.BillingCity, 
+                BillingState:this.BillingState, BillingPostalCode:this.BillingPostalCode, BillingCountry:this.BillingCountry})
+                .then(result =>{ 
+                    this.AccountId = result;
+                    // if(this.CreateNewContact){
+                    //     this.ContactAccountValue = this.AccountName;
+                    //     this.NewAccount = false;
+                    //     this.CreateContact = true;
+                    // }
+                    // if(!this.CreateNewContact){
+                        // this.AccountRoles = this.ReplaceEmptyAccountRoleRows();
+                        
+                        // //now Reset the form
+                        // this.AccountId = null;
+                        // this.AccountName = null;
+                        // this.AccountPhone = null;
+                        // this.Type = null;
+                        // this.AccountPhoneExt = null;
+                        // this.PersonAccount = null;
+                        // this.BillingStreet = null;
+                        // this.BillingCity = null;
+                        // this.BillingState = null;
+                        // this.BillingPostalCode = null;
+                        // this.ContactAccountRole = null;
+
+                    // }
+            
+                })
+             }
+        
+            if(!isValid) {
+                alert("Not a Valid Address");
+             }   
+        }
+}
+ReplaceEmptyAccountRoleRows(){
+    var AccountRoles = [];
+//var AccountRoless
+    //Get Value from HTML 
+    let TblRow =  Array.from(this.template.querySelectorAll('table.ActRoles tbody tr'));
+    console.log('tbl' + TblRow);
+    let RowCount = TblRow.length;
+    console.log('RowCount' + RowCount);
+    for(let k=0; k<RowCount; k++){
+        // let ARName = TblRow[k].querySelector('.ARName').value;
+        let ARRoles = TblRow[k].querySelector('.ARRoles').value;
+        //let ARAddress = TblRow[k].querySelector('.ARAddress').value;
+        let ARContact = TblRow[k].querySelector('.ARContact').value;
+        let ARAccount = TblRow[k].querySelector('.ARAccount').value;
+        if(ARContact === null && ARRoles === null && ARAccount === null){
+        AccountRoles.push({
+             Roles__c: ARRoles,  Contact_ID__c: ARContact, Account_ID__c: this.AccountId
+        });
+    }else{
+        AccountRoles.push({
+            Roles__c: ARRoles,  Contact_ID__c: ARContact, Account_ID__c: ARAccount
+       });
+    }
+        console.log('Account roles contains ' +AccountRoles);
+
+    }
+    return AccountRoles;
+}
+
+
 handleSectionToggle(event) {
     const openSections = event.detail.openSections;
-
-    // if (openSections.length === 0) {
-    //     this.activeSectionsMessage = 'All sections are closed';
-    // } else {
-    //     this.activeSectionsMessage =
-    //         'Open sections: ' + openSections.join(', ');
-    // }
 }
 addContact(){
     this.CreateContact = true;
+    this.CreateNewContact = true;
+}
+addAccount(){
+
+    this.NewAccount = true;
+    this.CreateContact = false; 
+}
+closeAccountModal(){
+    this.NewAccount = false;
+    this.AccountId = null;
+    this.AccountName = null;
+    this.AccountLastName = null;
+    this.AccountFirstName = null;
+    this.AccountPhone = null;
+    this.Type = null;
+    this.AccountPhoneExt = null;
+
+    this.BillingStreet = null;
+    this.BillingCity = null;
+    this.BillingState = null;
+    this.BillingPostalCode = null;
+    this.ContactAccountRole = null;
+    // remember to reset all the values for contact. 
+}
+closeContact(){
+    this.CreateContact = false;
+    this.CreateNewContact = false;
+    this.AccountId = null;
+    this.AccountName = null;
+    this.AccountLastName = null;
+    this.AccountFirstName = null;
+    this.AccountPhone = null;
+    this.Type = null;
+    this.AccountPhoneExt = null;
+
+    this.BillingStreet = null;
+    this.BillingCity = null;
+    this.BillingState = null;
+    this.BillingPostalCode = null;
+    this.ContactAccountRole = null;
+    // remember to reset all the values for contact. 
 }
 CustomerSelectedFalse(event){
     event.preventDefault();
     this.CustomerSelected = !this.CustomerSelected;
 }
+
 setAddressFields(){
         const address =
             this.template.querySelector('[data-id="AddressLookup"]');
@@ -215,12 +390,25 @@ setAddressFields(){
             alert("Not a Valid Address");
     }
 }
-ClearContactSearch(event){
+PropertyEmpty(event){
     this.ClearSearch();
-    this.CustomerSelected = false;
+    this.Customers = null;
 }
+ClearProperty(event){
+    var searchKey = event.detail.value;
+    if(searchKey.length === 0){
+    this.ClearSearch();
+    }
+    
+}
+ClearOffice(event){
+    var searchKey = event.detail.value;
+    if(searchKey.length === 0){
+    this.Office = null;
+    }
+    }
 ClearSearch(){
-    this.CustomerSelected = false;
+    this.Properties = null;
 }
 ContactIdChangeNew(){
 this.CustomerSelected = true;
@@ -358,12 +546,16 @@ ToggleNewCaller(){
         this.NewCaller = false;
     }
 }
-ToggleNewAccount(){
-    if(!this.NewAccount){
-        this.NewAccount = true;
-    }else{
-        this.NewAccount = false;
+ClearAccount(event){
+    var searchKey = event.detail.value;
+    if(searchKey.length === 0){
+        this.ContactAccounts = null;
+        this.AccountEmpty = true;
     }
+}
+ToggleNewAccount(){
+    this.CreateContact = false;
+    this.NewAccount = true;
 }
 ToggleNewProperty(){
     if(!this.NewProperty){
@@ -374,7 +566,7 @@ ToggleNewProperty(){
 }
 AddNewRow(){
     //this.AccountRoleNew(Name ='test');
-    this.AccountRoles.push({Name : '', Type : '', Contact : '', ContactSearch: ''});
+    this.AccountRoles.push({Type : '', Contact : '', Account: ''});
 }
 showModal(){
     this.bShowModal = true;
@@ -433,7 +625,7 @@ ARContactChange(event){
                    console.log('Delete row index ' + rowInd);
                    
                    this.AccountRoles = this.getAllAccountRoleObjects();
-                   this.AccountRoles[rowInd].ContactSearch = 't';
+                //    this.AccountRoles[rowInd].ContactSearch = 't';
                 })
                 
                 .catch(error => {
@@ -535,6 +727,7 @@ populateContactAccountField(event){
      //this.PropertyID = event.detail.value;
      this.ContactAccounts = '';
      this.ContactAccountSelected = true;
+     this.AccountEmpty = false;
      var ContactAccountField = event.target.value;
      this.ContactAccountValue = ContactAccountField.Name;
      this.ContactAccountId = ContactAccountField.Id;
@@ -587,15 +780,15 @@ PropertyChanged(event){
     console.log('testing ');
     
     window.clearTimeout(this.delayTimeout);
-       this.searchKey = event.target.value;
-       if(this.searchKey.length === 0){this.Properties = null;}
-       if(this.searchKey.length >= 1){
+       var searchKey = event.target.value;
+       if(searchKey.length === 0){this.Properties = null;}
+       if(searchKey.length >= 1){
            
         // eslint-disable-next-line @lwc/lwc/no-async-operation
         //this.delayTimeout = setTimeout(() => {
             // eslint-disable-next-line @lwc/lwc/no-async-operation
             this.delayTimeout = setTimeout(() => {
-                SearchProperties({searchKey : this.searchKey})
+                SearchProperties({searchKey : searchKey})
                 .then(result => {
                     this.Properties = result;
                     console.log('Properties ' + this.Properties);
@@ -625,7 +818,7 @@ getAllAccountRoleObjects() {
         let ARContact = TblRow[k].querySelector('.ARContact').value;
         let ARAccount = TblRow[k].querySelector('.ARAccount').value;
         AccountRoles.push({
-             Roles__c: ARRoles,  Contact_ID__c: ARContact, Account_ID__c: ARAccount, ContactSearch : false
+             Roles__c: ARRoles,  Contact_ID__c: ARContact, Account_ID__c: ARAccount
         });
         console.log('Account roles contains ' +AccountRoles);
 
