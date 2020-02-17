@@ -1,0 +1,179 @@
+<!--
+  @Component Name     : newProjectSchedule.html
+  @Description        : 
+  @Author             : sean.gray@atirestoration.com
+  @Group              : 
+  @Last Modified By   : sean.gray@atirestoration.com
+  @Last Modified On   : 2/6/2020, 3:30:37 PM
+  @Modification Log   : 
+  ==============================================================================
+  Ver         Date                     Author      		      Modification
+  ==============================================================================
+  1.0    8/23/2019, 9:56:08 AM   sean.gray@atirestoration.com     Initial Version
+-->
+<template>
+
+  <!-- <lightning-icon icon-name="action:approval" alternative-text="Create Project" ></lightning-icon>
+    <br>
+    <br> -->
+  <!-- Name:
+    <lightning-input value={schedulename} onchange={UpdateName}></lightning-input>
+    <br> -->
+
+
+
+  <div class="slds-box slds-theme_shade">
+    <div class="slds-m-around_medium">
+      <h1 class="slds-text-heading_small" style="text-decoration: underline;">New Schedule</h1>
+    </div>
+    <div class="row">
+      <div class="col-rp-12">
+        <div class="">
+          <table class="outer">
+            <tbody>
+              <tr>
+                <td class="left-col">
+
+                  <table class="table ActRoles">
+                    <thead>
+                      <tr>
+                        <th> Project Line Item Name</th>
+                        <th> Description</th>
+                        <th> Start Date</th>
+                        <th> End Date</th>
+                      
+                        <th> Connected To</th>
+                        <th> Day Difference</th>
+                      
+                        <th class="DeleteClmn"></th>
+
+                      </tr>
+                    </thead>
+
+                    <tbody>
+
+                      <template for:each={Budgetlineitems} for:item="Budgetlineitem">
+                        <tr key={Budgetlineitem.name}>
+                          <td>
+                            <!-- <lightning:layoutItem> -->
+                              <!-- <div class="grid"> -->
+                                <!-- <lightning-record-edit-form object-api-name="Schedule_Line_Item__c">
+                                  <lightning-input-field field-name="Product_Options__c" value={Budgetlineitem.name}
+                                    variant="label-hidden" class="form-control ScheduleName" onchange={handleNameChange}>
+                                  </lightning-input-field>
+                                </lightning-record-edit-form> -->
+                                <lightning-combobox
+                                    label = ''
+                                    name="FirstQuestion"
+                                    value={Budgetlineitem.name}
+                                    placeholder="--Select--"
+                                    options={ScheduleLineItemOptions}
+                                    onchange={handleNameChange}
+                                    class="gridInput ScheduleName"
+                                    disabled={unSavedRecord}
+                                     >
+                                     </lightning-combobox>
+                              <!-- </div> -->
+                            <!-- </lightning:layoutItem> -->
+                          </td>
+                          <td>
+                            <!-- <lightning:layoutItem> -->
+                              <!-- <div class="grid"> -->
+                                <lightning-record-edit-form object-api-name="Schedule_Line_Item__c">
+                                  <lightning-input-field field-name="Product_Description__c" value={Budgetlineitem.description}
+                                    variant="label-hidden" class="form-control ScheduleDescription">
+                                  </lightning-input-field>
+                                </lightning-record-edit-form>
+                              <!-- </div> -->
+                            <!-- </lightning:layoutItem> -->
+                          </td>
+                          <td>
+                            <!-- <lightning:layoutItem> -->
+                              <!-- <div class="grid"> -->
+                                <lightning-record-edit-form object-api-name="Schedule_Line_Item__c">
+                                  <lightning-input-field field-name="Start_Date__c" value={Budgetlineitem.startDate}
+                                    variant="label-hidden" onchange={handleStartDateChange}
+                                    class="form-control ScheduleStartDate"></lightning-input-field>
+
+                                </lightning-record-edit-form>
+
+                              <!-- </div> -->
+                            <!-- </lightning:layoutItem> -->
+
+                          </td>
+                          <td>
+                            <!-- <lightning:layoutItem> -->
+                              <!-- <div class="grid"> -->
+                                <lightning-record-edit-form object-api-name="Schedule_Line_Item__c">
+                                  <lightning-input-field field-name="Completion_Date__c" value={Budgetlineitem.endDate}
+                                    variant="label-hidden" onchange={handleEndDateChange}
+                                    class="form-control ScheduleEndDate"></lightning-input-field>
+
+                                </lightning-record-edit-form>
+
+                              <!-- </div> -->
+                            <!-- </lightning:layoutItem> -->
+                          </td>
+                          <td>
+                            <!-- <lightning:layoutItem> -->
+                              <!-- <div class="grid"> -->
+
+                                <lightning-combobox
+                                label = ''
+                                    name="FirstQuestion"
+                                    value={Budgetlineitem.connectedTo}
+                                    placeholder="--Select--"
+                                    options={ScheduleLineItemOptions}
+                                    onchange={handleFirstChange}
+                                    class="gridInput ScheduleConnectedTo"
+                                    disabled={savedRecord}
+                                     >
+                            </lightning-combobox>
+                              <!-- </div> -->
+                            <!-- </lightning:layoutItem> -->
+                          </td>
+                          <td>
+                            <!-- <lightning:layoutItem> -->
+                              <!-- <div class="grid"> -->
+
+                                <lightning-input type="number" value={Budgetlineitem.dayDiff} disabled={savedRecord} class="gridInput ScheduleDaysDiff"></lightning-input>
+                            
+                              <!-- </div> -->
+                            <!-- </lightning:layoutItem> -->
+             
+                        </td>
+                          
+                          <td class="DeleteClmn right-col lowerDelete">
+                            <lightning-button label='' class="delete-icon DeleteAR lowerDelete" title="Delete" variant="inverse"
+                              onclick={DeleteARRow} icon-name="action:delete"></lightning-button>
+
+
+                          </td>
+                        </tr>
+                      </template>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <br>
+    <lightning-button label="Add Row" variant="brand" onclick={AddNewRow}></lightning-button>
+  </div>
+  <br>
+  <div class="form">
+    <lightning-button label="Create Project" onclick={CreateProject} variant="success"> </lightning-button>
+    <lightning-button label='Cancel' onclick={Cancel} variant="destructive"></lightning-button>
+  </div>
+  <template if:true={loading}>
+    <div class="Spinner">
+      <lightning-spinner size="large" variant="brand"></lightning-spinner>
+    </div>
+  </template>
+  
+
+
+</template>

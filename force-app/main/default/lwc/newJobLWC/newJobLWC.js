@@ -131,6 +131,7 @@ export default class NewJobLWC extends LightningElement {
 @track AccountQuestion = false;
 @track AccountLastName;
 @track AccountFirstName;
+@track newAccountRoles = false;
 
 @wire(getObjectInfo, { objectApiName: ACCOUNTROLES_OBJECT })
     objectInfo;
@@ -164,6 +165,31 @@ PropertyTypeValues;
 //     return [{ 
 //         AccountRolesValues.data.values}];
 // }
+closeProperty(){
+    const address = this.template.querySelector('[data-id="AddressLookup"]');
+            const isValid = address.checkValidity();
+             if(isValid) {
+                this.Street = address.street;
+                this.City = address.city;
+                this.State = address.province;
+                this.Zip = address.postal;
+                this.Country = address.country;
+                this.NewProperty = false;
+             }
+
+
+}
+closePropertyModal(){
+    this.NewProperty = false;
+}
+NewAccountRoleSelected(event){
+    var rowInd = event.target.parentNode.parentNode.rowIndex;
+    console.log('Contact index ' + rowInd);
+    this.newAccountRoles = true;
+}
+CloseAccountRole(){
+    this.newAccountRoles = false;
+}
 connectedCallback(){
     GetAccountRolesPicklist({}).then(result =>{
         var AccountRolePicklistValues = result;
@@ -176,9 +202,14 @@ connectedCallback(){
         this.AccountRolePicklistValuesContainer.shift();
         this.ARReady = true;
         console.log('yo');
-        this.AccountRoles.push({Roles__c : '', Contact_ID__c : '', Account_ID__c :''});
+        this.AccountRoles.push({Contact_ID__c : '', Account_ID__c :'', Text__c : ''});
         this.AccountRoles.shift();
     })
+}
+AccountMultipleRoles(e){
+    const roles = e.detail.value;
+    console.log('roles' + roles);
+    
 }
 addAccountQuestion(){
     this.AccountQuestion = true;

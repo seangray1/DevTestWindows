@@ -24,6 +24,7 @@ const fields = [
     'ATI_Job__c.Project_Site_Contact_Name__c', 'ATI_Job__c.Project_Site_Contact_Account__c', 'ATI_Job__c.Office2__c',  'ATI_Job__c.Stage__c', 
     'ATI_Job__c.Project_Type__c', 
     'ATI_Job__c.Referred_by__c', 
+    'ATI_Job__c.Branch_Manager__c', 
     'ATI_Job__c.Project_Manager__c',
     'ATI_Job__c.CloseDate__c',
     'ATI_Job__c.City_of_LA__c', 
@@ -40,7 +41,7 @@ const fields = [
     'ATI_Job__c.Cont_P_O_Client_Job__c', 
     'ATI_Job__c.PO__c', 
     'ATI_Job__c.Send_Prelim__c',
-    
+    //'ATI_Job__c.Parent_Job__c',
 ];
 export default class CloneJobLWC extends LightningElement {
     connectedCallback(){
@@ -48,6 +49,7 @@ export default class CloneJobLWC extends LightningElement {
     }
 @api objectApiName;
 @track objectInfo;
+@track ParentJob;
 @track ContPOClientJob;
 @track PO;
 @track SendPrelim;
@@ -84,6 +86,7 @@ export default class CloneJobLWC extends LightningElement {
 @track TakenBy;
 @track Customer;
 @track ProjectDirector;
+@track BranchManager;
 @track No = false;
 @track loading = false;
 
@@ -112,14 +115,14 @@ get recordTypeId() {
 		} else if (data) {
 			
            console.log('Testing name ' + data.fields.Name.value);
-            this.Name = data.fields.Name.value;
+           this.Name = data.fields.Name.value;
             this.JobName = data.fields.Job_Name__c.value;
             this.JobNumber = data.fields.Job_Number__c.value;
             this.Account = data.fields.Account__c.value;
             this.Contact = data.fields.Contact__c.value;
             this.TakenBy = data.fields.Taken_By__c.value;
             
-            this.Parent_Job__c = this.recordId;
+            this.ParentJob = this.recordId;
             
             this.LeadSource = data.fields.Lead_Source__c.value;
             this.YearStructureBuilt = data.fields.Year_Structure_Built__c.value;
@@ -135,7 +138,8 @@ get recordTypeId() {
             this.ReferredBy = data.fields.Referred_by__c.value;
             this.County = data.fields.County__c.value;
             this.CloseDate = data.fields.CloseDate__c.value;
-            this.ProjectDirector = data.fields.Project_Manager__c.value;
+            //this.ProjectDirector = data.fields.Project_Manager__c.value;
+            this.BranchManager = data.fields.Branch_Manager__c.value;
 
            
             this.CityOfLA = data.fields.City_of_LA__c.value;
@@ -163,7 +167,8 @@ get recordTypeId() {
     NoTrue(){
         this.Start = false;
         this.Yes = true;
-        this.Parent_Job__c = '';
+        this.ParentJob = '';
+        // this.Description = '';
     }
     handleSuccess(event){
         const payload = event.detail;

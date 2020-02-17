@@ -86,13 +86,13 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
-        <content>ATI_Job_NewJobBeta</content>
+        <content>NewJob</content>
+        <formFactor>Large</formFactor>
         <skipRecordTypeSelect>true</skipRecordTypeSelect>
-        <type>Visualforce</type>
+        <type>LightningComponent</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
-        <formFactor>Large</formFactor>
         <type>Default</type>
     </actionOverrides>
     <actionOverrides>

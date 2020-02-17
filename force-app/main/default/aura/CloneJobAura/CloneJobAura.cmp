@@ -18,8 +18,8 @@
         max-width: 70rem;
         }
         .modal-body{
-        height : 1000px !important;
-        max-height: 1000px !important;
+        height : 120rem !important;
+        max-height: 120rem !important;
         }
         
         .customFooter{

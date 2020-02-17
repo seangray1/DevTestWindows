@@ -4,12 +4,37 @@
  * @Author             : sean.gray@atirestoration.com
  * @Group              : 
  * @Last Modified By   : sean.gray@atirestoration.com
- * @Last Modified On   : 2/5/2020, 11:17:36 AM
+ * @Last Modified On   : 2/14/2020, 10:56:56 AM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/28/2020   sean.gray@atirestoration.com     Initial Version
 **/
 public with sharing class NewJobController {
+    @AuraEnabled
+    public static string InsertAccount(String Name, String Phone, String Type, String PhoneExt,
+                                         String BillingStreet, String BillingCity, String BillingState,
+                                        String BillingPostalCode, String BillingCountry){
+                                            system.debug(Name +'     ' + Phone + '     ' +Type + '     ' +PhoneExt + '     ' +BillingStreet + '     ' +BillingCity+ '     ' +BillingState +'     ' + BillingPostalCode + '     ' +BillingCountry);
+        Account acct = new Account(Name = Name, Phone = Phone, Type = Type, Phone_Ext__c = PhoneExt,  BillingStreet = BillingStreet,
+                                    BillingState = BillingState, BillingPostalCode = BillingPostalCode, BillingCity = BillingCity, BillingCountry = BillingCountry);
+                                    //IsPersonType = PersonAccount,
+        insert acct;
+        return acct.id;
+        
+    }
+    @AuraEnabled
+    public static string InsertPersonAccount(String FirstName, String LastName, String Phone, String Type, String PhoneExt,
+                                         String BillingStreet, String BillingCity, String BillingState,
+                                        String BillingPostalCode, String BillingCountry){
+                                            system.debug(FirstName + '     ' + LastName +'     ' + Phone + '     ' +Type + '     ' +PhoneExt + '     ' +BillingStreet + '     ' +BillingCity+ '     ' +BillingState +'     ' + BillingPostalCode + '     ' +BillingCountry);
+        RecordType personAccountRecordType =  [SELECT Id FROM RecordType WHERE Name = 'Person Accounts' and SObjectType = 'Account'];
+        Account acct = new Account(FirstName = FirstName, LastName= LastName,  Phone = Phone, Type = Type, Phone_Ext__c = PhoneExt, RecordType = personAccountRecordType,  BillingStreet = BillingStreet,
+                                    BillingState = BillingState, BillingPostalCode = BillingPostalCode, BillingCountry = BillingCountry);
+                                    //IsPersonType = PersonAccount,
+        insert acct;
+        return acct.id;
+        
+    }
     @AuraEnabled
     public static List<Account_Roles__c> GetAccountRoless(String PropertyId) {
         Id PropertyIDFinal;

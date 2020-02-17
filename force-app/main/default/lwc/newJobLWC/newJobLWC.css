@@ -49,3 +49,23 @@
   .lgc-bg-inverse {
     background-color: rgb(22, 50, 92);
 }
+.Labels{
+    position: relative;
+    bottom: -20px;
+}
+.selectRole{
+    padding-bottom: 0.3%;
+    padding-top: 0.3%;
+    right: -2px;
+    position: relative;
+}
+.DeleteAR {
+    padding-bottom: 0.3%;
+   padding-top: 0.3%;
+   position: relative;
+   right: -4px;;
+}
+.rowPadding {
+    padding-bottom: 0.3%;
+   padding-top: 0.3%;
+}

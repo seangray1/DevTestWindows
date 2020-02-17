@@ -10,7 +10,7 @@
   1.0    1/21/2020   Sean Gray     Initial Version
 -->
 <template>
-  <!-- <div class="slds-scrollable_y" style="height:120rem;width:100rem"> -->
+  <div class="slds-scrollable_y" style="height:195rem;width:100%">
     <!-- <template if:true={Start}>
     <p style="width:100%; font-size:20px; text-align:center;margin: 45px 0 20px 0;"> Will the cloned job be related to this existing job ?</p><br/>
     <div style="width:100%; text-align:center;"><button style="padding: 3px 40px;margin-right: 20px;" class="slds-button slds-button_brand" onclick={YesTrue}>Yes</button>
@@ -23,7 +23,7 @@
     
       <div class="section" id="1">
         Job Information
-   
+        <br>
     </div>
   </div>
    
@@ -47,6 +47,7 @@
       <lightning-input-field field-name="Office2__c" value={Office}></lightning-input-field>
       <lightning-input-field field-name="Division__c" value={Division}></lightning-input-field>
       <lightning-input-field field-name="Project_Manager__c" value={ProjectDirector}></lightning-input-field>
+      <lightning-input-field field-name="Branch_Manager__c" value={BranchManager}></lightning-input-field>
       <lightning-input-field field-name="Work_Authorization__c" value={WorkAuth}></lightning-input-field>
       <lightning-input-field field-name="Stage__c" value={Stage}></lightning-input-field>
       <lightning-input-field field-name="CloseDate__c" value={CloseDate}></lightning-input-field>
@@ -113,7 +114,7 @@
     
   <div class="section" id="2">
     Project Information
-
+    <br>
 </div>
 </div>
 
@@ -184,11 +185,13 @@
   </div>
 </fieldset>   
 
-
-  <div class="center">
-      <lightning-button label="Submit" variant="brand"  type="submit" class="center"></lightning-button>
-      <lightning-button label="Cancel" onclick={Cancel} class="center"></lightning-button>
-  </div>
+<div class="slds-p-around_medium lgc-bg-inverse element">
+    <lightning-button-group>
+        <lightning-button label="Submit" variant="brand"  type="submit" class="center"></lightning-button>
+        <lightning-button label="Cancel" onclick={Cancel} class="center"></lightning-button>
+    </lightning-button-group>
+    </div>
+  
     </lightning-record-edit-form>
     
   
@@ -240,4 +243,5 @@
   </section>
   <div class="slds-backdrop slds-backdrop_open"></div>
 </template>
+</div>
 </template>

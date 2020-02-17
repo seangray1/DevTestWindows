@@ -1,0 +1,103 @@
+.everything{
+    background-color:rgb(135, 202, 222);
+    
+   
+}
+.Name1 {
+    
+    font-family: fantasy;
+}
+.Quantity1 {
+    
+    font-family: fantasy;
+}
+.Price1 {
+    
+    font-family: fantasy;
+}
+.Race1 {
+   
+    font-family: fantasy;
+}
+.save1 {
+    
+    font-family: fantasy;
+    border-spacing: 3em;
+}
+/* .alpha {
+    font-size: 15px;
+    padding-left: 5%;
+    font-family: Arial, Helvetica, sans-serif;
+    
+} */
+.a {
+    
+    font-family: fantasy;
+  
+    font-variant: normal;
+    font-family: fantasy;
+}
+.copy-row {
+    
+    
+}
+.rec1 {
+    
+}
+.rec2 {
+    
+}
+.lowerDelete {
+    margin-top: 5%;
+}
+.pleaseWork {
+    size: 2em;
+    background-size: 2em;
+    direction: inherit;
+    background-position-x: center;
+    background-position-y: center;
+    color: black;
+    text-align: center;
+    font-size: 3em;
+}
+.grid {
+    color: gray;
+
+    margin-top: 1%;
+ 
+    
+    
+   
+}
+.gridInput {
+    margin-bottom: 5.5%;
+}
+.form{
+    display: inline;
+}
+.add-row buton{
+    float: left;
+    ;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: 500px;
+}
+.BtnSave buton {
+    float: left;
+
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: 500px;
+}
+.cancel buton {
+    float: left;
+    
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin-top: -3%;
+    margin-bottom: -3%;
+    
+}
