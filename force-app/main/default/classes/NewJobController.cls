@@ -4,12 +4,38 @@
  * @Author             : sean.gray@atirestoration.com
  * @Group              : 
  * @Last Modified By   : sean.gray@atirestoration.com
- * @Last Modified On   : 2/14/2020, 10:56:56 AM
+ * @Last Modified On   : 2/18/2020, 1:47:15 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/28/2020   sean.gray@atirestoration.com     Initial Version
 **/
 public with sharing class NewJobController {
+    @AuraEnabled
+    public static string InsertContact(String FirstName, String LastName, String Email, String Phone, String Type, String PhoneExt,
+                                         String MailingStreet, String MailingCity, String MailingState,
+                                        String MailingPostalCode, String MailingCountry, String AccountId, Boolean AccountList){
+                                            system.debug(FirstName +'     ' +LastName+ '      '+  Phone + '     ' +Type + '     ' +PhoneExt + '     ' +MailingStreet + '     ' +MailingCity+ '     ' +MailingState +'     ' + MailingPostalCode + '     ' +MailingCountry);
+         //AccountList false if accountlist..
+         Id conId;
+         if(!AccountList){
+        AccountWrapper accountWrap = (AccountWrapper)JSON.deserialize(AccountId, AccountWrapper.class);
+       
+        system.debug('Account Id ' + accountWrap.AccountId);
+        for(Id ca : accountWrap.AccountId){
+            conId = ca;
+        }
+    }   
+        if(AccountList){
+            AccountId acctId = (AccountId)JSON.deserialize(AccountId, AccountId.class);
+            conId = acctId.AccountId;
+        }
+        Contact cont = new Contact(AccountId = conId, Email = Email, FirstName = FirstName, LastName = LastName, Phone = Phone, Contact_Type__c =Type, Phone_Ext__c = PhoneExt,  MailingStreet = MailingStreet,
+                                    MailingState = MailingState, MailingPostalCode = MailingPostalCode, MailingCity = MailingCity, MailingCountry = MailingCountry);
+                                    //IsPersonType = PersonAccount,
+        insert cont;
+        return cont.id;
+        
+    }
     @AuraEnabled
     public static string InsertAccount(String Name, String Phone, String Type, String PhoneExt,
                                          String BillingStreet, String BillingCity, String BillingState,
@@ -29,10 +55,15 @@ public with sharing class NewJobController {
                                             system.debug(FirstName + '     ' + LastName +'     ' + Phone + '     ' +Type + '     ' +PhoneExt + '     ' +BillingStreet + '     ' +BillingCity+ '     ' +BillingState +'     ' + BillingPostalCode + '     ' +BillingCountry);
         RecordType personAccountRecordType =  [SELECT Id FROM RecordType WHERE Name = 'Person Accounts' and SObjectType = 'Account'];
         Account acct = new Account(FirstName = FirstName, LastName= LastName,  Phone = Phone, Type = Type, Phone_Ext__c = PhoneExt, RecordType = personAccountRecordType,  BillingStreet = BillingStreet,
-                                    BillingState = BillingState, BillingPostalCode = BillingPostalCode, BillingCountry = BillingCountry);
-                                    //IsPersonType = PersonAccount,
-        insert acct;
-        return acct.id;
+                                    BillingState = BillingState, BillingCity = BillingCity, BillingPostalCode = BillingPostalCode, BillingCountry = BillingCountry);
+        try {
+            insert acct;
+            return acct.id;
+        } catch (Exception e) {
+            return String.valueOf(e);
+        }                       //IsPersonType = PersonAccount,
+        
+        
         
     }
     @AuraEnabled
@@ -96,7 +127,10 @@ public with sharing class NewJobController {
     
     @AuraEnabled 
     public static list<Account_Roles__c> CheckId(string propId){
-        List<Account_Roles__c> a = [Select Id, Name, Roles__c, Contact_ID__c, Address__c, Account_ID__c FROM Account_Roles__c Where Property_ID__c =: propId];
+        List<Account_Roles__c> a = [Select Id, Name, Roles__c, Contact_ID__c, Address__c, Text__c, Account_ID__c FROM Account_Roles__c Where Property_ID__c =: propId];
+        for(Account_Roles__c ar : a){
+            ar.Text__c = ar.Roles__c;
+        }
         system.debug('Prop Id + ' + propId);
         system.debug('Contact ID is ' + a);
         return a;
@@ -123,15 +157,15 @@ public with sharing class NewJobController {
             }
         
     @AuraEnabled 
-    public static Id CreateNewJob(string ContactInfo, string AccountRoleInfo, string AccountInfo, string PropertyInfo, string JobInfo, string MasterJobId){
-        system.debug('Contact Wrap ' + ContactInfo);
-        ContactWrapper contactWrap = (ContactWrapper)JSON.deserialize(ContactInfo, ContactWrapper.class);
-        system.debug('Contact deserialized first name ' +contactWrap.FirstName);
-        AccountWrapper accountWrap = (AccountWrapper)JSON.deserialize(AccountInfo, AccountWrapper.class);
-        system.debug('Contact Wrap ' + contactWrap);
-        system.debug(' Contact Info ' + ContactInfo);
+    public static Id CreateNewJob(string AccountRoleInfo,string PropertyInfo, string JobInfo, string MasterJobId){
+        // system.debug('Contact Wrap ' + ContactInfo);
+        // ContactWrapper contactWrap = (ContactWrapper)JSON.deserialize(ContactInfo, ContactWrapper.class);
+        // system.debug('Contact deserialized first name ' +contactWrap.FirstName);
+        // AccountWrapper accountWrap = (AccountWrapper)JSON.deserialize(AccountInfo, AccountWrapper.class);
+        // system.debug('Contact Wrap ' + contactWrap);
+        // system.debug(' Contact Info ' + ContactInfo);
         system.debug(' AccountRoleInfo ' + AccountRoleInfo);
-        system.debug(' Account Info ' + AccountInfo);
+        // system.debug(' Account Info ' + AccountInfo);
         system.debug(' Property Info ' + PropertyInfo);
         system.debug(' Job Info ' + JobInfo);
         system.debug(' MasterJob Info ' + MasterJobId);
@@ -140,6 +174,44 @@ public with sharing class NewJobController {
         Id test;
         return test;
 
+    }
+    
+    public class ContactId {
+        public Id ContactId {get;set;}
+    
+    }
+    public class AccountId{
+        public Id AccountId {get;set;}
+    }
+    
+    public class AccountRoleWrapper{
+        public List<Id> AccountRoleLineItems {get;set;}
+    }
+    public class AccountRoleLineItems{
+        public String Text__c {get;set;}
+        public Id Account_ID__c {get;set;}
+        public Id Contact_ID__c {get;set;}
+    }
+    public class PropertyWrapper{
+        public List<Id> PropertyId {get;set;}
+    }
+    public class JobWrapper{
+        public List<Id> PropertyId {get;set;}
+    }
+    public class AccountWrapper{
+        //public List<Id> PropertyId {get;set;}
+        
+        
+        public List<Id> AccountId {get;set;}
+        public string AccountName {get;set;}
+        public string BillingStreet {get;set;}
+        public string BillingCity {get;set;}
+        public string BillingState {get;set;}
+        public string BillingPostalCode {get;set;}
+        public string TypeChange {get;set;}
+        public string BillingCountry {get;set;}
+        public string AccountPhone {get;set;}
+        public string AccountPhoneExt {get;set;}
     }
     public class ContactWrapper{
         public List<Id> ContactId {get;set;}
@@ -155,35 +227,6 @@ public with sharing class NewJobController {
         public string Email {get;set;}
         public string PhoneExt {get;set;}
         public string MailingPostalCode {get;set;}
-    }
-    public class ContactId {
-        public Id ContactId {get;set;}
-    
-    }
-    public class AccountId{
-        public Id AccountId {get;set;}
-    }
-    
-    public class AccountRoleWrapper{
-        public List<Id> PropertyId {get;set;}
-    }
-    public class PropertyWrapper{
-        public List<Id> PropertyId {get;set;}
-    }
-    public class JobWrapper{
-        public List<Id> PropertyId {get;set;}
-    }
-    public class AccountWrapper{
-        //public List<Id> PropertyId {get;set;}
-        public string AccountName {get;set;}
-        public string BillingStreet {get;set;}
-        public string BillingCity {get;set;}
-        public string BillingState {get;set;}
-        public string BillingPostalCode {get;set;}
-        public string TypeChange {get;set;}
-        public string BillingCountry {get;set;}
-        public string AccountPhone {get;set;}
-        public string AccountPhoneExt {get;set;}
     }
     
 // @track AccountName;

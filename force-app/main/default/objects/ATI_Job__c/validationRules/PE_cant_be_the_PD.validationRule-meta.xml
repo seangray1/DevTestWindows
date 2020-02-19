@@ -3,6 +3,6 @@
     <fullName>PE_cant_be_the_PD</fullName>
     <active>true</active>
     <description>Project Estimator can&#39;t be the same as the Project Director.</description>
-    <errorConditionFormula>(Project_Estimator__c = Project_Manager__c) &amp;&amp; DATEVALUE(CreatedDate) &gt;= DATE(2020,01,31)</errorConditionFormula>
+    <errorConditionFormula>Project_Estimator__c &lt;&gt; null &amp;&amp; (Project_Estimator__c = Project_Manager__c) &amp;&amp; DATEVALUE(CreatedDate) &gt;= DATE(2020,01,31)</errorConditionFormula>
     <errorMessage>Project Estimator can&#39;t be the same as the Project Director.</errorMessage>
 </ValidationRule>

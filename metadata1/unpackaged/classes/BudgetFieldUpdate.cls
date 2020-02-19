@@ -111,7 +111,9 @@ public without sharing class BudgetFieldUpdate {
             
             }
         }//for loop for each customer survey and assign them to customer survey.  
+        system.debug('Jobs to update ' + jobsToUpdate.Budget__c);
         update jobsToUpdate;
+        system.debug('Jobs to update ' + jobsToUpdate.Budget__c);
      
     }
     public static void UpdateFinancialGP(List<Budget__c> bud, Map<Id,Budget__c> oldBud)

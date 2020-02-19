@@ -6,6 +6,7 @@
         <members>Contact</members>
         <members>Task</members>
         <members>Case</members>
+        <members>Opportunity</members>
         <name>CustomObject</name>
     </types>
     <types>

@@ -12,11 +12,10 @@
 .grid {
     color: gray;
 
-    margin-top: 1%;
- 
-    
-    
-   
+    margin-top: 1%;  
+}
+.pushRight{
+margin-left: 18px;
 }
 .biggerText{
     size: 60%;
@@ -63,7 +62,10 @@
     padding-bottom: 0.3%;
    padding-top: 0.3%;
    position: relative;
-   right: -4px;;
+   right: -4px;
+   /* margin-right: 390px; */
+   
+   
 }
 .rowPadding {
     padding-bottom: 0.3%;
