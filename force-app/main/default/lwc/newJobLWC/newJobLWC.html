@@ -4,7 +4,7 @@
   @Author             : Sean Gray
   @Group              : 
   @Last Modified By   : sean.gray@atirestoration.com
-  @Last Modified On   : 2/20/2020, 10:59:19 AM
+  @Last Modified On   : 2/21/2020, 8:15:45 AM
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    1/23/2020   Sean Gray     Initial Version
@@ -143,9 +143,9 @@
                                                                             field-name="Contact_ID__c"
                                                                             class="form-control ARContact everything"
                                                                             variant="label-hidden"
-                                                                            onchange={ARContactChangeNew}>
+                                                                            >
                                                                         </lightning-input-field>
-                                                                        
+                                                                       <!-- onchange={ARContactChangeNew} -->
                                                                     </lightning-record-edit-form>
                                                                    </div>
                                                              
@@ -334,7 +334,7 @@
                         <label class="Labels spacing"> Claim #</label>
                         <lightning-input  value={Claim}  onchange={ClaimChange} class="spacing"></lightning-input>
                         <label class="Labels spacing" > Deductible</label>
-                        <lightning-input value={Deductible} onchange={DeductibleChange} class="spacing"></lightning-input>
+                        <lightning-input type="number" formatter="currency" value={Deductible} onchange={DeductibleChange} class="spacing"></lightning-input>
                        
                     </div>
                     <div class="slds-col slds-size_1-of-6">
@@ -1026,6 +1026,8 @@
                 
                     
                                 <lightning-input-address
+                                required
+                                class="propertyFormControl"
                                 data-id="AddressLookup"
                                 address-label="Address Search"
                                 street-label="Street"
@@ -1039,6 +1041,7 @@
                                 province={State}
                                 postal-code={Zip}
                                 show-address-lookup
+                                
                     
                     ></lightning-input-address>
                                          <div class="slds-col slds-size_1-of-2">
@@ -1047,7 +1050,9 @@
                                             value={PropertyType}
                                             placeholder="-Select-"
                                             options={PropertyTypeValues.data.values}
-                                            onchange={PropertyTypeChange} >
+                                            onchange={PropertyTypeChange}
+                                            class="propertyFormControl"
+                                            required>
                                         </lightning-combobox>
                                         <!-- <lightning-input label="Zip" value={Zip} onchange={ZipChange}></lightning-input>
                 

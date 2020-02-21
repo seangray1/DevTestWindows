@@ -1,3 +1,6 @@
+/* eslint-disable vars-on-top */
+/* eslint-disable no-console */
+/* eslint-disable no-alert */
 /**
  * @File Name          : newJobLWC.js
  * @Description        : 
@@ -8,7 +11,7 @@
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/23/2020   Sean Gray     Initial Version
-**/ 
+**/
 import { LightningElement, track, wire } from 'lwc';
 import {ShowToastEvent} from 'lightning/platformShowToastEvent';
 //import SearchAccountRoles from '@salesforce/apex/NewJobController.GetAccountRoles';
@@ -200,10 +203,19 @@ MultipleDivisionPicklistValues;
 //         AccountRolesValues.data.values}];
 // }
 get options() {
-    console.log('DIvision pickilst values under OPtions are ' + this.DivisionPicklistValues);
+    
     return this.DivisionPicklistValues;
 }
 closeProperty(){
+    
+        const input = [...this.template.querySelectorAll('.propertyFormControl')]
+        .reduce((validSoFar, inputCmp) => {
+                    inputCmp.reportValidity();
+                    return validSoFar && inputCmp.checkValidity();
+        }, true);
+    if(!input){
+        alert('Fill in all required fields before saving');
+    }else{
     const address = this.template.querySelector('[data-id="AddressLookup"]');
             const isValid = address.checkValidity();
              if(isValid) {
@@ -221,7 +233,7 @@ closeProperty(){
                 this.dispatchEvent(event);
              }
 
-
+            }
 }
 
 AccountPhoneChange(e){
@@ -247,11 +259,11 @@ closePropertyModal(){
 }
 NewAccountRoleSelected(event){
     var rowInd = event.target.parentNode.parentNode.parentNode.rowIndex;
-    console.log('Row Ind0 is  '+ rowInd );
+    
  
     rowInd = rowInd - 1;
     this.MultRoleInd = rowInd;
-    console.log('Contact index ' + rowInd);
+    
     this.newAccountRoles = true;
 }
 CloseAccountRole(){
@@ -263,7 +275,7 @@ connectedCallback(){
     GetAccountRolesPicklist({}).then(result =>{
         var AccountRolePicklistValues = result;
         for(var i = 0; i<AccountRolePicklistValues.length;i++){
-            console.log('Lenght is '+ AccountRolePicklistValues.length + '    values are ' + AccountRolePicklistValues[i] );
+        
             this.AccountRolePicklistValuesContainer.push({label : AccountRolePicklistValues[i], value : AccountRolePicklistValues[i], });
         }   
         this.AccountRolePicklistValuesContainer.shift();
@@ -274,19 +286,19 @@ connectedCallback(){
     GetDivisionPicklist({}).then(result =>{
         var AccountRolePicklistValues = result;
         for(var i = 0; i<AccountRolePicklistValues.length;i++){
-            console.log('Lenght is '+ AccountRolePicklistValues.length + '    values are ' + AccountRolePicklistValues[i] );
+            
             this.DivisionPicklistValues.push({label : AccountRolePicklistValues[i], value : AccountRolePicklistValues[i], });
         }
-        console.log('DIvision pickilst values are ' + this.DivisionPicklistValues);
+        
         this.DivisionPicklistValues.shift();
         this.ARDivision = true;
-        console.log('DIvision pickilst values after shift are ' + this.DivisionPicklistValues);
+       
        
     })
     GetJobClassPicklist({}).then(result =>{
         var AccountRolePicklistValues = result;
         for(var i = 0; i<AccountRolePicklistValues.length;i++){
-            console.log('Lenght is '+ AccountRolePicklistValues.length + '    values are ' + AccountRolePicklistValues[i] );
+            
             this.JobClassPicklistValues.push({label : AccountRolePicklistValues[i], value : AccountRolePicklistValues[i], });
         }
         
@@ -295,7 +307,7 @@ connectedCallback(){
     GetEsJobTypePicklist({}).then(result =>{
         var AccountRolePicklistValues = result;
         for(var i = 0; i<AccountRolePicklistValues.length;i++){
-            console.log('Lenght is '+ AccountRolePicklistValues.length + '    values are ' + AccountRolePicklistValues[i] );
+            
             this.EsJobTypePicklistValues.push({label : AccountRolePicklistValues[i], value : AccountRolePicklistValues[i], });
         }
         
@@ -304,7 +316,7 @@ connectedCallback(){
     GetLeadSourcePicklist({}).then(result =>{
         var AccountRolePicklistValues = result;
         for(var i = 0; i<AccountRolePicklistValues.length;i++){
-            console.log('Lenght is '+ AccountRolePicklistValues.length + '    values are ' + AccountRolePicklistValues[i] );
+            
             this.LeadSourcePicklistValues.push({label : AccountRolePicklistValues[i], value : AccountRolePicklistValues[i], });
         }
         
@@ -332,7 +344,7 @@ saveMultipleRoles(){
 }
 AccountMultipleRoles(e){
     this.MultipleRoles = e.detail.value;
-    console.log('roles' + this.MultipleRoles);
+   
     
 }
 PersonAccountRolesChange(e){
@@ -366,9 +378,9 @@ closePersonAccountModal(){
     this.ContactAccountRole = null;
 }
 SaveContact(){
-    var ContactJSON = {'AccountId': this.ContactAccountValue};
-    console.log('ContactJSON is   ' + ContactJSON);
-    var PackagedString = JSON.stringify(ContactJSON);
+    var ACCOUNTJSON = {'AccountId': this.ContactAccountValue};
+    
+    var PackagedString = JSON.stringify(ACCOUNTJSON);
     
     // var cavalue = JSON.stringify(this.ContactAccountValue);
     // var cavalueid = JSON.parse(cavalue);
@@ -525,7 +537,7 @@ saveAccount(){
                 this.BillingPostalCode = address.postalCode;
                 this.BillingCountry = address.country;
                 this.loading = true;
-                console.log('Billing Postal ' + this.BillingPostalCode);
+                
                 InsertAccount({Name:this.AccountName, Phone:this.AccountPhone, Type:this.Type, PhoneExt:this.AccountPhoneExt,
                  BillingStreet:this.BillingStreet, BillingCity:this.BillingCity, 
                 BillingState:this.BillingState, BillingPostalCode:this.BillingPostalCode, BillingCountry:this.BillingCountry})
@@ -586,16 +598,16 @@ ReplaceEmptyAccountRoleRows(){
     //Get Value from HTML
     if(this.TypeOfInsert === 'PersonAccount'){
         this.ContactAccountRole = this.PersonAccountRoles;
-        console.log('PersonAccount part ');
+      
     }
     if(this.TypeOfInsert === 'BusinessAccount'){
         this.ContactAccountRole = this.CompanyAccountRoles;
-        console.log('CompanyAccount part part ');
+     
     } 
     let TblRow =  Array.from(this.template.querySelectorAll('table.ActRoles tbody tr'));
-    console.log('tbl' + TblRow);
+ 
     let RowCount = TblRow.length;
-    console.log('RowCount' + RowCount);
+   
     var Inserted = false;
     for(let k=0; k<RowCount; k++){
         // let ARName = TblRow[k].querySelector('.ARName').value;
@@ -603,14 +615,14 @@ ReplaceEmptyAccountRoleRows(){
         //let ARAddress = TblRow[k].querySelector('.ARAddress').value;
         let ARContact = TblRow[k].querySelector('.ARContact').value;
         let ARAccount = TblRow[k].querySelector('.ARAccount').value;
-        console.log('ARContact ' + ARContact + '    ARAccount ' + ARAccount + '   ARRoles ' + ARRoles);
+      
         if((ARContact !== "" && ARContact !== null) || (ARAccount !== "" && ARAccount !== null)){
         AccountRoles.push({
             Text__c: ARRoles,  Contact_ID__c: ARContact, Account_ID__c: ARAccount
         });
         
     }else if((ARContact === "" || ARContact === null) && (ARRoles === "" || ARRoles === null) && (ARAccount === "" || ARAccount === null)){
-        console.log('Else called' );
+       
         AccountRoles.push({
             
             Text__c: this.ContactAccountRole,  Contact_ID__c: this.ContactId, Account_ID__c: this.ContactAccountValue
@@ -619,10 +631,10 @@ ReplaceEmptyAccountRoleRows(){
     }
 }
     if(!Inserted){
-        console.log('!Inserted has been called ' );
+    
         AccountRoles.push({Text__c : this.ContactAccountRole,  Contact_ID__c: this.ContactId, Account_ID__c: this.ContactAccountValue});
     }
-        console.log('Account roles contains ' +AccountRoles);
+   
 
     
     return AccountRoles;
@@ -695,7 +707,7 @@ setAddressFields(){
             alert("Not a Valid Address");
     }
 }
-PropertyEmpty(event){
+PropertyEmpty(){
     this.ClearSearch();
     this.Customers = null;
 }
@@ -794,12 +806,7 @@ TypeChange(e){
 BillingCountryChange(e){
     this.BillingCountry = e.detail.value;
 }
-AccountPhoneChange(e){
-    this.AccountPhone = e.detail.value;
-}
-AccountPhoneExtChange(e){
-    this.AccountPhoneExt = e.detail.value;
-}
+
 PropertyNameChange(e){
     this.PropertyName = e.detail.value;
 }
@@ -839,7 +846,7 @@ JobClassChange(e){
     this.JobClass = e.detail.value;
 }
 EsJobTypeChange(e){
-    this.EstimateType = e.detail.value;
+    this.EsJobType = e.detail.value;
 }
 ClaimChange(e){
     this.Claim = e.detail.value;
@@ -853,7 +860,7 @@ DeductibleChange(e){
  AccountSelectionChange(e){
      this.ContactAccountSelected = true;
      this.ContactAccountValue = e.detail.value;
-     console.log('Length is ' + this.ContactAccountValue.length + '    Value is ' + this.ContactAccountValue);
+    
  }
 ToggleNewCaller(){
     this.NewAccount = false;
@@ -918,19 +925,19 @@ closeModal(){
 
 // }
 // }
-ARContactChangeNew(event){
-    var rowInd = event.target.parentNode.parentNode.rowIndex;
-                   console.log('Contact index ' + rowInd);
-}
+// ARContactChangeNew(event){
+//     var rowInd = event.target.parentNode.parentNode.rowIndex;
+                  
+// }
 
 ARContactChange(event){
 
-    console.log('Testing ARContact Change ' );
+
     window.clearTimeout(this.delayTimeout);
        var searchKey = event.target.value;
        if(searchKey.length === 0){this.ARContacts = null;}
        if(searchKey.length >= 1){
-           console.log('Testing ' + searchKey);
+          
         // eslint-disable-next-line @lwc/lwc/no-async-operation
         //this.delayTimeout = setTimeout(() => {
             // eslint-disable-next-line @lwc/lwc/no-async-operation
@@ -938,9 +945,9 @@ ARContactChange(event){
                 SearchCustomers({searchKey : searchKey})
                 .then(result => {
                     this.ARContacts = result;
-                   console.log('ARContacts ' + this.ARContacts);
+                  
                    var rowInd = event.target.parentNode.parentNode.rowIndex;
-                   console.log('Delete row index ' + rowInd);
+                  
                    
                    this.AccountRoles = this.getAllAccountRoleObjects();
                 //    this.AccountRoles[rowInd].ContactSearch = 't';
@@ -948,7 +955,7 @@ ARContactChange(event){
                 
                 .catch(error => {
                     this.error = error;
-                    console.log('Error ' + this.error);
+                 
                 });
             }, DELAY);
            
@@ -971,7 +978,7 @@ OfficeChange(event){
                 SearchOffices({searchKey : searchKey})
                 .then(result => {
                     this.Offices = result;
-                    console.log('Customers ' + this.Offices);
+                   
                 })
                 
                 .catch(error => {
@@ -995,7 +1002,7 @@ ContactAccountChanged(event){
                 SearchContactAccounts({searchKey : searchKey})
                 .then(result => {
                     this.ContactAccounts = result;
-                    console.log('Customers ' + this.ContactAccounts);
+                 
                 })
                 
                 .catch(error => {
@@ -1019,7 +1026,7 @@ CustomerChanged(event){
                 SearchCustomers({searchKey : searchKey})
                 .then(result => {
                     this.Customers = result;
-                    console.log('Customers ' + this.Customers);
+                
                 })
                 
                 .catch(error => {
@@ -1075,15 +1082,12 @@ populatePropertyField(event){
     this.PropertySelectedField = event.target.value;
     this.PropertyValue = this.PropertySelectedField.Name;
     this.PropertyID = this.PropertySelectedField.Id;
-    console.log('Testing name alert ' + this.PropertySelectedField.name);
-    console.log('PropertyID ' + this.testingProperty);
+  
 
     checkId({propId:this.testingProperty.Id}).then(result => {
         this.AccountRoles = result;
         this.AccountRolesSelected = true;
-        console.log('Account Roles is ' + this.AccountRoles);
-        console.log('Account Roles Name ' + this.AccountRoles.Name);
-        console.log('Account Roles Contact ' + this.AccountRoles.Contact_ID__c);
+    
     })
     GetMasterJobs({propId:this.testingProperty.Id}).then(result => {
         this.MasterJobs = result;
@@ -1095,7 +1099,7 @@ populatePropertyField(event){
 PropertyChanged(event){
     
     // window.clearTimeout(this.delayTimeout);
-    console.log('testing ');
+  
     
     window.clearTimeout(this.delayTimeout);
        var searchKey = event.target.value;
@@ -1109,7 +1113,7 @@ PropertyChanged(event){
                 SearchProperties({searchKey : searchKey})
                 .then(result => {
                     this.Properties = result;
-                    console.log('Properties ' + this.Properties);
+                  
                 })
                 
                 .catch(error => {
@@ -1126,9 +1130,9 @@ getAllAccountRoleObjects() {
 //var AccountRoless
     //Get Value from HTML 
     let TblRow =  Array.from(this.template.querySelectorAll('table.ActRoles tbody tr'));
-    console.log('tbl' + TblRow);
+    
     let RowCount = TblRow.length;
-    console.log('RowCount' + RowCount);
+  
     for(let k=0; k<RowCount; k++){
         // let ARName = TblRow[k].querySelector('.ARName').value;
         
@@ -1139,7 +1143,7 @@ getAllAccountRoleObjects() {
         AccountRoles.push({
              Contact_ID__c: ARContact, Account_ID__c: ARAccount, Text__c: ARRoles
         });
-        console.log('Account roles contains ' +AccountRoles);
+ 
 
     }
     return AccountRoles;
@@ -1154,9 +1158,8 @@ populateMasterJobField(event){
     this.bShowModal = false;
 }
 DeleteARRow(e){
-    var DeleteRowIndex = e.target.parentNode.parentNode.rowIndex;
-    console.log('Delete row index ' + DeleteRowIndex);
-    console.log('Test ' + e);
+    var DeleteRowIndex = e.target.parentNode.parentNode.parentNode.rowIndex;
+ 
     this.AccountRoles = this.getAllAccountRoleObjects();
     this.AccountRoles.splice(DeleteRowIndex-1,1);
 }
@@ -1184,7 +1187,7 @@ CreateNewJob(){
             //Job Fields
             JobJSON = JSON.stringify({'Description': this.Description, 'Division': this.Division, 'Office': this.OfficeId, JobClass: this.JobClass,
             'EstimateType': this.EstimateType,'Claim': this.Claim, 'Deductible': this.Deductible, JobName : this.JobName, LeadSource: this.LeadSource,
-            MultipleDivisions: this.MultipleDivision });
+            MultipleDivisions: this.MultipleDivision, EsJobType:this.EsJobType });
             //Master Job is just MasterJobId, if null then need to create a new one.
             this.jobLoading = true;
             CreateNewJob({AccountRoleInfo : AccountRoleInfo, PropertyInfo : PropertyJSON,
@@ -1221,7 +1224,7 @@ GenerateAccountRoleJSON(){
 GetAccountRolesObjects() {
         var AccountRoles = [];
         let ActTblRow =  Array.from(this.template.querySelectorAll('table.ActRoles tbody tr'));
-        console.log('ProjTblRow' + ActTblRow);
+      
         let ActRowCount = ActTblRow.length;
         for(let Actindex=0; Actindex<ActRowCount; Actindex++){
             // let ARName = ActTblRow[Actindex].querySelector('.ARName').value;
@@ -1236,7 +1239,7 @@ GetAccountRolesObjects() {
                     Account: ARAccount
                 });
             }
-            console.log('Account Roles' + AccountRoles);
+          
             return AccountRoles;
         }  
     }

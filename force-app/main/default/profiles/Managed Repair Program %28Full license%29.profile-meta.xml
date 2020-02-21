@@ -2997,6 +2997,11 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>true</editable>
+        <field>ATI_Job__c.Property_ID__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>false</editable>
         <field>ATI_Job__c.Purchasing_Type__c</field>
         <readable>false</readable>
@@ -8547,9 +8552,9 @@
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
+        <editable>true</editable>
         <field>Master_Job__c.Multiple_Divisions__c</field>
-        <readable>false</readable>
+        <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
@@ -10619,6 +10624,11 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Property__c.State__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Property__c.Street__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

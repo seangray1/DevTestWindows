@@ -4,7 +4,7 @@
  * @Author             : sean.gray@atirestoration.com
  * @Group              : 
  * @Last Modified By   : sean.gray@atirestoration.com
- * @Last Modified On   : 2/20/2020, 10:14:44 AM
+ * @Last Modified On   : 2/21/2020, 9:26:52 AM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/28/2020   sean.gray@atirestoration.com     Initial Version
@@ -233,6 +233,10 @@ public with sharing class NewJobController {
         AccountRoleWrapper AR = (AccountRoleWrapper)JSON.deserialize(AccountRoleInfo, AccountRoleWrapper.class);
         PropertyWrapper Property = (PropertyWrapper)JSON.deserialize(PropertyInfo, PropertyWrapper.class);
         JobWrapper jobWrap = (JobWrapper)JSON.deserialize(jobInfo, JobWrapper.class);
+        system.debug('JobWrap is ' + jobWrap);
+        system.debug('PropertyWrap is ' + Property);
+        system.debug('AccountWrap is ' + AR);
+        system.debug('Master Job Id  is  ' + MasterJobId);
         if(String.isEmpty(Property.PropertyId)){
             prop.Property_Type__c = Property.PropertyType;
             prop.Street__c = Property.Street;
@@ -266,9 +270,16 @@ public with sharing class NewJobController {
             mJobId = MasterJobId;
         }
         //insert job, and relate to Master Job
+        Id propId;
+        if(NewProperty){
+            propId = prop.Id;
+        }else{
+            propId = Property.PropertyId;
+        }
+       
         ATI_Job__c job = new ATI_Job__c(Name = 'Test Job 1', Job_Name__c = jobWrap.JobName, Stage__c = 'Qualification',  
         Office2__c = jobWrap.Office, Claim__c = jobWrap.Claim, deductible__c = Decimal.valueOf(jobWrap.Deductible), Master_Job__c = mJobId, division__c = jobWrap.division,
-        Job_Class__c = jobWrap.JobClass, Lead_Source__c = jobWrap.LeadSource);
+        Job_Class__c = jobWrap.JobClass, Lead_Source__c = jobWrap.LeadSource, property_Id__c = propId, Es_Job_Type__c = jobWrap.EsJobType);
         insert job;
         //insert AR's and relate to job
         for(AccountRoleLineItems accountRoles : AR.AccountRoleLineItems){
@@ -337,6 +348,7 @@ public with sharing class NewJobController {
         public String MultipleDivisions {get;set;}
         public String LeadSource {get;set;}
         public String JobName {get;set;}  
+        public String EsJobType {get;set;}  
     }
     public class AccountWrapper{
         //public List<Id> PropertyId {get;set;}
