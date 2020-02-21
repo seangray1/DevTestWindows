@@ -8,14 +8,20 @@
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/23/2020   Sean Gray     Initial Version
-**/
+**/ 
 import { LightningElement, track, wire } from 'lwc';
+import {ShowToastEvent} from 'lightning/platformShowToastEvent';
 //import SearchAccountRoles from '@salesforce/apex/NewJobController.GetAccountRoles';
 import InsertContact from '@salesforce/apex/NewJobController.InsertContact';
 import InsertAccount from '@salesforce/apex/NewJobController.InsertAccount';
 import InsertPersonAccount from '@salesforce/apex/NewJobController.InsertPersonAccount';
 import SearchProperties from '@salesforce/apex/NewJobController.GetProperties';
 import GetAccountRolesPicklist from '@salesforce/apex/NewJobController.getPickListValuesIntoList';
+import GetDivisionPicklist from '@salesforce/apex/NewJobController.GetDivisionPicklist';
+import GetJobClassPicklist from '@salesforce/apex/NewJobController.GetJobClassPicklist';
+import GetEsJobTypePicklist from '@salesforce/apex/NewJobController.GetEsJobTypePicklist';
+import GetLeadSourcePicklist from '@salesforce/apex/NewJobController.GetLeadSourcePicklist';
+import GetMultipleDivisionPicklist from '@salesforce/apex/NewJobController.GetLeadSourcePicklist';
 import SearchCustomers from '@salesforce/apex/NewJobController.GetCustomers';
 import SearchContactAccounts from '@salesforce/apex/NewJobController.GetContactAccounts';
 import SearchOffices from '@salesforce/apex/NewJobController.GetOffices';
@@ -26,11 +32,13 @@ import { NavigationMixin } from 'lightning/navigation';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import ATIJOB_OBJECT from '@salesforce/schema/ATI_Job__c';
+import MASTERJOB_OBJECT from '@salesforce/schema/Master_Job__c';
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
 import CONTACT_OBJECT from '@salesforce/schema/Contact';
 import PROPERTY_OBJECT from '@salesforce/schema/Property__c';
 import ACCOUNTROLES_OBJECT from '@salesforce/schema/Account_Roles__c';
 import ROLE_FIELD from '@salesforce/schema/Account_Roles__c.Roles__c';
+import MULTIPLEDIVISION_FIELD from '@salesforce/schema/Master_Job__c.Multiple_Divisions__c';
 import DIVISION_FIELD from '@salesforce/schema/ATI_Job__c.Division__c';
 import JOBCLASS_FIELD from '@salesforce/schema/ATI_Job__c.Job_Class__c';
 import ESTIMATETYPE_FIELD from '@salesforce/schema/ATI_Job__c.Estimate_Type__c';
@@ -42,9 +50,10 @@ var AccountJSON;
 var PropertyJSON;
 var JobJSON;
 const DELAY = 600;
-export default class NewJobLWC extends LightningElement {
+export default class NewJobLWC extends NavigationMixin(LightningElement) {
     @track activeSections = ['Customer Search', 'Additional Information', 'Account Roles', 'Property Information'];
 @track PersonAccount = false;
+@track jobLoading = false;
 @track testingProperty;
 @track ARContacts;
 @track Properties;
@@ -123,6 +132,11 @@ export default class NewJobLWC extends LightningElement {
 @track CustomerAccountId;
 @track CustomerAccountName;
 @track AccountRolePicklistValuesContainer =[{}];
+@track DivisionPicklistValues =[{}];
+@track JobClassPicklistValues =[{}];
+@track EsJobTypePicklistValues =[{}];
+@track LeadSourcePicklistValues =[{}];
+@track MultipleDivisionPicklistValues =[{}];
 @track ARReady = false;
 @track AccountRoles = [{}];
 @track CreateContact = false;
@@ -140,6 +154,14 @@ export default class NewJobLWC extends LightningElement {
 @track CompanyAccountRoles;
 @track PersonAccountRoles;
 @track TypeOfInsert = '';
+@track JobName;
+@track Division;
+@track ARDivision = false;
+@track EsJobType;
+@track JobClass;
+@track LeadSource;
+@track DivisionEs = false;
+@track MultipleDivision;
 
 @wire(getObjectInfo, { objectApiName: ACCOUNTROLES_OBJECT })
     objectInfo;
@@ -149,6 +171,8 @@ export default class NewJobLWC extends LightningElement {
     contactInfo;
 @wire(getObjectInfo, { objectApiName: PROPERTY_OBJECT })
     propertyInfo;
+@wire(getObjectInfo, { objectApiName: MASTERJOB_OBJECT })
+    masterjobInfo;
 @wire(getObjectInfo, { objectApiName: ATIJOB_OBJECT })
     atijobInfo;
 @wire(getPicklistValues, { recordTypeId: '$objectInfo.data.defaultRecordTypeId', fieldApiName: ROLE_FIELD})
@@ -167,12 +191,18 @@ AccountTypeValues;
 ContactTypeValues;
 @wire(getPicklistValues, { recordTypeId: '$propertyInfo.data.defaultRecordTypeId', fieldApiName: PROPERTYTYPE_FIELD})
 PropertyTypeValues;
+@wire(getPicklistValues, { recordTypeId: '$masterjobInfo.data.defaultRecordTypeId', fieldApiName: MULTIPLEDIVISION_FIELD})
+MultipleDivisionPicklistValues;
 
 
 // get options() {
 //     return [{ 
 //         AccountRolesValues.data.values}];
 // }
+get options() {
+    console.log('DIvision pickilst values under OPtions are ' + this.DivisionPicklistValues);
+    return this.DivisionPicklistValues;
+}
 closeProperty(){
     const address = this.template.querySelector('[data-id="AddressLookup"]');
             const isValid = address.checkValidity();
@@ -180,9 +210,15 @@ closeProperty(){
                 this.Street = address.street;
                 this.City = address.city;
                 this.State = address.province;
-                this.Zip = address.postal;
+                this.Zip = address.postalCode;
                 this.Country = address.country;
                 this.NewProperty = false;
+                const event = new ShowToastEvent({
+                    title:'Success',
+                    message: 'Saved',
+                    variant: 'success',
+                });
+                this.dispatchEvent(event);
              }
 
 
@@ -199,6 +235,12 @@ AccountFirstNameChange(e){
 }
 AccountLastNameChange(e){
     this.AccountLastName  = e.detail.value;
+}
+MultipleDivisionChange(e){
+    this.MultipleDivision = e.detail.value;
+}
+JobNameChange(e){
+    this.JobName = e.detail.value;
 }
 closePropertyModal(){
     this.NewProperty = false;
@@ -223,15 +265,61 @@ connectedCallback(){
         for(var i = 0; i<AccountRolePicklistValues.length;i++){
             console.log('Lenght is '+ AccountRolePicklistValues.length + '    values are ' + AccountRolePicklistValues[i] );
             this.AccountRolePicklistValuesContainer.push({label : AccountRolePicklistValues[i], value : AccountRolePicklistValues[i], });
-           
-        }
-        
+        }   
         this.AccountRolePicklistValuesContainer.shift();
         this.ARReady = true;
-        console.log('yo');
         this.AccountRoles.push({Contact_ID__c : '', Account_ID__c :'', Text__c : ''});
         this.AccountRoles.shift();
     })
+    GetDivisionPicklist({}).then(result =>{
+        var AccountRolePicklistValues = result;
+        for(var i = 0; i<AccountRolePicklistValues.length;i++){
+            console.log('Lenght is '+ AccountRolePicklistValues.length + '    values are ' + AccountRolePicklistValues[i] );
+            this.DivisionPicklistValues.push({label : AccountRolePicklistValues[i], value : AccountRolePicklistValues[i], });
+        }
+        console.log('DIvision pickilst values are ' + this.DivisionPicklistValues);
+        this.DivisionPicklistValues.shift();
+        this.ARDivision = true;
+        console.log('DIvision pickilst values after shift are ' + this.DivisionPicklistValues);
+       
+    })
+    GetJobClassPicklist({}).then(result =>{
+        var AccountRolePicklistValues = result;
+        for(var i = 0; i<AccountRolePicklistValues.length;i++){
+            console.log('Lenght is '+ AccountRolePicklistValues.length + '    values are ' + AccountRolePicklistValues[i] );
+            this.JobClassPicklistValues.push({label : AccountRolePicklistValues[i], value : AccountRolePicklistValues[i], });
+        }
+        
+        this.JobClassPicklistValues.shift();
+    })
+    GetEsJobTypePicklist({}).then(result =>{
+        var AccountRolePicklistValues = result;
+        for(var i = 0; i<AccountRolePicklistValues.length;i++){
+            console.log('Lenght is '+ AccountRolePicklistValues.length + '    values are ' + AccountRolePicklistValues[i] );
+            this.EsJobTypePicklistValues.push({label : AccountRolePicklistValues[i], value : AccountRolePicklistValues[i], });
+        }
+        
+        this.EsJobTypePicklistValues.shift();
+    })
+    GetLeadSourcePicklist({}).then(result =>{
+        var AccountRolePicklistValues = result;
+        for(var i = 0; i<AccountRolePicklistValues.length;i++){
+            console.log('Lenght is '+ AccountRolePicklistValues.length + '    values are ' + AccountRolePicklistValues[i] );
+            this.LeadSourcePicklistValues.push({label : AccountRolePicklistValues[i], value : AccountRolePicklistValues[i], });
+        }
+        
+        this.LeadSourcePicklistValues.shift();
+    })
+    
+    // GetMultipleDivisionPicklist({}).then(result =>{
+    //     var AccountRolePicklistValues = result;
+    //     for(var i = 0; i<AccountRolePicklistValues.length;i++){
+    //         console.log('Lenght is '+ AccountRolePicklistValues.length + '    values are ' + AccountRolePicklistValues[i] );
+    //         this.MultipleDivisionPicklistValues.push({label : AccountRolePicklistValues[i], value : AccountRolePicklistValues[i], });
+    //     }
+        
+    //     this.MultipleDivisionPicklistValues.shift();
+    // })
 }
 closeAccountQuestion(){
     this.AccountQuestion = false;
@@ -302,9 +390,21 @@ SaveContact(){
                     MailingStreet:this.MailingStreet, MailingCity:this.MailingCity, 
                    MailingState:this.MailingState, MailingPostalCode:this.MailingPostalCode, MailingCountry:this.MailingCountry, AccountId:PackagedString, AccountList:this.CreateNewContact})
                    .then(result =>{ 
+                       let Message = result;
+                    if(Message.length >18){
+                        this.loadingContact = false;
+                        alert(Message);
+                    }else{
+                    
                        this.ContactId = result;
                        this.TypeOfInsert = 'BusinessAccount';
                            this.AccountRoles = this.ReplaceEmptyAccountRoleRows();
+                           const event = new ShowToastEvent({
+                            title:'Success',
+                            message: 'Saved',
+                            variant: 'success',
+                        });
+                        this.dispatchEvent(event);
                            this.loadingContact = false;
                            //now Reset the form
                            this.Email = null;
@@ -330,6 +430,7 @@ SaveContact(){
                             this.ContactAccountValue = null;
                             this.PersonAccountRoles = null;
                             this.CompanyAccountRoles = null;
+                }
                         //    this.AccountLastName = null;
                         //    this.AccountFirstName = null;
                         //    this.AccountPhone = null;
@@ -369,17 +470,27 @@ savePersonAccount(){
                 BillingState:this.BillingState, BillingPostalCode:this.BillingPostalCode, BillingCountry:this.BillingCountry})
                 .then(result =>{ 
                     this.AccountId = result;
+                   
                     if(this.AccountId.length >18){
                         this.loadingPersonAccount = false;
                         alert(this.AccountId);
                         
                     }else{
+                        
                         this.PersonAccountModal = false;
                         this.loadingPersonAccount = false;
                         this.TypeOfInsert = 'PersonAccount';
+                        this.ContactAccountValue = this.AccountId;
                         this.AccountRoles = this.ReplaceEmptyAccountRoleRows();
+                        const event = new ShowToastEvent({
+                            title:'Success',
+                            message: 'Saved',
+                            variant: 'success',
+                        });
+                        this.dispatchEvent(event);
                         //now Reset the form
                         this.AccountId = null;
+                        this.ContactAccountValue = null;
                         this.AccountName = null;
                         
                         this.AccountLastName = null;
@@ -420,6 +531,17 @@ saveAccount(){
                 BillingState:this.BillingState, BillingPostalCode:this.BillingPostalCode, BillingCountry:this.BillingCountry})
                 .then(result =>{ 
                     this.AccountId = result;
+                    if(this.AccountId.length >18){
+                        this.loadingPersonAccount = false;
+                        alert(this.AccountId);
+                        
+                    }else{
+                    const event = new ShowToastEvent({
+                        title:'Success',
+                        message: 'Saved',
+                        variant: 'success',
+                    });
+                    this.dispatchEvent(event);
                     if(this.CreateNewContact){
                         this.ContactAccountValue = this.AccountId;
                         this.NewAccount = false;
@@ -427,11 +549,13 @@ saveAccount(){
                         this.AccountEmpty = false;
                     }
                     if(!this.CreateNewContact){
+                        this.ContactAccountValue = this.AccountId;
                         this.TypeOfInsert = 'BusinessAccount';
                         this.AccountRoles = this.ReplaceEmptyAccountRoleRows();
                         
                         //now Reset the form
                         this.AccountId = null;
+                        this.ContactAccountValue = null;
                         this.AccountName = null;
                         this.AccountPhone = null;
                         this.Type = null;
@@ -446,15 +570,16 @@ saveAccount(){
                         this.NewAccount = false;
                         
                     }
-            
+                }
                 })
              }
+            }
         
             if(!isValid) {
                 alert("Not a Valid Address");
              }   
         }
-}
+
 ReplaceEmptyAccountRoleRows(){
     var AccountRoles = [];
 //var AccountRoless
@@ -701,12 +826,19 @@ DescriptionChange(e){
 }
 DivisionChange(e){
     this.Division = e.detail.value;
+    if(this.Division === 'Emergency Svces'){
+        this.DivisionEs = true;
+    }else{
+        this.DivisionEs = false;
+    }
 }
-
+LeadSourceChange(e){
+    this.LeadSource = e.detail.value;
+}
 JobClassChange(e){
     this.JobClass = e.detail.value;
 }
-EstimateTypeChange(e){
+EsJobTypeChange(e){
     this.EstimateType = e.detail.value;
 }
 ClaimChange(e){
@@ -1016,6 +1148,9 @@ getAllAccountRoleObjects() {
 populateMasterJobField(event){
     this.MasterJobDetails = event.target.value;
     this.MasterJobId = this.MasterJobDetails.Id;
+    this.Claim = this.MasterJobDetails.Claim__c;
+    this.Description = this.MasterJobDetails.Description_of_Loss__c;
+    this.Deductible = this.MasterJobDetails.Deductible__c;
     this.bShowModal = false;
 }
 DeleteARRow(e){
@@ -1045,28 +1180,33 @@ CreateNewJob(){
             // 'PhoneChange': this.PhoneChange,'AccountPhoneExt': this.AccountPhoneExt});
             //Property Data
             PropertyJSON = JSON.stringify({'PropertyId': this.PropertyID, 'City': this.City, 'Country': this.Country, 'State': this.State,
-            'AddressLine1': this.Street,'PropertyType': this.PropertyType, 'Zip': this.Zip});
+            'Street': this.Street,'PropertyType': this.PropertyType, 'Zip': this.Zip});
             //Job Fields
-            JobJSON = JSON.stringify({'Description': this.Description, 'Division': this.Division, 'Office': this.Office, 'JobClass': this.JobClass,
-            'EstimateType': this.EstimateType,'Claim': this.Claim, 'Deductible': this.Deductible});
+            JobJSON = JSON.stringify({'Description': this.Description, 'Division': this.Division, 'Office': this.OfficeId, JobClass: this.JobClass,
+            'EstimateType': this.EstimateType,'Claim': this.Claim, 'Deductible': this.Deductible, JobName : this.JobName, LeadSource: this.LeadSource,
+            MultipleDivisions: this.MultipleDivision });
             //Master Job is just MasterJobId, if null then need to create a new one.
+            this.jobLoading = true;
             CreateNewJob({AccountRoleInfo : AccountRoleInfo, PropertyInfo : PropertyJSON,
                 JobInfo : JobJSON, MasterJobId:this.MasterJobId})
-                // .then(result => {
-                //                 this.data = result;
-                //                 if(this.data !== null){
-                //                 this[NavigationMixin.Navigate]({
-                //                     type: 'standard__recordPage',
-                //                     attributes: {
-                //                         recordId: this.data,
-                //                         objectApiName: 'ATI_Job__c',
-                //                         actionName: 'view',
-                //                     },
-                //                 });
-                //             }
-                //             })
-    //}
-}
+                .then(result => {
+                                var data = result;
+                                if(data.length > 18){
+                                    this.jobLoading = false;
+                                    alert(data);
+                                }else{
+                                this[NavigationMixin.Navigate]({
+                                    type: 'standard__recordPage',
+                                    attributes: {
+                                        recordId: data,
+                                        objectApiName: 'ATI_Job__c',
+                                        actionName: 'view',
+                                    },
+                                });
+                            }
+                            })
+    }
+
    
 Cancel(event){
     location.href='https://' + window.location.hostname + '/lightning/o/ATI_Job__c/list?filterName=Recent';
@@ -1091,9 +1231,9 @@ GetAccountRolesObjects() {
             
             AccountRoles.push({
                     //name: ARName,
-                    Text__c: ARRoles,
-                    Contact_ID__c: ARContact,
-                    Account_ID__c: ARAccount
+                    Text: ARRoles,
+                    Contact: ARContact,
+                    Account: ARAccount
                 });
             }
             console.log('Account Roles' + AccountRoles);

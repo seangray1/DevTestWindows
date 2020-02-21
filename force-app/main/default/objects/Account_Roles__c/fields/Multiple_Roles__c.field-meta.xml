@@ -16,19 +16,44 @@
                 <label>Property Owner</label>
             </value>
             <value>
-                <fullName>Tester</fullName>
+                <fullName>Property Manager</fullName>
                 <default>false</default>
-                <label>Tester</label>
+                <label>Property Manager</label>
             </value>
             <value>
-                <fullName>Tester 2</fullName>
+                <fullName>Tenant Real Estimate / Facilities</fullName>
                 <default>false</default>
-                <label>Tester 2</label>
+                <label>Tenant Real Estimate / Facilities</label>
             </value>
             <value>
-                <fullName>Tester 4</fullName>
+                <fullName>Independent Claims Adjuster</fullName>
                 <default>false</default>
-                <label>Tester 4</label>
+                <label>Independent Claims Adjuster</label>
+            </value>
+            <value>
+                <fullName>Carrier Claims Adjuster</fullName>
+                <default>false</default>
+                <label>Carrier Claims Adjuster</label>
+            </value>
+            <value>
+                <fullName>General Contractor</fullName>
+                <default>false</default>
+                <label>General Contractor</label>
+            </value>
+            <value>
+                <fullName>Insurance carrier</fullName>
+                <default>false</default>
+                <label>Insurance carrier</label>
+            </value>
+            <value>
+                <fullName>Insurance Broker</fullName>
+                <default>false</default>
+                <label>Insurance Broker</label>
+            </value>
+            <value>
+                <fullName>Legacy</fullName>
+                <default>false</default>
+                <label>Legacy</label>
             </value>
         </valueSetDefinition>
     </valueSet>

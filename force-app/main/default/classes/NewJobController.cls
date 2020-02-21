@@ -4,7 +4,7 @@
  * @Author             : sean.gray@atirestoration.com
  * @Group              : 
  * @Last Modified By   : sean.gray@atirestoration.com
- * @Last Modified On   : 2/18/2020, 1:47:15 PM
+ * @Last Modified On   : 2/20/2020, 10:14:44 AM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/28/2020   sean.gray@atirestoration.com     Initial Version
@@ -31,9 +31,16 @@ public with sharing class NewJobController {
         }
         Contact cont = new Contact(AccountId = conId, Email = Email, FirstName = FirstName, LastName = LastName, Phone = Phone, Contact_Type__c =Type, Phone_Ext__c = PhoneExt,  MailingStreet = MailingStreet,
                                     MailingState = MailingState, MailingPostalCode = MailingPostalCode, MailingCity = MailingCity, MailingCountry = MailingCountry);
+         
                                     //IsPersonType = PersonAccount,
-        insert cont;
-        return cont.id;
+        try {
+            insert cont;
+            return cont.id;
+        } catch (Exception e) {
+            return string.valueOf(e);
+        }
+       
+        
         
     }
     @AuraEnabled
@@ -44,8 +51,13 @@ public with sharing class NewJobController {
         Account acct = new Account(Name = Name, Phone = Phone, Type = Type, Phone_Ext__c = PhoneExt,  BillingStreet = BillingStreet,
                                     BillingState = BillingState, BillingPostalCode = BillingPostalCode, BillingCity = BillingCity, BillingCountry = BillingCountry);
                                     //IsPersonType = PersonAccount,
-        insert acct;
+        
+        try {
+            insert acct;
         return acct.id;
+        } catch (Exception e) {
+            return string.valueOf(e);
+        }
         
     }
     @AuraEnabled
@@ -138,7 +150,7 @@ public with sharing class NewJobController {
     }
     @AuraEnabled 
     public static list<Master_Job__c> GetMasterJobs(string propId){
-        List<Master_Job__c> mj = [Select Id, Name, Stage__c, Property_ID__c FROM Master_Job__c Where Property_ID__c =: propId AND Active__c = true];
+        List<Master_Job__c> mj = [Select Id, Name, Stage__c, Property_ID__c, Claim__c, Date_of_Loss__c, Deductible__c, Description_of_Loss__c FROM Master_Job__c Where Property_ID__c =: propId AND Active__c = true];
         system.debug('Prop Id + ' + propId);
         
         return mj;
@@ -155,24 +167,135 @@ public with sharing class NewJobController {
                 }       
                 return pickListValuesList;
             }
+    
+    @AuraEnabled  
+    public static List<String> GetDivisionPicklist(){  
+        List<String> pickListValuesList= new List<String>(); 
+         Schema.DescribeFieldResult fieldResult = ATI_Job__c.Division__c.getDescribe();   
+        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();   
+             for( Schema.PicklistEntry pickListVal : ple){  
+                    pickListValuesList.add(pickListVal.getLabel());  
+                }       
+                return pickListValuesList;
+            }
         
+    @AuraEnabled  
+    public static List<String> GetJobClassPicklist(){  
+        List<String> pickListValuesList= new List<String>(); 
+         Schema.DescribeFieldResult fieldResult = ATI_Job__c.Job_Class__c.getDescribe();   
+        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();   
+             for( Schema.PicklistEntry pickListVal : ple){  
+                    pickListValuesList.add(pickListVal.getLabel());  
+                }       
+                return pickListValuesList;
+            }
+    
+    @AuraEnabled  
+    public static List<String> GetEsJobTypePicklist(){  
+        List<String> pickListValuesList= new List<String>(); 
+         Schema.DescribeFieldResult fieldResult = ATI_Job__c.Es_Job_Type__c.getDescribe();   
+        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();   
+             for( Schema.PicklistEntry pickListVal : ple){  
+                    pickListValuesList.add(pickListVal.getLabel());  
+                }       
+                return pickListValuesList;
+            }
+    @AuraEnabled  
+    public static List<String> GetLeadSourcePicklist(){  
+        List<String> pickListValuesList= new List<String>(); 
+         Schema.DescribeFieldResult fieldResult = ATI_Job__c.Lead_Source__c.getDescribe();   
+        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();   
+             for( Schema.PicklistEntry pickListVal : ple){  
+                    pickListValuesList.add(pickListVal.getLabel());  
+                }       
+                return pickListValuesList;
+            }  
+                 
+    @AuraEnabled  
+    public static List<String> GetMultipleDivisionPicklist(){  
+        List<String> pickListValuesList= new List<String>(); 
+         Schema.DescribeFieldResult fieldResult = Master_Job__c.Multiple_Divisions__c.getDescribe();   
+        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();   
+             for( Schema.PicklistEntry pickListVal : ple){  
+                    pickListValuesList.add(pickListVal.getLabel());  
+                }       
+                return pickListValuesList;
+            }    
     @AuraEnabled 
     public static Id CreateNewJob(string AccountRoleInfo,string PropertyInfo, string JobInfo, string MasterJobId){
-        // system.debug('Contact Wrap ' + ContactInfo);
-        // ContactWrapper contactWrap = (ContactWrapper)JSON.deserialize(ContactInfo, ContactWrapper.class);
-        // system.debug('Contact deserialized first name ' +contactWrap.FirstName);
-        // AccountWrapper accountWrap = (AccountWrapper)JSON.deserialize(AccountInfo, AccountWrapper.class);
-        // system.debug('Contact Wrap ' + contactWrap);
-        // system.debug(' Contact Info ' + ContactInfo);
-        system.debug(' AccountRoleInfo ' + AccountRoleInfo);
-        // system.debug(' Account Info ' + AccountInfo);
-        system.debug(' Property Info ' + PropertyInfo);
-        system.debug(' Job Info ' + JobInfo);
-        system.debug(' MasterJob Info ' + MasterJobId);
-        // List<Master_Job__c> mj = [Select Id, Name, Stage__c, Property_ID__c FROM Master_Job__c Where Property_ID__c =: propId AND Active__c = true];
-        // system.debug('Prop Id + ' + propId);
-        Id test;
-        return test;
+        Master_Job__c masterJob = new Master_Job__c();
+        Boolean NewProperty = false;
+        List<Account_Roles__c> ARList = new List<Account_Roles__c>();
+        List<Account_Roles__c> ARPropertyList = new List<Account_Roles__c>();
+        Property__c prop = new Property__c();
+        //Property.. if PropertyID is empty, insert with the info given, then attach AR Roles to them. => relate Prop to Master job
+        try {
+        AccountRoleWrapper AR = (AccountRoleWrapper)JSON.deserialize(AccountRoleInfo, AccountRoleWrapper.class);
+        PropertyWrapper Property = (PropertyWrapper)JSON.deserialize(PropertyInfo, PropertyWrapper.class);
+        JobWrapper jobWrap = (JobWrapper)JSON.deserialize(jobInfo, JobWrapper.class);
+        if(String.isEmpty(Property.PropertyId)){
+            prop.Property_Type__c = Property.PropertyType;
+            prop.Street__c = Property.Street;
+            prop.City__c = Property.City;
+            prop.Zip__c = Property.Zip;
+            prop.Country__c = Property.Country;
+            prop.State__c = Property.State;
+            NewProperty= true;
+            insert prop;  
+            
+        }
+        Id mJobId;
+        //if Master Job is empty, create one. 
+        if(string.isEmpty(MasterJobId)){
+           masterJob.Name = 'Test Master Job';
+           masterJob.Claim__c = jobWrap.Claim;
+           masterJob.Description_of_Loss__c = jobWrap.Description;
+           masterJob.Deductible__c = Decimal.valueOf(jobWrap.Deductible);
+           masterJob.Lead_Source__c = jobWrap.LeadSource;
+           masterJob.Multiple_Divisions__c = jobWrap.MultipleDivisions;
+           masterJob.office2__c = jobWrap.Office;
+           if(NewProperty){
+               masterJob.Property_ID__c = prop.Id;
+           }else{
+               masterJob.Property_ID__c = Property.PropertyId;
+           }
+           insert masterJob;
+           mJobId = masterJob.id;
+        
+        }else{
+            mJobId = MasterJobId;
+        }
+        //insert job, and relate to Master Job
+        ATI_Job__c job = new ATI_Job__c(Name = 'Test Job 1', Job_Name__c = jobWrap.JobName, Stage__c = 'Qualification',  
+        Office2__c = jobWrap.Office, Claim__c = jobWrap.Claim, deductible__c = Decimal.valueOf(jobWrap.Deductible), Master_Job__c = mJobId, division__c = jobWrap.division,
+        Job_Class__c = jobWrap.JobClass, Lead_Source__c = jobWrap.LeadSource);
+        insert job;
+        //insert AR's and relate to job
+        for(AccountRoleLineItems accountRoles : AR.AccountRoleLineItems){
+            system.debug('Account Roles are '  + accountRoles);
+            system.debug('Text is ' + accountRoles.Text);
+            Account_Roles__c ARRole = new Account_Roles__c(Account_ID__c = accountRoles.Account, Contact_ID__c = accountRoles.Contact, Master_Job_Id__c = job.Id,
+            Multiple_Roles__c = accountRoles.Text);
+            ARList.add(ARRole);
+            //if Prop is new, need to add a different set of Account Roles to property, unrelated to the Job Account roles. 
+            if(NewProperty){
+            Account_Roles__c PropARRole = new Account_Roles__c(Account_ID__c = accountRoles.Account, Contact_ID__c = accountRoles.Contact, Property_ID__c = prop.Id,
+            Multiple_Roles__c = accountRoles.Text);
+            ARPropertyList.add(PropARRole);
+            }
+
+        }
+        if(!ARList.isEmpty()){
+            insert ARList;
+            if(NewProperty){
+                insert ARPropertyList;
+            }
+        }
+        return job.id;
+    } catch (Exception e) {
+            return string.valueOf(e);
+    }
+        
 
     }
     
@@ -185,18 +308,35 @@ public with sharing class NewJobController {
     }
     
     public class AccountRoleWrapper{
-        public List<Id> AccountRoleLineItems {get;set;}
+        public List<AccountRoleLineItems> AccountRoleLineItems {get;set;}
     }
     public class AccountRoleLineItems{
-        public String Text__c {get;set;}
-        public Id Account_ID__c {get;set;}
-        public Id Contact_ID__c {get;set;}
+        public String Text {get;set;}
+        public Id Account {get;set;}
+        public Id Contact {get;set;}
     }
     public class PropertyWrapper{
-        public List<Id> PropertyId {get;set;}
+        public Id PropertyId {get;set;}
+        public String Street {get;set;}
+        public String City {get;set;}
+        public String State {get;set;}
+        public String Country {get;set;}
+        public String Zip {get;set;}
+        public String PropertyType {get;set;}
     }
+
+   
+
     public class JobWrapper{
-        public List<Id> PropertyId {get;set;}
+        public Id Office {get;set;}
+        public String Description {get;set;}
+        public String Division {get;set;}
+        public String JobClass {get;set;}
+        public String Claim {get;set;}
+        public String Deductible {get;set;}
+        public String MultipleDivisions {get;set;}
+        public String LeadSource {get;set;}
+        public String JobName {get;set;}  
     }
     public class AccountWrapper{
         //public List<Id> PropertyId {get;set;}
