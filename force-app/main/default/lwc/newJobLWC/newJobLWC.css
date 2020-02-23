@@ -41,6 +41,9 @@ margin-left: 18px;
 .Buttonspacing{
     padding-left: 1%;
 }
+.pushDownProperty{
+    padding-top: 5px;
+}
 .element {
     
     text-align: left;
@@ -54,10 +57,19 @@ margin-left: 18px;
 }
 .MultLabels{
     position: relative;
-    bottom: -11px;
+    bottom: 10px;
     margin-left: 60px;
 
 }
+.required1:after {
+    content:" *";
+    
+    color: red;
+  }
+  .textbox{
+    height:250px;
+    
+  }
 .selectRole{
     padding-bottom: 0.3%;
     padding-top: 0.3%;

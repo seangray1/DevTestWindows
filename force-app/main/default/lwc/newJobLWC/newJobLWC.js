@@ -52,6 +52,7 @@ var ContactJSON;
 var AccountJSON;
 var PropertyJSON;
 var JobJSON;
+var AccountRolesPassed = false;
 const DELAY = 600;
 export default class NewJobLWC extends NavigationMixin(LightningElement) {
     @track activeSections = ['Customer Search', 'Additional Information', 'Account Roles', 'Property Information'];
@@ -79,7 +80,7 @@ export default class NewJobLWC extends NavigationMixin(LightningElement) {
 @track NewCaller = false;
 @track NewAccount = false;
 @track NewProperty = false;
-@track PropertyID;
+@track PropertyID = "";
 @track PropertyPicked = false;
 @track AccountRoles = [{}];
 @track AccountRolesSelected = false;
@@ -99,7 +100,7 @@ export default class NewJobLWC extends NavigationMixin(LightningElement) {
 @track MailingCity;
 @track MailingState;
 @track MailingCounty;
-@track AccountId;
+@track AccountId = "";
 @track MailingPostalCode;
 @track Phone;
 @track Email;
@@ -117,15 +118,15 @@ export default class NewJobLWC extends NavigationMixin(LightningElement) {
 @track Country;
 @track State;
 @track AddressLine1;
-@track PropertyType;
+@track PropertyType = "";
 @track Zip;
-@track Description;
+@track Description = "";
 @track Division;
 @track Office;
 @track JobClass;
 @track EstimateType;
-@track Claim;
-@track Deductible;
+@track Claim = "";
+@track Deductible = "";
 @track AccountRoleLineItems = [{}];
 @track loading = false;
 @track data;
@@ -154,8 +155,8 @@ export default class NewJobLWC extends NavigationMixin(LightningElement) {
 @track loadingPersonAccount = false;
 @track MultipleRoles;
 @track MultRoleInd;
-@track CompanyAccountRoles;
-@track PersonAccountRoles;
+@track CompanyAccountRoles = "";
+@track PersonAccountRoles = "";
 @track TypeOfInsert = '';
 @track JobName;
 @track Division;
@@ -165,6 +166,8 @@ export default class NewJobLWC extends NavigationMixin(LightningElement) {
 @track LeadSource;
 @track DivisionEs = false;
 @track MultipleDivision;
+@track NotNewProperty = true;
+@track AutoComplete = false;
 
 @wire(getObjectInfo, { objectApiName: ACCOUNTROLES_OBJECT })
     objectInfo;
@@ -206,6 +209,15 @@ get options() {
     
     return this.DivisionPicklistValues;
 }
+ResetPropertyForm(){
+    this.NotNewProperty = true;
+    this.Street = '';
+    this.City = '';
+    this.State = '';
+    this.Zip = '';
+    this.Country = '';
+    this.PropertyType = '';
+}
 closeProperty(){
     
         const input = [...this.template.querySelectorAll('.propertyFormControl')]
@@ -225,6 +237,7 @@ closeProperty(){
                 this.Zip = address.postalCode;
                 this.Country = address.country;
                 this.NewProperty = false;
+                this.NotNewProperty = false;
                 const event = new ShowToastEvent({
                     title:'Success',
                     message: 'Saved',
@@ -259,11 +272,9 @@ closePropertyModal(){
 }
 NewAccountRoleSelected(event){
     var rowInd = event.target.parentNode.parentNode.parentNode.rowIndex;
-    
- 
     rowInd = rowInd - 1;
     this.MultRoleInd = rowInd;
-    
+    this.MultipleRoles = this.AccountRoles[this.MultRoleInd].Text__c;
     this.newAccountRoles = true;
 }
 CloseAccountRole(){
@@ -363,21 +374,36 @@ BusinessAccountClicked(){
 }
 closePersonAccountModal(){
     this.PersonAccountModal = false;
-    this.AccountId = null;
-    this.AccountName = null;
-    this.AccountLastName = null;
-    this.AccountFirstName = null;
-    this.AccountPhone = null;
-    this.Type = null;
-    this.AccountPhoneExt = null;
-
-    this.BillingStreet = null;
-    this.BillingCity = null;
-    this.BillingState = null;
-    this.BillingPostalCode = null;
-    this.ContactAccountRole = null;
+    this.AccountId = "";
+    this.AccountName = "";
+    this.AccountLastName = "";
+    this.AccountFirstName = "";
+    this.AccountPhone = "";
+    this.Type = "";
+    this.AccountPhoneExt = "";
+    this.PersonAccountRoles = "";
+    this.BillingStreet = "";
+    this.BillingCity = "";
+    this.BillingState = "";
+    this.BillingPostalCode = "";
+    this.ContactAccountRole = "";
 }
 SaveContact(){
+    const input = [...this.template.querySelectorAll('.contactFormControl')]
+        .reduce((validSoFar, inputCmp) => {
+                    inputCmp.reportValidity();
+                    return validSoFar && inputCmp.checkValidity();
+        }, true);
+    if(!input){
+        alert('Fill in all required fields before saving');
+    }else{
+        if(this.AccountId === null || this.AccountId === ""){
+            alert('Select or Create an Account before saving');
+        }else{
+            if(this.CompanyAccountRoles === null || this.CompanyAccountRoles === ""){
+                alert('Select a Role before saving');
+            }else{
+
     var ACCOUNTJSON = {'AccountId': this.ContactAccountValue};
     
     var PackagedString = JSON.stringify(ACCOUNTJSON);
@@ -386,11 +412,10 @@ SaveContact(){
     // var cavalueid = JSON.parse(cavalue);
     // console.log('Cavalueid ' + cavalueid);
 
-    if(this.FirstName !== null && this.LastName !== null && this.Phone !== null && this.ContactType !== '' &&
-        this.PhoneExt !== null && this.PackagedString !== null){
+    
             const address = this.template.querySelector('[data-id="ContactAddressLookup"]');
-            const isValid = address.checkValidity();
-             if(isValid) {
+            
+             
                 this.MailingStreet = address.street;
                 this.MailingCity = address.city;
                 this.MailingState = address.province;
@@ -419,29 +444,29 @@ SaveContact(){
                         this.dispatchEvent(event);
                            this.loadingContact = false;
                            //now Reset the form
-                           this.Email = null;
-                           this.ContactId = null;
-                           this.AccountId = null;
-                           this.Type = null;
-                           this.ContactAccountRole = null;
-                           this.AccountPhoneExt = null;
-                           this.AccountPhone = null;
-                           this.AccountName = null;
-                           this.MailingStreet = null;
-                            this.MailingCity = null;
-                            this.MailingState = null;
-                            this.MailingPostalCode = null;
-                            this.MailingCountry = null;
-                            this.FirstName = null;
-                            this.LastName = null;
-                            this.Phone = null;
-                            this.ContactType = null;
-                            this.PhoneExt = null;
+                           this.Email = "";
+                           this.ContactId = "";
+                           this.AccountId = "";
+                           this.Type = "";
+                           this.ContactAccountRole = "";
+                           this.AccountPhoneExt = "";
+                           this.AccountPhone = "";
+                           this.AccountName = "";
+                           this.MailingStreet = "";
+                            this.MailingCity = "";
+                            this.MailingState = "";
+                            this.MailingPostalCode = "";
+                            this.MailingCountry = "";
+                            this.FirstName = "";
+                            this.LastName = "";
+                            this.Phone = "";
+                            this.ContactType = "";
+                            this.PhoneExt = "";
                             this.CreateContact = false;
                             this.CreateNewContact = false;
-                            this.ContactAccountValue = null;
-                            this.PersonAccountRoles = null;
-                            this.CompanyAccountRoles = null;
+                            this.ContactAccountValue = "";
+                            this.PersonAccountRoles = "";
+                            this.CompanyAccountRoles = "";
                 }
                         //    this.AccountLastName = null;
                         //    this.AccountFirstName = null;
@@ -455,27 +480,33 @@ SaveContact(){
                         //    this.BillingPostalCode = null;
                         //    this.ContactAccountRole = null;
                    })
-                }
-           
-               if(!isValid) {
-                   alert("Not a Valid Address");
-                }   
-            
-            
-            }
+            }}}
         }
 
 savePersonAccount(){
-    if(this.AccountLastName !== null && this.AccountFirstName !== null && this.AccountPhone !== null && this.Type !== null &&
-        this.AccountPhoneExt !== null && this.PersonAccountRoles !== null){
-            const address = this.template.querySelector('[data-id="PersonAccountAddressLookup"]');
-            const isValid = address.checkValidity();
-             if(isValid) {
+    console.log('Starting Person Account ' );
+    
+            const input = [...this.template.querySelectorAll('.personAccountFormControl')]
+            .reduce((validSoFar, inputCmp) => {
+                        inputCmp.reportValidity();
+                        console.log('inside the return' );
+                        return validSoFar && inputCmp.checkValidity();
+            }, true);
+            console.log('Valid input ' + input);
+            if(!input){
+            alert('Fill in all required fields before saving');
+            }else{
+                    if(this.PersonAccountRoles === null || this.PersonAccountRoles === ""){
+                        alert('Select a Role before Saving');
+                    }else{
+                console.log('Inside the else statement ');  
+                const address = this.template.querySelector('[data-id="PersonAccountAddressLookup"]');
                 this.BillingStreet = address.street;
                 this.BillingCity = address.city;
                 this.BillingState = address.province;
                 this.BillingPostalCode = address.postalCode;
                 this.BillingCountry = address.country;
+                console.log('Inside the else statement 2'); 
                 this.loadingPersonAccount = true;
                 InsertPersonAccount({FirstName:this.AccountFirstName, LastName:this.AccountLastName, Phone:this.AccountPhone, Type:this.Type, PhoneExt:this.AccountPhoneExt,
                  BillingStreet:this.BillingStreet, BillingCity:this.BillingCity, 
@@ -501,36 +532,42 @@ savePersonAccount(){
                         });
                         this.dispatchEvent(event);
                         //now Reset the form
-                        this.AccountId = null;
-                        this.ContactAccountValue = null;
-                        this.AccountName = null;
+                        this.AccountId = "";
+                        this.ContactAccountValue = "";
+                        this.AccountName = "";
                         
-                        this.AccountLastName = null;
-                        this.AccountFirstName = null;
-                        this.AccountPhone = null;
-                        this.Type = null;
-                        this.AccountPhoneExt = null;
-                        this.BillingStreet = null;
-                        this.BillingCity = null;
-                        this.BillingState = null;
-                        this.BillingPostalCode = null;
-                        this.ContactAccountRole = null;
+                        this.AccountLastName = "";
+                        this.AccountFirstName = "";
+                        this.AccountPhone = "";
+                        this.Type = "";
+                        this.AccountPhoneExt = "";
+                        this.BillingStreet = "";
+                        this.BillingCity = "";
+                        this.BillingState = "";
+                        this.BillingPostalCode = "";
+                        this.ContactAccountRole = "";
                     }
                 })
-             }
+             }}
         
-            if(!isValid) {
-                alert("Not a Valid Address");
-             }   
-        }
     }
 
 saveAccount(){
-    if(this.AccountName !== null && this.AccountPhone !== null && this.Type !== null &&
-        this.AccountPhoneExt !== null && this.CompanyAccountRoles !== null){
-            const address = this.template.querySelector('[data-id="AccountAddressLookup"]');
-            const isValid = address.checkValidity();
-             if(isValid) {
+            const input = [...this.template.querySelectorAll('.companyAccountFormControl')]
+            .reduce((validSoFar, inputCmp) => {
+                        inputCmp.reportValidity();
+                        return validSoFar && inputCmp.checkValidity();
+            }, true);
+             if(!input){
+            alert('Fill in all required fields before saving');
+            }else{  
+                console.log('Company Account Roles ' + this.CompanyAccountRoles); 
+                if(this.CompanyAccountRoles === null || this.CompanyAccountRoles === ""){
+                    console.log('Company Account Roles ' + this.CompanyAccountRoles);
+                    alert('Select a Role before saving');
+                }else{
+                    console.log('Everything Passed ');
+                const address = this.template.querySelector('[data-id="AccountAddressLookup"]');
                 this.BillingStreet = address.street;
                 this.BillingCity = address.city;
                 this.BillingState = address.province;
@@ -544,7 +581,7 @@ saveAccount(){
                 .then(result =>{ 
                     this.AccountId = result;
                     if(this.AccountId.length >18){
-                        this.loadingPersonAccount = false;
+                        this.loading = false;
                         alert(this.AccountId);
                         
                     }else{
@@ -566,31 +603,28 @@ saveAccount(){
                         this.AccountRoles = this.ReplaceEmptyAccountRoleRows();
                         
                         //now Reset the form
-                        this.AccountId = null;
-                        this.ContactAccountValue = null;
-                        this.AccountName = null;
-                        this.AccountPhone = null;
-                        this.Type = null;
-                        this.AccountPhoneExt = null;
-                        this.PersonAccount = null;
-                        this.BillingStreet = null;
-                        this.BillingCity = null;
-                        this.BillingState = null;
-                        this.BillingPostalCode = null;
-                        this.ContactAccountRole = null;
+                        this.AccountId = "";
+                        this.ContactAccountValue = "";
+                        this.AccountName = "";
+                        this.AccountPhone = "";
+                        this.Type = "";
+                        this.AccountPhoneExt = "";
+                        this.PersonAccount = "";
+                        this.BillingStreet = "";
+                        this.BillingCity = "";
+                        this.BillingState = "";
+                        this.BillingPostalCode = "";
+                        this.ContactAccountRole = "";
                         this.loading = false;
                         this.NewAccount = false;
                         
                     }
                 }
                 })
-             }
+            }}
             }
         
-            if(!isValid) {
-                alert("Not a Valid Address");
-             }   
-        }
+        
 
 ReplaceEmptyAccountRoleRows(){
     var AccountRoles = [];
@@ -657,37 +691,46 @@ addAccount(){
 }
 closeAccountModal(){
     this.NewAccount = false;
-    this.AccountId = null;
-    this.AccountName = null;
-    this.AccountLastName = null;
-    this.AccountFirstName = null;
-    this.AccountPhone = null;
-    this.Type = null;
-    this.AccountPhoneExt = null;
+    this.AccountId = "";
+    this.AccountName = "";
+    this.AccountLastName = "";
+    this.AccountFirstName = "";
+    this.AccountPhone = "";
+    this.Type = "";
+    this.AccountPhoneExt = "";
+    this.CompanyAccountRoles = "";
 
-    this.BillingStreet = null;
-    this.BillingCity = null;
-    this.BillingState = null;
-    this.BillingPostalCode = null;
-    this.ContactAccountRole = null;
+    this.BillingStreet = "";
+    this.BillingCity = "";
+    this.BillingState = "";
+    this.BillingPostalCode = "";
+    this.ContactAccountRole = "";
     // remember to reset all the values for contact. 
 }
 closeContact(){
     this.CreateContact = false;
     this.CreateNewContact = false;
-    this.AccountId = null;
-    this.AccountName = null;
-    this.AccountLastName = null;
-    this.AccountFirstName = null;
-    this.AccountPhone = null;
-    this.Type = null;
-    this.AccountPhoneExt = null;
-
-    this.BillingStreet = null;
-    this.BillingCity = null;
-    this.BillingState = null;
-    this.BillingPostalCode = null;
-    this.ContactAccountRole = null;
+    this.AccountId = "";
+    this.AccountName = "";
+    this.AccountLastName = "";
+    this.AccountFirstName = "";
+    this.AccountPhone = "";
+    this.Type = "";
+    this.AccountPhoneExt = "";
+    this.Phone = "";
+    this.BillingStreet = "";
+    this.BillingCity = "";
+    this.BillingState = "";
+    this.BillingPostalCode = "";
+    this.ContactAccountRole = "";
+    this.FirstName = "";
+    this.LastName = "";
+    this.Email = "";
+    this.ContactType = "";
+    this.PhoneExt = "";
+    this.ContactAccountValue = "";
+    this.AccountId = "";
+    this.CompanyAccountRoles = "";
     // remember to reset all the values for contact. 
 }
 CustomerSelectedFalse(event){
@@ -709,7 +752,7 @@ setAddressFields(){
 }
 PropertyEmpty(){
     this.ClearSearch();
-    this.Customers = null;
+    this.Customers = "";
 }
 ClearProperty(event){
     var searchKey = event.detail.value;
@@ -721,17 +764,17 @@ ClearProperty(event){
 ClearOffice(event){
     var searchKey = event.detail.value;
     if(searchKey.length === 0){
-    this.Office = null;
+    this.Office = "";
     }
     }
 ClearSearch(){
-    this.Properties = null;
+    this.Properties = "";
 }
 ContactIdChangeNew(){
 this.CustomerSelected = true;
 }
 ClearCustomer(){
-    this.Customers = null;
+    this.Customers = "";
 }
 ContactIdChange(e){
     this.ContactId = e.detail.value;
@@ -873,7 +916,7 @@ ToggleNewCaller(){
 ClearAccount(event){
     var searchKey = event.detail.value;
     if(searchKey.length === 0){
-        this.ContactAccounts = null;
+        this.ContactAccounts = "";
         this.AccountEmpty = true;
     }
 }
@@ -1170,17 +1213,21 @@ CreateNewJob(){
             // }else{
             // this.loading = true;
             let AccountRoleInfo = this.GenerateAccountRoleJSON();
+            console.log('Property Id is ' + this.PropertyID + '   PropertyType is ' + this.PropertyType);
+            if(!AccountRolesPassed){
+                alert('Account Roles must have a Project Site Contact and Bill To selected');
+            }else{
+                if(this.PropertyID === "" && this.PropertyType === ""){
+                    console.log('Property Id is ' + this.PropertyID + '   PropertyType is ' + this.PropertyType);
+                    alert('Either Select a Property or Create a New Property');
+                }else{
+                    console.log('Description ' + this.Description);
+                    if(this.Description === "" || this.Description === undefined || this.JobName === "" || this.JobName === undefined || this.Claim === "" || this.Claim === undefined || this.Deductible === "" || this.Deductible === undefined){
+                        alert('Fill in all required Job Fields');
+                    }else{
+                
             //Account Roles is good to go.
-            //Caller now
-            //set up a JSON set up.
-            // ContactJSON = JSON.stringify({'ContactId': this.ContactId, 'FirstName': this.FirstName, 'ContactType':this.ContactType, 'LastName': this.LastName,
-            // 'MailingStreet': this.MailingStreet,'MailingCity': this.MailingCity,'MailingState': this.MailingState,'MailingCounty': this.MailingCounty,
-            // 'AccountId': this.AccountId,'MailingPostalCode': this.MailingPostalCode,'Phone': this.Phone,'Email': this.Email,
-            // 'PhoneExt': this.PhoneExt});
-            // //Now for the Account
-            // AccountJSON = JSON.stringify({'AccountName': this.AccountName, 'BillingStreet': this.BillingStreet, 'BillingCity': this.BillingCity,
-            // 'BillingState': this.BillingState,'BillingPostalCode': this.BillingPostalCode,'TypeChange': this.TypeChange,'BillingCountry': this.BillingCountry,
-            // 'PhoneChange': this.PhoneChange,'AccountPhoneExt': this.AccountPhoneExt});
+            
             //Property Data
             PropertyJSON = JSON.stringify({'PropertyId': this.PropertyID, 'City': this.City, 'Country': this.Country, 'State': this.State,
             'Street': this.Street,'PropertyType': this.PropertyType, 'Zip': this.Zip});
@@ -1208,6 +1255,9 @@ CreateNewJob(){
                                 });
                             }
                             })
+                        }
+                    }
+                    }
     }
 
    
@@ -1222,16 +1272,33 @@ GenerateAccountRoleJSON(){
 }
 
 GetAccountRolesObjects() {
+        var projectSiteContact = false;
+        var billTo = false;
         var AccountRoles = [];
         let ActTblRow =  Array.from(this.template.querySelectorAll('table.ActRoles tbody tr'));
-      
+        console.log('Get Account Roles has been called ' );
         let ActRowCount = ActTblRow.length;
         for(let Actindex=0; Actindex<ActRowCount; Actindex++){
             // let ARName = ActTblRow[Actindex].querySelector('.ARName').value;
             let ARRoles = ActTblRow[Actindex].querySelector('.ARRoles').value;
             let ARContact = ActTblRow[Actindex].querySelector('.ARContact').value;
             let ARAccount = ActTblRow[Actindex].querySelector('.ARAccount').value;
-            
+            console.log('Inside for loop :     AR Roles is ' + ARRoles + '    ARCONTACT :  ' + ARContact + '    ARAccount + ' + ARAccount );
+            if(ARRoles.includes('Project Site Contact')){
+                projectSiteContact = true;
+                console.log('ARRoles Contains inside');
+            }
+            console.log('contains AR');
+            if(ARRoles.includes('Bill To')){
+                billTo = true;
+            }
+            if((ARContact === "" || ARContact === null) && (ARRoles === "" || ARRoles === null) && (ARAccount === "" || ARAccount === null)){
+                console.log('Removing row' );
+            }else{
+                if(ARRoles === "" || ARRoles === null){
+                    alert('A Role MUST be selected for each row');
+                    break;
+                }else{
             AccountRoles.push({
                     //name: ARName,
                     Text: ARRoles,
@@ -1239,7 +1306,14 @@ GetAccountRolesObjects() {
                     Account: ARAccount
                 });
             }
-          
+        }
+        }
+            if(projectSiteContact === false || billTo === false){
+                AccountRolesPassed = false;
+            }else{
+                AccountRolesPassed = true;
+            }
+            console.log('AccountRolesPassed ' + AccountRolesPassed);
             return AccountRoles;
         }  
     }

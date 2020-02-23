@@ -16,44 +16,121 @@
                 <label>Property Owner</label>
             </value>
             <value>
-                <fullName>Property Manager</fullName>
+                <fullName>Bill To</fullName>
                 <default>false</default>
-                <label>Property Manager</label>
+                <label>Bill To</label>
             </value>
             <value>
-                <fullName>Tenant Real Estimate / Facilities</fullName>
+                <fullName>Property/Facility Manager</fullName>
                 <default>false</default>
-                <label>Tenant Real Estimate / Facilities</label>
+                <label>Property/Facility Manager</label>
             </value>
             <value>
-                <fullName>Independent Claims Adjuster</fullName>
+                <fullName>HOA</fullName>
                 <default>false</default>
-                <label>Independent Claims Adjuster</label>
+                <label>HOA</label>
             </value>
             <value>
-                <fullName>Carrier Claims Adjuster</fullName>
+                <fullName>Tenant</fullName>
                 <default>false</default>
-                <label>Carrier Claims Adjuster</label>
+                <label>Tenant</label>
             </value>
             <value>
-                <fullName>General Contractor</fullName>
+                <fullName>Insurance Company</fullName>
                 <default>false</default>
-                <label>General Contractor</label>
+                <label>Insurance Company</label>
             </value>
             <value>
-                <fullName>Insurance carrier</fullName>
+                <fullName>Insurance Adjuster</fullName>
                 <default>false</default>
-                <label>Insurance carrier</label>
+                <label>Insurance Adjuster</label>
             </value>
             <value>
-                <fullName>Insurance Broker</fullName>
+                <fullName>Insurance Agent/Broker</fullName>
                 <default>false</default>
-                <label>Insurance Broker</label>
+                <label>Insurance Agent/Broker</label>
+            </value>
+            <value>
+                <fullName>Independent Adjuster</fullName>
+                <default>false</default>
+                <label>Independent Adjuster</label>
+            </value>
+            <value>
+                <fullName>Attorney/Risk Manager/Public Adjuster</fullName>
+                <default>false</default>
+                <label>Attorney/Risk Manager/Public Adjuster</label>
+            </value>
+            <value>
+                <fullName>Contractor/Consultant</fullName>
+                <default>false</default>
+                <label>Contractor/Consultant</label>
+            </value>
+            <value>
+                <fullName>Project Site Contact</fullName>
+                <default>false</default>
+                <label>Project Site Contact</label>
+            </value>
+            <value>
+                <fullName>Referred By</fullName>
+                <default>false</default>
+                <label>Referred By</label>
+            </value>
+            <value>
+                <fullName>Stakeholder</fullName>
+                <default>false</default>
+                <label>Stakeholder</label>
+            </value>
+            <value>
+                <fullName>Influencer</fullName>
+                <default>false</default>
+                <label>Influencer</label>
             </value>
             <value>
                 <fullName>Legacy</fullName>
                 <default>false</default>
                 <label>Legacy</label>
+            </value>
+            <value>
+                <fullName>Carrier Claims Adjuster</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Carrier Claims Adjuster</label>
+            </value>
+            <value>
+                <fullName>General Contractor</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>General Contractor</label>
+            </value>
+            <value>
+                <fullName>Independent Claims Adjuster</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Independent Claims Adjuster</label>
+            </value>
+            <value>
+                <fullName>Insurance Broker</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Insurance Broker</label>
+            </value>
+            <value>
+                <fullName>Insurance carrier</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Insurance carrier</label>
+            </value>
+            <value>
+                <fullName>Property Manager</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Property Manager</label>
+            </value>
+            <value>
+                <fullName>Tenant Real Estimate / Facilities</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Tenant Real Estimate / Facilities</label>
             </value>
         </valueSetDefinition>
     </valueSet>
