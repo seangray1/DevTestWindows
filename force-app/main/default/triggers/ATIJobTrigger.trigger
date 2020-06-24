@@ -4,7 +4,7 @@
  * @Author             : sean.gray@atirestoration.com
  * @Group              : 
  * @Last Modified By   : sean.gray@atirestoration.com
- * @Last Modified On   : 12/19/2019, 1:54:21 PM
+ * @Last Modified On   : 2/26/2020, 9:02:50 AM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    12/19/2019   sean.gray@atirestoration.com     Initial Version
@@ -12,9 +12,9 @@
 trigger ATIJobTrigger on ATI_Job__c (before insert, before update,
                                      after insert,after update,
                                      before delete) {
-                                         List<Profile> profileName = [SELECT Name FROM Profile WHERE Id=:userinfo.getProfileId() LIMIT 1];
-                                         if(profileName[0].Name != 'Restricted Process Execution')
-                                         {
+                                        //  List<Profile> profileName = [SELECT Name FROM Profile WHERE Id=:userinfo.getProfileId() LIMIT 1];
+                                        //  if(profileName[0].Name != 'Restricted Process Execution')
+                                        //  {
                                                if(TriggerFlagController.flag == true) {
                                              if(Trigger.isBefore && Trigger.isInsert){
                                                  JobTriggerHandler.handleBeforeInsertOnly();
@@ -53,5 +53,5 @@ trigger ATIJobTrigger on ATI_Job__c (before insert, before update,
                                                  JobTriggerHandler.handleBeforeDelete();
                                                  system.debug('The delete is called');
                                              }          
-                                     }
+                                    // }
                                     }

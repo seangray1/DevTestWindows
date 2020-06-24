@@ -83,4 +83,15 @@ public with sharing class ProjectSchedule {
     system.debug(budList);
     return budList;
     }
+
+    @AuraEnabled  
+    public static List<String> GetProductOptions(){  
+        List<String> pickListValuesList= new List<String>(); 
+         Schema.DescribeFieldResult fieldResult = Schedule_Line_Item__c.Product_Options__c.getDescribe();   
+        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();   
+             for( Schema.PicklistEntry pickListVal : ple){  
+                    pickListValuesList.add(pickListVal.getLabel());  
+                }       
+                return pickListValuesList;
+            }  
 }

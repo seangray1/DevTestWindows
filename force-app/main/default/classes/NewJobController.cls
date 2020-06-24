@@ -4,7 +4,7 @@
  * @Author             : sean.gray@atirestoration.com
  * @Group              : 
  * @Last Modified By   : sean.gray@atirestoration.com
- * @Last Modified On   : 2/21/2020, 9:26:52 AM
+ * @Last Modified On   : 2/24/2020, 9:30:31 AM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    1/28/2020   sean.gray@atirestoration.com     Initial Version
@@ -101,14 +101,14 @@ public with sharing class NewJobController {
         // for(Id ca : PropertyIDs.PropertyID){
         // PropertyIDFinal = ca; }
         String searchLikeKey = '%' + searchKey + '%';
-        List<Property__c> props = [Select Id, Name, State__c, City__c, Address_Line_1__c, Zip__c FROM Property__c Where Address_Line_1__c Like : searchLikeKey];
+        List<Property__c> props = [Select Id, Name, State__c, City__c, Address_Line_1__c, Zip__c FROM Property__c Where Address_Line_1__c Like : searchLikeKey Limit 5];
         system.debug('Properties are ' + props);
         return props;
     }
     @AuraEnabled(cacheable = true)
     public static List<Office__c> GetOffices(String searchKey) {
         String searchLikeKey = '%' + searchKey + '%';
-        List<Office__c> off = [Select Id, Name FROM Office__c Where Name Like : searchLikeKey];
+        List<Office__c> off = [Select Id, Name FROM Office__c Where Name Like : searchLikeKey Limit 5];
         
         return off;
     }
@@ -281,20 +281,47 @@ public with sharing class NewJobController {
         Office2__c = jobWrap.Office, Claim__c = jobWrap.Claim, deductible__c = Decimal.valueOf(jobWrap.Deductible), Master_Job__c = mJobId, division__c = jobWrap.division,
         Job_Class__c = jobWrap.JobClass, Lead_Source__c = jobWrap.LeadSource, property_Id__c = propId, Es_Job_Type__c = jobWrap.EsJobType);
         insert job;
+        MasterJobUpdateJob(mJobId, job.Id);
         //insert AR's and relate to job
+        Set<Id> ContactIdsSet = new Set<Id>();
+        Map<Id,Contact> ContactMap = new Map<Id,Contact>();
+        for(AccountRoleLineItems accountRoles : AR.AccountRoleLineItems){
+            if(String.isNotEmpty(accountRoles.Contact) && String.isEmpty(accountRoles.Account)){
+                ContactIdsSet.add(accountRoles.Contact);
+            }
+        }
+        if(!ContactIdsSet.isEmpty()){
+            for(Contact c : [Select Id, AccountId FROM Contact Where Id =: ContactIdsSet]){
+                ContactMap.put(c.Id, c);
+            }
+        }
         for(AccountRoleLineItems accountRoles : AR.AccountRoleLineItems){
             system.debug('Account Roles are '  + accountRoles);
             system.debug('Text is ' + accountRoles.Text);
+            if(String.isNotEmpty(accountRoles.Account)){
             Account_Roles__c ARRole = new Account_Roles__c(Account_ID__c = accountRoles.Account, Contact_ID__c = accountRoles.Contact, Master_Job_Id__c = job.Id,
             Multiple_Roles__c = accountRoles.Text);
             ARList.add(ARRole);
+            }
+            if(String.isEmpty(accountRoles.Account) && String.isNotEmpty(accountRoles.Contact)){
+                Account_Roles__c ARRole = new Account_Roles__c(Account_ID__c = ContactMap.get(accountRoles.Contact).AccountId, Contact_ID__c = accountRoles.Contact, Master_Job_Id__c = job.Id,
+                Multiple_Roles__c = accountRoles.Text);
+                ARList.add(ARRole);
+            }
+            
             //if Prop is new, need to add a different set of Account Roles to property, unrelated to the Job Account roles. 
             if(NewProperty){
-            Account_Roles__c PropARRole = new Account_Roles__c(Account_ID__c = accountRoles.Account, Contact_ID__c = accountRoles.Contact, Property_ID__c = prop.Id,
-            Multiple_Roles__c = accountRoles.Text);
-            ARPropertyList.add(PropARRole);
+                if(String.isNotEmpty(accountRoles.Account)){
+                    Account_Roles__c PropARRole = new Account_Roles__c(Account_ID__c = accountRoles.Account, Contact_ID__c = accountRoles.Contact, Property_ID__c = prop.Id,
+                    Multiple_Roles__c = accountRoles.Text);
+                    ARPropertyList.add(PropARRole);
+                }
+                if(String.isEmpty(accountRoles.Account) && String.isNotEmpty(accountRoles.Contact)){
+                    Account_Roles__c PropARRole = new Account_Roles__c(Account_ID__c = ContactMap.get(accountRoles.Contact).AccountId, Contact_ID__c = accountRoles.Contact, Property_ID__c = prop.Id,
+                    Multiple_Roles__c = accountRoles.Text);
+                    ARPropertyList.add(PropARRole);
             }
-
+        }
         }
         if(!ARList.isEmpty()){
             insert ARList;
@@ -308,6 +335,11 @@ public with sharing class NewJobController {
     }
         
 
+    }
+    @future
+    public static void MasterJobUpdateJob(Id MasterJobId, Id JobId){
+        Master_Job__c mJob = new Master_Job__c(Id = MasterJobId, Job__c = JobId);
+        update mJob;
     }
     
     public class ContactId {

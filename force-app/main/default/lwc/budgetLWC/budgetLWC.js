@@ -8,6 +8,10 @@ var i;
 var budgetLineItem;
 var budgetlineItemsTest = {};
 export default class budgetLWC extends NavigationMixin (LightningElement) {
+    activeSections = [
+        "Budget Info",
+        "Budget Line Items",
+      ];
     connectedCallback(){
     this.recordId = this.jobIdtosearch;
     // testapexBudgetOutput({recordId:this.recordId})
@@ -56,6 +60,9 @@ export default class budgetLWC extends NavigationMixin (LightningElement) {
     handleEndDateChange(event){
         this.endDate = event.detail.value;
     }
+    handleSectionToggle(event) {
+        const openSections = event.detail.openSections;
+      }
     Cancel(){
         this[NavigationMixin.Navigate]({
             type: 'standard__recordPage',
@@ -65,6 +72,9 @@ export default class budgetLWC extends NavigationMixin (LightningElement) {
                 actionName: 'view',
             },
         });
+    }
+    AddRow(){
+        this.Budgetlineitems.push({Trade__c:''});
     }
     CreateProject(){
         this.loading = true;

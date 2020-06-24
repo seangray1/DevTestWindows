@@ -10632,6 +10632,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Property__c.Year_Structure_Built__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Property__c.Zip__c</field>
         <readable>false</readable>
     </fieldPermissions>

@@ -69,6 +69,13 @@
     
    
 }
+.lgc-bg-inverse {
+    background-color: rgb(22, 50, 92);
+}
+.rowPadding {
+    margin-bottom: -2%;
+   margin-top: -2%;
+}
 .gridInput {
     margin-bottom: 5.5%;
 }

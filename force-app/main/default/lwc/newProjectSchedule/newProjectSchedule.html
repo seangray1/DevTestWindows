@@ -21,14 +21,14 @@
     <br> -->
 
 
-
+<div if:true={ScreenLoaded}>
   <div class="slds-box slds-theme_shade">
-    <div class="slds-m-around_medium">
+    <!-- <div class="slds-m-around_medium">
       <h1 class="slds-text-heading_small" style="text-decoration: underline;">New Schedule</h1>
-    </div>
+    </div> -->
     <div class="row">
       <div class="col-rp-12">
-        <div class="">
+        
           <table class="outer">
             <tbody>
               <tr>
@@ -54,7 +54,7 @@
 
                       <template for:each={Budgetlineitems} for:item="Budgetlineitem">
                         <tr key={Budgetlineitem.name}>
-                          <td>
+                          <td> 
                             <!-- <lightning:layoutItem> -->
                               <!-- <div class="grid"> -->
                                 <!-- <lightning-record-edit-form object-api-name="Schedule_Line_Item__c">
@@ -62,41 +62,50 @@
                                     variant="label-hidden" class="form-control ScheduleName" onchange={handleNameChange}>
                                   </lightning-input-field>
                                 </lightning-record-edit-form> -->
+                                <div class="rowPadding">
                                 <lightning-combobox
                                     label = ''
                                     name="FirstQuestion"
                                     value={Budgetlineitem.name}
                                     placeholder="--Select--"
-                                    options={ScheduleLineItemOptions}
+                                    options={ProductOptions}
                                     onchange={handleNameChange}
                                     class="gridInput ScheduleName"
                                     disabled={unSavedRecord}
                                      >
                                      </lightning-combobox>
+                                </div>
                               <!-- </div> -->
                             <!-- </lightning:layoutItem> -->
                           </td>
                           <td>
                             <!-- <lightning:layoutItem> -->
                               <!-- <div class="grid"> -->
-                                <lightning-record-edit-form object-api-name="Schedule_Line_Item__c">
+                                <!-- <lightning-record-edit-form object-api-name="Schedule_Line_Item__c">
                                   <lightning-input-field field-name="Product_Description__c" value={Budgetlineitem.description}
                                     variant="label-hidden" class="form-control ScheduleDescription">
                                   </lightning-input-field>
-                                </lightning-record-edit-form>
+                                </lightning-record-edit-form> -->
+                                <div class="rowPadding">
+                                <lightning-input value={Budgetlineitem.description}
+                                 class="gridInput ScheduleDescription"></lightning-input>
+                                 </div>
                               <!-- </div> -->
                             <!-- </lightning:layoutItem> -->
                           </td>
                           <td>
                             <!-- <lightning:layoutItem> -->
                               <!-- <div class="grid"> -->
-                                <lightning-record-edit-form object-api-name="Schedule_Line_Item__c">
+                                <!-- <lightning-record-edit-form object-api-name="Schedule_Line_Item__c">
                                   <lightning-input-field field-name="Start_Date__c" value={Budgetlineitem.startDate}
                                     variant="label-hidden" onchange={handleStartDateChange}
                                     class="form-control ScheduleStartDate"></lightning-input-field>
 
-                                </lightning-record-edit-form>
-
+                                </lightning-record-edit-form> -->
+                                <div class="rowPadding">
+                                <lightning-input value={Budgetlineitem.startDate} type="date"
+                                 class="gridInput ScheduleStartDate" onchange={handleStartDateChange}></lightning-input>
+                                 </div>
                               <!-- </div> -->
                             <!-- </lightning:layoutItem> -->
 
@@ -104,39 +113,44 @@
                           <td>
                             <!-- <lightning:layoutItem> -->
                               <!-- <div class="grid"> -->
-                                <lightning-record-edit-form object-api-name="Schedule_Line_Item__c">
+                                <!-- <lightning-record-edit-form object-api-name="Schedule_Line_Item__c">
                                   <lightning-input-field field-name="Completion_Date__c" value={Budgetlineitem.endDate}
                                     variant="label-hidden" onchange={handleEndDateChange}
                                     class="form-control ScheduleEndDate"></lightning-input-field>
 
-                                </lightning-record-edit-form>
-
+                                </lightning-record-edit-form> -->
+                                <div class="rowPadding">
+                                <lightning-input value={Budgetlineitem.endDate} type="date"
+                                 class="gridInput ScheduleEndDate" onchange={handleEndDateChange}></lightning-input>
+                                </div>
                               <!-- </div> -->
                             <!-- </lightning:layoutItem> -->
                           </td>
                           <td>
                             <!-- <lightning:layoutItem> -->
                               <!-- <div class="grid"> -->
-
+                                <div class="rowPadding">
                                 <lightning-combobox
-                                label = ''
+                                
                                     name="FirstQuestion"
                                     value={Budgetlineitem.connectedTo}
                                     placeholder="--Select--"
                                     options={ScheduleLineItemOptions}
                                     onchange={handleFirstChange}
                                     class="gridInput ScheduleConnectedTo"
-                                    disabled={savedRecord}
+                                    
                                      >
                             </lightning-combobox>
+                                </div>
                               <!-- </div> -->
                             <!-- </lightning:layoutItem> -->
                           </td>
                           <td>
                             <!-- <lightning:layoutItem> -->
                               <!-- <div class="grid"> -->
-
-                                <lightning-input type="number" value={Budgetlineitem.dayDiff} disabled={savedRecord} class="gridInput ScheduleDaysDiff"></lightning-input>
+                                <div class="rowPadding">
+                                <lightning-input type="number" value={Budgetlineitem.dayDiff}  class="gridInput ScheduleDaysDiff"></lightning-input>
+                                </div>
                             
                               <!-- </div> -->
                             <!-- </lightning:layoutItem> -->
@@ -144,7 +158,7 @@
                         </td>
                           
                           <td class="DeleteClmn right-col lowerDelete">
-                            <lightning-button label='' class="delete-icon DeleteAR lowerDelete" title="Delete" variant="inverse"
+                            <lightning-button label='' class="delete-icon DeleteAR lowerDelete" title="Delete" variant="destructive"
                               onclick={DeleteARRow} icon-name="action:delete"></lightning-button>
 
 
@@ -157,16 +171,18 @@
               </tr>
             </tbody>
           </table>
-        </div>
+        
       </div>
     </div>
     <br>
     <lightning-button label="Add Row" variant="brand" onclick={AddNewRow}></lightning-button>
   </div>
-  <br>
-  <div class="form">
-    <lightning-button label="Create Project" onclick={CreateProject} variant="success"> </lightning-button>
-    <lightning-button label='Cancel' onclick={Cancel} variant="destructive"></lightning-button>
+  
+  <div class="slds-p-around_medium lgc-bg-inverse element">
+    <lightning-button-group>
+    <lightning-button label="Create Project" icon-name="utility:save" onclick={CreateProject} variant="brand"> </lightning-button>
+    <lightning-button label='Cancel' onclick={Cancel} ></lightning-button>
+  </lightning-button-group>
   </div>
   <template if:true={loading}>
     <div class="Spinner">
@@ -175,5 +191,5 @@
   </template>
   
 
-
+</div>
 </template>

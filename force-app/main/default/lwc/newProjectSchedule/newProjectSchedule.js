@@ -13,7 +13,12 @@ import { LightningElement, track, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import ApprovedOrRejected from '@salesforce/apex/ProjectSchedule.ProjectScheduleInsert';
 import testapexBudgetOutput from '@salesforce/apex/ProjectSchedule.testBudget';
-// import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { getObjectInfo } from "lightning/uiObjectInfoApi";
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+import SCHEDULE_LINE_ITEMS from "@salesforce/schema/Schedule_Line_Item__c.Product_Options__c";
+import SCHEDULE_OBJECT from "@salesforce/schema/Schedule_Line_Item__c";
+import GetProductOptions from "@salesforce/apex/ProjectSchedule.GetProductOptions";
+
 
 // import COURTESYCALL_FIELD from '@salesforce/schema/Case.Case_Type__c';
 
@@ -22,30 +27,9 @@ var i;
 var budgetLineItem;
 var budgetlineItemsTest = {};
 export default class NewProjectSchedule extends NavigationMixin (LightningElement) {
-    connectedCallback(){
-    this.recordId = this.jobIdtosearch;
-    testapexBudgetOutput({recordId:this.recordId})
-        .then(result => {
-           
-            this.budgetlineItemsRecieved = result;
-      
-            budgetlength = this.budgetlineItemsRecieved.length;
-        // i = 0;
-    for (i = 0; i < budgetlength; i++){
-        this.Budgetlineitems.push({name: this.budgetlineItemsRecieved[i].Trade__c, description : this.budgetlineItemsRecieved[i].Trade__c, 
-            startDate : null, endDate : null, connectedTo : null, dayDiff : null});
-            
-        this.ScheduleLineItemOptions.push({label : this.budgetlineItemsRecieved[i].Trade__c, value : this.budgetlineItemsRecieved[i].Trade__c});
-        
-    }
-    /*for(budgetLineItem in budgetlineItemsTest){
-        this.Budgetlineitems.push({name: budgetLineItem})   
-    }*/
-    this.Budgetlineitems.shift();
-    this.ScheduleLineItemOptions.shift();
-    //this.ScheduleLineItemOptions.shift();
-        })        
-    }
+@track ScreenLoaded = false;
+@track ProductOptions = [{}];
+@track ScheduleLineItems;
     @track savedRecord = true;
     @track loading;
     @track test = true;
@@ -63,12 +47,52 @@ export default class NewProjectSchedule extends NavigationMixin (LightningElemen
     @track ScheduleLineItemOptions = [{
     }];
     @track AccountRoles;
-    // @wire(getPicklistValues, { fieldApiName: NAME_FIELD})
-    // CourtesyCallPicklistValues;
+// @wire(getObjectInfo, { objectApiName: SCHEDULE_OBJECT })
+//   objectInfo;
+// @wire(getPicklistValues, {
+//     recordTypeId: "$objectInfo.data.defaultRecordTypeId",
+//     fieldApiName: SCHEDULE_LINE_ITEMS
+//   })
+//   ScheduleLineItems;
+
+
+    connectedCallback(){
+    this.recordId = this.jobIdtosearch;
+    this.ScreenLoaded = true;
     
+    GetProductOptions({}).then((result) => {
+        var AccountRolePicklistValues = result;
+        for (var i = 0; i < AccountRolePicklistValues.length; i++) {
+          this.ProductOptions.push({
+            label: AccountRolePicklistValues[i],
+            value: AccountRolePicklistValues[i]
+          });
+        }
+  
+        this.ProductOptions.shift();
+      });
+      console.log(this.ProductOptions);
+    testapexBudgetOutput({recordId:this.recordId})
+        .then(result => {
+            this.budgetlineItemsRecieved = result;
+            budgetlength = this.budgetlineItemsRecieved.length;
+        // i = 0;
+    for (i = 0; i < budgetlength; i++){
+        this.Budgetlineitems.push({name: this.budgetlineItemsRecieved[i].Trade__c, description : this.budgetlineItemsRecieved[i].Trade__c, 
+            startDate : null, endDate : null, connectedTo : null, dayDiff : null});
+            
+        this.ScheduleLineItemOptions.push({label : this.budgetlineItemsRecieved[i].Trade__c, value : this.budgetlineItemsRecieved[i].Trade__c});
+        
+    }
+    
+    this.Budgetlineitems.shift();
+    this.ScheduleLineItemOptions.shift();
+    //this.ScheduleLineItemOptions.shift();
+        })        
+    }
+
     get options() {
         for (i = 0; i < this.Budgetlineitems.length; i++){
-            //console.log('Budget line item name ' + this.budgetlineItemsRecieved[i].name + this.budgetlineItemsRecieved.length);
             this.ScheduleLineItemOptions.push({label : this.Budgetlineitems[i].name, value : this.Budgetlineitems[i].name}); 
         }
         return this.ScheduleLineItemOptions;
@@ -83,21 +107,6 @@ export default class NewProjectSchedule extends NavigationMixin (LightningElemen
         console.log(' Row ind ' + rowInd);
         console.log('Namech ' + nameCh);
         this.Budgetlineitems = this.getAllAccountRoleObjects();
-        
-//         for (var i=0;i<this.Budgetlineitems.length; i++){
-//         if ( this.Budgetlineitems[i].name === nameCh ){
-//             console.log('budget line item name ' + i + ' ' + this.Budgetlineitems[i].name);
-//             console.log('budget line item name ' + i + ' ' + this.Budgetlineitems[i].description);
-//             if(this.Budgetlineitems[i].description.length < this.Budgetlineitems[i].name.length){
-//         this.Budgetlineitems[i].description = nameCh;
-//         console.log('budget line item name ' + i + ' ' + this.Budgetlineitems[i].description);
-//             }
-//     }
-// }
-        // console.log('Delete row index ' + descriptionChange);
-        // console.log('Test ' + e);
-        // this.Budgetlineitems = this.getAllAccountRoleObjects();
-        // this.Budgetlineitems[descriptionChange].description = this.Budgetlineitems[descriptionChange].name;
     }
     handleStartDateChange(event){
         this.startDate = event.detail.value;
